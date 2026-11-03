@@ -16,7 +16,9 @@ OUT.mkdir(exist_ok=True)
 DB = SRC / "03_DATABASE_MANGROVE/05_Basis_Data_Spasial"
 AN = SRC / "04_PENGOLAHAN_ANALISIS"
 GPKG = DB / "MGV-KS_HasilAnalisis_KS_v03.gpkg"
-S2 = DB / "MGV-KS_SebaranMangroveS2SR_KS_2019-2026_v01.gpkg"
+S2DIR = DB / "MGV-KS_S2SR_2018-2026"   # raster kelas kerapatan per pulau-tahun (sudah dipotong AOI)
+DIGIT = DB                              # MGV-KS_DigitasiMangrove2025_<KODE>.shp
+KELAS = {1: "jarang", 2: "sedang", 3: "lebat"}
 
 PULAU = {
     "UTJ": "Untung Jawa", "PAR": "Pari", "LCG": "Lancang", "TDG": "Tidung",
@@ -72,9 +74,18 @@ def code_of(p):
 L = lambda n: gpd.read_file(GPKG, layer=n)
 
 write_geo(L("daratan_2025"), "daratan_2025", simplify_m=2)
-write_geo(L("mangrove_eksisting"), "mangrove_eksisting", simplify_m=0.5)
+# Mangrove eksisting = digitasi citra resolusi tinggi 2025 (tim MGV-KS)
+dg = []
+for f in sorted(DIGIT.glob("MGV-KS_DigitasiMangrove2025_*.shp")):
+    g = gpd.read_file(f).to_crs(32748)
+    g = g[g.geometry.notna()]
+    k = f.stem.split("_")[-1]
+    dg.append({"pulau": k, "n_poligon": len(g), "geometry": g.union_all()})
+dg = gpd.GeoDataFrame(dg, crs=32748)
+dg["luas_ha"] = (dg.area / 1e4).round(3)
+write_geo(dg, "mangrove_eksisting", simplify_m=0.3)
+LUAS_DIGIT = dict(zip(dg.pulau, dg.luas_ha))
 sms = L("sebaran_mangrove_sumber")
-write_geo(sms[sms.sumber.str.startswith("Landsat")], "mangrove_landsat2025", simplify_m=1)
 write_geo(sms[sms.sumber.str.startswith("RBI")], "mangrove_rbi2022", simplify_m=1)
 
 pv = L("plot_vegetasi")
@@ -99,12 +110,30 @@ kb = L("kontur_batimetri_gabungan")
 kb = kb[(kb.elevasi_m % 1 == 0)]  # kontur tiap 1 m saja untuk web
 write_geo(kb, "kontur_batimetri", simplify_m=4, precision=5)
 
-# Sebaran mangrove Sentinel-2 SR per tahun
-s2 = pd.concat([gpd.read_file(S2, layer=f"mangrove_{y}") for y in (2019, 2021, 2023, 2025, 2026)])
-s2 = gpd.GeoDataFrame(s2, crs="EPSG:32748")
-s2["kode"] = s2.pulau.map(code_of)
-for y, g in s2.groupby("tahun"):
-    write_geo(g, f"mangrove_s2sr_{y}", simplify_m=2, keep=["kode", "kelas", "tahun", "luas_ha"])
+# Sebaran mangrove Sentinel-2 super-resolusi 2,5 m per tahun, langsung dari raster kelas
+import rasterio, rasterio.features
+from shapely.geometry import shape
+from scipy.stats import kendalltau, linregress
+s2rows, s2polys, s2meta = [], [], {}
+for f in sorted(S2DIR.glob("*/MGV-KS_S2SR_*_Kerapatan.tif")):
+    _, _, k, y, _ = f.stem.split("_")
+    y = int(y)
+    with rasterio.open(f) as r:
+        a = r.read(1); tr = r.transform; px = abs(r.res[0] * r.res[1])
+    luas = {KELAS[c]: round((a == c).sum() * px / 1e4, 3) for c in KELAS}
+    meta = json.loads(f.with_name(f.name.replace("Kerapatan.tif", "meta.json")).read_text())
+    s2rows.append({"kode": k, "tahun": y, **luas, "total": round(sum(luas.values()), 3),
+                   "valid_pct": meta.get("valid_pct"), "luas_aoi_ha": meta.get("luas_aoi_ha"),
+                   "n_citra": len(meta.get("scenes", []))})
+    m = (a >= 1) & (a <= 3)
+    for geom, v in rasterio.features.shapes(a, mask=m, transform=tr):
+        s2polys.append({"kode": k, "tahun": y, "kelas": KELAS[int(v)], "geometry": shape(geom)})
+s2df = pd.DataFrame(s2rows).sort_values(["kode", "tahun"])
+s2g = gpd.GeoDataFrame(s2polys, crs=32748).dissolve(["kode", "tahun", "kelas"]).reset_index()
+s2g["luas_ha"] = (s2g.area / 1e4).round(3)
+for y, g in s2g.groupby("tahun"):
+    write_geo(g, f"mangrove_s2sr_{y}", simplify_m=1, keep=["kode", "kelas", "tahun", "luas_ha"])
+S2_YEARS = sorted(s2df.tahun.unique().tolist())
 
 # ---------- Statistik / tabel ----------
 def sheet_rows(path, sheet, header_row=1):
@@ -129,7 +158,7 @@ def report_table(n):
 
 
 stats = {}
-stats["tabel"] = {str(n): report_table(n) for n in range(1, 16)}
+stats["tabel"] = {str(n): report_table(n) for n in range(1, 16) if n != 9}  # Tabel 9 = seri Landsat, tidak dipakai
 
 # Ringkasan per pulau (lembar RINGKASAN_PULAU, berorientasi baris=indikator)
 ws = openpyxl.load_workbook(AN / "15_Ringkasan_Per_Pulau/MGV-KS_Ringkasan_KS_v03.xlsx", data_only=True)
@@ -142,26 +171,34 @@ for r in rp[1:]:
     for c, v in zip(codes, r[1:]):
         if c:
             ring[c][r[0]] = v
+DROP = {"Luas mangrove Landsat 2025 (ha)", "Tren luas 1996–2025", "Perubahan luas (ha)", "Kappa peta Landsat"}
+for c in ring:
+    for d_ in DROP:
+        ring[c].pop(d_, None)
+    ring[c]["Luas mangrove eksisting (ha)"] = LUAS_DIGIT.get(c)
 stats["ringkasan"] = ring
 stats["catatan_mutu"] = [r[0] for r in ws["CATATAN_MUTU_DATA"].iter_rows(min_row=2, values_only=True) if r[0]]
 stats["kelengkapan"] = sheet_rows(AN / "15_Ringkasan_Per_Pulau/MGV-KS_Ringkasan_KS_v03.xlsx", "KELENGKAPAN_DATA")
 
-# Seri luas Landsat tahunan
-lt = sheet_rows(AN / "07_Perubahan_Tutupan/MGV-KS_PerubahanTutupan_KS_v03.xlsx", "LUAS_TAHUNAN")
-series = {}
-for r in lt:
-    series.setdefault(r["kode_pulau"], []).append([r["tahun"], round(r["luas_ha"], 3)])
-stats["landsat_tahunan"] = series
-stats["landsat_tren"] = sheet_rows(AN / "07_Perubahan_Tutupan/MGV-KS_PerubahanTutupan_KS_v03.xlsx", "TREN")
-
-s2x = AN / "07_Perubahan_Tutupan/MGV-KS_AnalisisS2SR_KS_v01.xlsx"
-stats["s2sr_ringkasan"] = sheet_rows(s2x, "RINGKASAN_PULAU")
-stats["s2sr_total"] = sheet_rows(s2x, "TOTAL_KS")
-stats["s2sr_catatan"] = [r["catatan"] for r in sheet_rows(s2x, "CATATAN")]
-s2c = pd.read_csv(AN / "07_Perubahan_Tutupan/MGV-KS_LuasMangroveS2SR_KS_2019-2026_v01.csv")
-s2c["kode"] = s2c.pulau.map(code_of)
-stats["s2sr_tahunan"] = {k: g[["tahun", "luas_mangrove_ha", "jarang_ha", "sedang_ha", "lebat_ha"]].round(3).values.tolist()
-                         for k, g in s2c.groupby("kode")}
+# Seri waktu luas mangrove S2SR (satu-satunya sumber seri waktu)
+stats["s2sr_tahun"] = [int(y) for y in S2_YEARS]
+stats["s2sr_tahunan"] = {k: [[int(r[0])] + [float(x) for x in r[1:]] for r in g[["tahun", "total", "jarang", "sedang", "lebat"]].values.tolist()] for k, g in s2df.groupby("kode")}
+tren = []
+for k, g in s2df.groupby("kode"):
+    t, p = kendalltau(g.tahun, g.total) if g.total.nunique() > 1 else (0.0, 1.0)
+    lr = linregress(g.tahun, g.total)
+    first, last = g.iloc[0], g.iloc[-1]
+    tren.append({"pulau": k, "tahun_awal": int(first.tahun), "tahun_akhir": int(last.tahun),
+                 "luas_awal_ha": first.total, "luas_akhir_ha": last.total,
+                 "perubahan_ha": round(last.total - first.total, 3),
+                 "laju_ha_th": round(lr.slope, 3), "tau": round(t, 3), "p": round(p, 3),
+                 "tren": ("Naik" if t > 0 else "Turun") if p < 0.05 else "Tidak nyata",
+                 "digitasi_2025_ha": LUAS_DIGIT.get(k)})
+stats["s2sr_tren"] = tren
+stats["s2sr_total"] = [{"tahun": int(y), "luas_ha": round(g.total.sum(), 3), "n_pulau": int(g.kode.nunique()),
+                        "jarang": round(g.jarang.sum(), 3), "sedang": round(g.sedang.sum(), 3), "lebat": round(g.lebat.sum(), 3)}
+                       for y, g in s2df.groupby("tahun")]
+stats["luas_digitasi_2025"] = LUAS_DIGIT
 stats["gelombang"] = sheet_rows(AN / "13_Oseanografi_Fisik/MGV-KS_KriteriaFisik_KS_v03.xlsx", "GELOMBANG")
 stats["pulau"] = PULAU
 

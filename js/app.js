@@ -69,18 +69,15 @@
         <div class="row"><span class="sw l" style="background:#c9a46a"></span>darat (≥ 0 m)</div>
         <div class="row"><span class="sw l" style="background:#5aa9d6"></span>perairan (&lt; 0 m)</div>` },
 
-    { id: "eksisting", grp: "Sebaran mangrove", label: "Mangrove eksisting (acuan)", file: "mangrove_eksisting", on: true, sw: "#00e676",
+    { id: "eksisting", grp: "Sebaran mangrove", label: "Mangrove eksisting (digitasi 2025)", file: "mangrove_eksisting", on: true, sw: "#00e676",
       style: () => ({ color: "#00e676", weight: 1.5, fillColor: "#00c853", fillOpacity: .45 }),
-      popup: p => popupTable("Mangrove eksisting", [["Pulau", PULAU[p.pulau]], ["Luas (ha)", p.luas_ha]]) },
-    { id: "s2sr", grp: "Sebaran mangrove", label: "Sentinel-2 SR (kelas kerapatan)", fileFn: () => `mangrove_s2sr_${s2Year}`, on: false, sw: "#3f9c5a",
+      popup: p => popupTable("Mangrove eksisting – digitasi 2025", [["Pulau", PULAU[p.pulau]], ["Luas (ha)", p.luas_ha], ["Jumlah poligon", p.n_poligon, 0]]) },
+    { id: "s2sr", grp: "Sebaran mangrove", label: "Sentinel-2 SR 2,5 m (kelas kerapatan)", fileFn: () => `mangrove_s2sr_${s2Year}`, on: false, sw: "#3f9c5a",
       style: f => ({ color: KELAS_S2[f.properties.kelas], weight: .5, fillColor: KELAS_S2[f.properties.kelas], fillOpacity: .65 }),
-      popup: p => popupTable(`Mangrove Sentinel-2 ${p.tahun}`, [["Pulau", PULAU[p.kode]], ["Kelas", p.kelas], ["Luas kelas (ha)", p.luas_ha]]),
+      popup: p => popupTable(`Mangrove Sentinel-2 SR ${p.tahun}`, [["Pulau", PULAU[p.kode]], ["Kelas", p.kelas], ["Luas kelas (ha)", p.luas_ha]]),
       legend: () => `<div class="lt">Mangrove Sentinel-2 SR ${s2Year}</div>` +
         Object.entries(KELAS_S2).map(([k, c]) => `<div class="row"><span class="sw" style="background:${c}"></span>${k}</div>`).join(""),
-      extra: () => `<select id="s2-year">${[2019, 2021, 2023, 2025, 2026].map(y => `<option ${y === s2Year ? "selected" : ""}>${y}</option>`).join("")}</select>` },
-    { id: "landsat", grp: "Sebaran mangrove", label: "Mangrove Landsat 2025 (30 m)", file: "mangrove_landsat2025", on: false, sw: "#ffeb3b",
-      style: () => ({ color: "#ffeb3b", weight: 1.2, fill: false }),
-      popup: p => popupTable("Mangrove Landsat GEE 2025", [["Pulau", PULAU[p.pulau]], ["Luas (ha)", p.luas_ha]]) },
+      extra: () => `<select id="s2-year">${S.s2sr_tahun.map(y => `<option ${y === s2Year ? "selected" : ""}>${y}</option>`).join("")}</select>` },
     { id: "rbi", grp: "Sebaran mangrove", label: "Mangrove RBI 25K 2022", file: "mangrove_rbi2022", on: false, sw: "#ff80ab",
       style: () => ({ color: "#ff80ab", weight: 1.2, fill: false, dashArray: "4 3" }),
       popup: p => popupTable("Mangrove RBI 2022", [["Pulau", PULAU[p.pulau]], ["Luas (ha)", p.luas_ha]]) },
@@ -135,7 +132,7 @@
         ["Lintang", p.lintang, 6], ["Bujur", p.bujur, 6]]),
       legend: () => `<div class="lt">Prioritas pemulihan</div>` + Object.entries(PRIOR).map(([k, c]) => `<div class="row"><span class="sw" style="background:${c}"></span>${k}</div>`).join("") },
   ];
-  let s2Year = 2026, airMode = "ket";
+  let s2Year = S.s2sr_tahun[S.s2sr_tahun.length - 1], airMode = "ket";
   const loaded = {};
   const cache = {};
 
@@ -232,18 +229,17 @@
 
   /* ---------------- Per pulau ---------------- */
   let current = null;
-  const s2r = Object.fromEntries(S.s2sr_ringkasan.map(r => [r.kode, r]));
+  const s2t = Object.fromEntries(S.s2sr_tren.map(r => [r.pulau, r]));
   function rowsFor(k) {
     const r = R[k] || {};
     const keys = ["Jenis dominan", "Kerapatan batang rerata (ind/ha)", "DBH rerata (cm)", "Tutupan kanopi rerata (%)", "LAI rerata",
       "Karbon batas bawah (t C/ha)", "H' Shannon", "% plot rusak-jarang (kerapatan+tutupan)", "Luas mangrove eksisting (ha)",
-      "Luas mangrove Landsat 2025 (ha)", "Tren luas 1996–2025", "Perubahan luas (ha)", "LRR rerata (m/th)", "% transek abrasi",
-      "Hs P90 (m)", "Kappa peta Landsat", "% bersedia berpartisipasi"];
+      "LRR rerata (m/th)", "% transek abrasi", "Hs P90 (m)", "% bersedia berpartisipasi"];
     return keys.filter(x => r[x] != null && r[x] !== "-").map(x => `<tr><td>${esc(x)}</td><td>${esc(fmt(r[x]))}</td></tr>`).join("");
   }
   function selectIsland(k, open = true) {
     current = k; showTab("pulau", open);
-    const r = R[k] || {}, s = s2r[k];
+    const r = R[k] || {}, s = s2t[k];
     const t13 = S.tabel["13"].baris.find(b => b[0] === PULAU[k]);
     const pri = S.tabel["14"].baris.filter(b => b[1] === PULAU[k]);
     $("#tab-pulau").innerHTML = `
@@ -256,10 +252,13 @@
         <div class="kpi"><div class="v">${fmt(r["LRR rerata (m/th)"])}</div><div class="l">m/th laju garis pantai (LRR)</div></div>
       </div>
       ${(+r["Plot vegetasi"] || 0) === 0 ? `<div class="note">Survei lapangan di pulau ini belum dilakukan.</div>` : ""}
-      <h3>Luas mangrove 1996–2026</h3>
-      <div class="chartbox"><canvas id="ch-pulau"></canvas></div>
-      <p class="muted" style="font-size:.8rem">Garis: Landsat EMI 30 m (tahunan). Titik: Sentinel-2 SR.</p>
-      ${s ? `<div class="note ${s.mutu_kesesuaian_spasial?.startsWith("Baik") ? "ok" : ""}"><b>Sentinel-2 SR — ${esc(s.mutu_kesesuaian_spasial)}</b><br>${esc(s.tafsiran)}</div>` : ""}
+      <h3>Luas mangrove Sentinel-2 SR ${S.s2sr_tahun[0]}–${S.s2sr_tahun.at(-1)}</h3>
+      ${s ? `<div class="chartbox"><canvas id="ch-pulau"></canvas></div>
+      <p class="muted" style="font-size:.8rem">Batang: luas per kelas kerapatan (S2 super-resolusi 2,5 m, dipotong AOI pulau). Garis putus: digitasi 2025.</p>
+      <table class="kv"><tr><td>Luas ${s.tahun_awal} → ${s.tahun_akhir}</td><td>${fmt(s.luas_awal_ha)} → ${fmt(s.luas_akhir_ha)} ha</td></tr>
+        <tr><td>Laju regresi</td><td>${fmt(s.laju_ha_th, 3)} ha/th</td></tr>
+        <tr><td>Tren Mann-Kendall</td><td>${s.tren} (τ ${fmt(s.tau)}, p ${fmt(s.p, 3)})</td></tr></table>`
+        : `<div class="note">Data Sentinel-2 SR untuk pulau ini belum tersedia.</div>`}
       <h3>Indikator</h3>
       <table class="kv">${rowsFor(k)}</table>
       ${t13 ? `<h3>Kesesuaian &amp; prioritas pemulihan</h3><table class="kv">
@@ -270,13 +269,15 @@
         ${pri.length ? `<p style="font-size:.85rem"><b>Lokasi prioritas tinggi:</b> ${pri.map(p => `<a href="#" data-ll="${p[6]},${p[7]}">${p[0]}</a> (${fmt(p[2])} ha)`).join(", ")}</p>` : ""}`
         : `<div class="note">Analisis kesesuaian belum tersedia untuk pulau ini (menunggu data batimetri/DTM/gelombang).</div>`}
       <p><button class="btn" id="btn-layers">Tampilkan lapisan survei di peta</button></p>`;
-    const ls = (S.landsat_tahunan[k] || []).map(([x, y]) => ({ x, y }));
-    const s2 = (S.s2sr_tahunan[k] || []).map(r => ({ x: r[0], y: r[1] }));
-    chart("ch-pulau", { type: "line", data: { datasets: [
-        { label: "Landsat (ha)", data: ls, borderColor: "#1f5f4a", backgroundColor: "#1f5f4a", pointRadius: 1.5, borderWidth: 2, tension: .2 },
-        { label: "Sentinel-2 SR (ha)", data: s2, showLine: false, pointRadius: 5, pointStyle: "rectRot", borderColor: "#c8662b", backgroundColor: "#c8662b" }] },
-      options: { maintainAspectRatio: false, parsing: false, scales: { x: { type: "linear", min: 1996, max: 2026, ticks: { stepSize: 5, callback: v => v } }, y: { title: { display: true, text: "ha" }, beginAtZero: true } },
-        plugins: { legend: { position: "bottom", labels: { boxWidth: 10 } } } } });
+    if (s) {
+      const ser = S.s2sr_tahunan[k], dig = S.luas_digitasi_2025[k];
+      const ds = ["lebat", "sedang", "jarang"].map((c, i) => ({ type: "bar", label: c, stack: "s", backgroundColor: KELAS_S2[c],
+        data: ser.map(r => r[{ jarang: 2, sedang: 3, lebat: 4 }[c]]) }));
+      if (dig != null) ds.push({ type: "line", label: "Digitasi 2025", data: ser.map(() => dig), borderColor: "#c8662b", borderDash: [5, 4], borderWidth: 2, pointRadius: 0 });
+      chart("ch-pulau", { data: { labels: ser.map(r => r[0]), datasets: ds },
+        options: { maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, title: { display: true, text: "ha" } } },
+          plugins: { legend: { position: "bottom", labels: { boxWidth: 10 } } } } });
+    }
     flyIsland(k);
   }
   function flyIsland(k) {
@@ -297,8 +298,8 @@
     <h2>Hasil analisis (v03)</h2>
     <h3>Luas mangrove total Kepulauan Seribu</h3>
     <div class="chartbox"><canvas id="ch-total"></canvas></div>
-    ${S.s2sr_catatan.slice(-2).map(c => `<div class="note">${esc(c)}</div>`).join("")}
-    <h3>Tren luas Landsat 1996–2025 per pulau</h3>
+    <p class="muted" style="font-size:.8rem">Sentinel-2 super-resolusi 2,5 m, dipotong AOI tiap pulau (daratan + 150 m ∪ mangrove acuan + 30 m ∪ plot + 30 m). Tahun 2022 tidak tersedia. ${S.s2sr_total.some(r => r.n_pulau < 10) ? `Jumlah pulau terhitung: ${S.s2sr_total.at(-1).n_pulau} dari 10.` : ""}</p>
+    <h3>Perubahan luas mangrove per pulau (S2SR ${S.s2sr_tahun[0]}–${S.s2sr_tahun.at(-1)})</h3>
     <div class="chartbox" style="height:240px"><canvas id="ch-tren"></canvas></div>
     <h3>Kesesuaian lahan pemulihan (ha)</h3>
     <div class="chartbox"><canvas id="ch-sesuai"></canvas></div>
@@ -314,18 +315,19 @@
 
   const nm = k => PULAU[k];
   const tot = S.s2sr_total;
-  chart("ch-total", { type: "bar", data: { labels: tot.map(r => r.tahun), datasets: [
-      { label: "Sentinel-2 SR", data: tot.map(r => r.luas_s2sr_ha), backgroundColor: "#c8662b" },
-      { label: "S2 dalam zona acuan", data: tot.map(r => r.dalam_zona_acuan_ha), backgroundColor: "#f0b27a" },
-      { label: "Landsat", data: tot.map(r => r.luas_landsat_ha), backgroundColor: "#1f5f4a" }] },
-    options: { maintainAspectRatio: false, scales: { y: { title: { display: true, text: "ha" } } }, plugins: { legend: { position: "bottom", labels: { boxWidth: 10 } } } } });
+  const digTot = Object.keys(S.s2sr_tahunan).reduce((a, k) => a + (S.luas_digitasi_2025[k] || 0), 0);
+  chart("ch-total", { data: { labels: tot.map(r => r.tahun), datasets: [
+      ...["lebat", "sedang", "jarang"].map(c => ({ type: "bar", label: c, stack: "s", data: tot.map(r => r[c]), backgroundColor: KELAS_S2[c] })),
+      { type: "line", label: `Digitasi 2025 (${fmt(digTot)} ha)`, data: tot.map(() => digTot), borderColor: "#c8662b", borderDash: [5, 4], borderWidth: 2, pointRadius: 0 }] },
+    options: { maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, title: { display: true, text: "ha" } } },
+      plugins: { legend: { position: "bottom", labels: { boxWidth: 10 } } } } });
 
-  const tren = S.landsat_tren;
+  const tren = S.s2sr_tren;
   chart("ch-tren", { type: "bar", data: { labels: tren.map(r => nm(r.pulau)), datasets: [
-      { label: "Perubahan (ha), rerata 1996–2000 → 2021–2025", data: tren.map(r => r.perubahan_ha),
+      { label: "Perubahan luas (ha)", data: tren.map(r => r.perubahan_ha),
         backgroundColor: tren.map(r => r.tren === "Naik" ? "#2f8466" : r.tren === "Turun" ? "#c0392b" : "#b8beb9") }] },
     options: { indexAxis: "y", maintainAspectRatio: false, plugins: { legend: { display: false },
-      tooltip: { callbacks: { afterLabel: c => `Tren: ${tren[c.dataIndex].tren} (τ ${tren[c.dataIndex].MannKendall_tau}, p ${tren[c.dataIndex].p})` } } },
+      tooltip: { callbacks: { afterLabel: c => { const t = tren[c.dataIndex]; return `${t.tahun_awal}: ${fmt(t.luas_awal_ha)} ha → ${t.tahun_akhir}: ${fmt(t.luas_akhir_ha)} ha\nTren: ${t.tren} (τ ${t.tau}, p ${t.p})`; } } } },
       scales: { x: { title: { display: true, text: "ha (hijau = naik nyata, merah = turun nyata)" } } } } });
 
   const sc = [["S1", "#1a9850"], ["S2", "#91cf60"], ["S3", "#fee08b"], ["N", "#d9d9d9"]];
@@ -370,15 +372,15 @@
     <h3>Sumber data</h3>
     <table class="kv">
       <tr><td>Basis data spasial terpadu</td><td>HasilAnalisis_KS v03</td></tr>
-      <tr><td>Sebaran mangrove Sentinel-2 SR</td><td>2019–2026 v01</td></tr>
-      <tr><td>Seri luas Landsat (GEE, indeks EMI)</td><td>1996–2025</td></tr>
+      <tr><td>Mangrove eksisting (digitasi citra resolusi tinggi)</td><td>2025</td></tr>
+      <tr><td>Seri waktu mangrove Sentinel-2 super-resolusi 2,5 m (dipotong AOI pulau)</td><td>${S.s2sr_tahun[0]}–${S.s2sr_tahun.at(-1)}</td></tr>
       <tr><td>Survei vegetasi, kualitas air, sumur, foto hemispherical</td><td>Sep–Nov 2026</td></tr>
       <tr><td>Garis pantai (DSAS, koreksi pasut GOT4.10c)</td><td>1990–2025</td></tr>
       <tr><td>Kesesuaian &amp; prioritas (AHP)</td><td>v03</td></tr>
     </table>
     <p class="muted" style="font-size:.85rem">Semua lapisan ditampilkan dalam WGS84; sumber asli dalam UTM 48S (EPSG:32748). Geometri disederhanakan (toleransi 0,5–4 m) untuk tampilan web, sehingga luas di peta bisa sedikit berbeda dari tabel.</p>
     <h3>Unduh data</h3>
-    <p style="font-size:.88rem">${["mangrove_eksisting", "plot_vegetasi", "titik_kualitas_air", "sumur_air_tanah", "foto_lai", "transek_garis_pantai", "lokasi_prioritas", "mangrove_s2sr_2026"]
+    <p style="font-size:.88rem">${["mangrove_eksisting", "plot_vegetasi", "titik_kualitas_air", "sumur_air_tanah", "foto_lai", "transek_garis_pantai", "lokasi_prioritas", `mangrove_s2sr_${S.s2sr_tahun.at(-1)}`]
       .map(f => `<a href="data/${f}.geojson" download>${f}.geojson</a>`).join(" · ")}</p>
     <p class="muted" style="font-size:.8rem">Data dibangun: ${esc(S.dibangun)}</p>`;
 })();
