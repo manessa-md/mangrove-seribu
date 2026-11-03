@@ -1,0 +1,15 @@
+{
+  "_petunjuk": "Ubah berkas ini untuk memperbarui panel Progres. status: selesai | berjalan | belum",
+  "diperbarui": "2026-11-03",
+  "tahapan": [
+    {"nama": "Persiapan & desain sampling", "status": "selesai", "tanggal": "Sep 2026"},
+    {"nama": "Laporan pendahuluan", "status": "selesai", "tanggal": "5 Okt 2026"},
+    {"nama": "Survei lapangan (vegetasi, kualitas air, sumur, sosek)", "status": "berjalan", "tanggal": "Sep–Nov 2026", "catatan": "9 dari 10 pulau; Pulau Sebira belum disurvei"},
+    {"nama": "Entri, QA/QC & basis data", "status": "berjalan", "tanggal": "Okt–Nov 2026"},
+    {"nama": "Analisis spasial & kesesuaian pemulihan (v03)", "status": "berjalan", "tanggal": "Okt–Nov 2026", "catatan": "6 pulau dianalisis kesesuaian; PAR, PGG, KLP menunggu batimetri/DTM"},
+    {"nama": "Paparan awal hasil", "status": "selesai", "tanggal": "2 Nov 2026"},
+    {"nama": "Laporan antara", "status": "belum", "tanggal": "—"},
+    {"nama": "Strategi & rencana aksi pemulihan", "status": "belum", "tanggal": "—"},
+    {"nama": "Laporan akhir", "status": "belum", "tanggal": "—", "catatan": "Kerangka v01 sudah disusun (19 Okt 2026)"}
+  ]
+}
