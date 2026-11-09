@@ -16,6 +16,9 @@ OUT.mkdir(exist_ok=True)
 DB = SRC / "03_DATABASE_MANGROVE/05_Basis_Data_Spasial"
 AN = SRC / "04_PENGOLAHAN_ANALISIS"
 GPKG = DB / "MGV-KS_HasilAnalisis_KS_v03.gpkg"
+# Kesesuaian & prioritas v04 (elevasi berdatum pasut/MSL) menggantikan lapisan/tabel v03 di GPKG & TabelLaporan
+KESESUAIAN = AN / "08_Kesesuaian_Pemulihan/MGV-KS_Kesesuaian_KS_v04.xlsx"
+PRIORITAS = AN / "09_Lokasi_Prioritas/MGV-KS_LokasiPrioritas_KS_v04.gpkg"
 S2DIR = DB / "MGV-KS_S2SR_2018-2026"   # raster kelas kerapatan per pulau-tahun (sudah dipotong AOI)
 DIGIT = DB                              # MGV-KS_DigitasiMangrove2025_<KODE>.shp
 KELAS = {1: "jarang", 2: "sedang", 3: "lebat"}
@@ -229,8 +232,9 @@ write_geo(L("transek_garis_pantai"), "transek_garis_pantai",
           keep=["pulau", "id_transek", "n_tahun", "NSM_m", "EPR_m_th", "LRR_m_th", "LRR_R2", "kelas_LRR"])
 gp = L("garis_pantai_tahunan")
 write_geo(gp, "garis_pantai_tahunan", simplify_m=3)
-write_geo(L("lokasi_prioritas"), "lokasi_prioritas", simplify_m=1,
-          keep=["id_lokasi", "pulau", "prioritas", "luas_ha", "skor_rerata", "lintang", "bujur"])
+prio = gpd.read_file(PRIORITAS, layer="lokasi_prioritas")
+write_geo(prio, "lokasi_prioritas", simplify_m=1,
+          keep=["id_lokasi", "pulau", "prioritas", "luas_ha", "skor_rerata", "elevasi_median_m", "lintang", "bujur"])
 kb = L("kontur_batimetri_gabungan")
 kb = kb[(kb.elevasi_m % 1 == 0)]  # kontur tiap 1 m saja untuk web
 write_geo(kb, "kontur_batimetri", simplify_m=4, precision=5)
@@ -284,6 +288,32 @@ def report_table(n):
 
 stats = {}
 stats["tabel"] = {str(n): report_table(n) for n in range(1, 16) if n != 9}  # Tabel 9 = seri Landsat, tidak dipakai
+
+# Tabel 13 & 14 diganti hasil kesesuaian v04 (elevasi terhadap zona pasut, batimetri terkoreksi lapangan)
+lk = pd.read_excel(KESESUAIAN, sheet_name="LUAS_KELAS")
+t13 = stats["tabel"]["13"]
+t13["baris"] = [[PULAU[r.pulau], r.S1, r.S2, r.S3, r.N, r["Mangrove eksisting"], r["Prioritas Tinggi"],
+                 r["Prioritas Sedang"], r["Prioritas Rendah"], r.sumber_elevasi]
+                for _, r in lk.iterrows()]
+t13["baris"] = [[clean(v) for v in b] for b in t13["baris"]]
+t13["catatan"] = ["Sumber: Analisis kesesuaian multikriteria MGV-KS 2026 v04 (grid 10 m; 300 m ke laut, 30 m ke darat)",
+                  "Catatan: S1 sangat sesuai, S2 sesuai, S3 sesuai bersyarat, N tidak sesuai. Elevasi terhadap MSL pasut lokal; "
+                  "S1 = MLW–MHW, S2 = LLWS–MLW atau MHW–HHWS, S3 = (LAT − 0,2)–LLWS atau HHWS–(HAT + 0,2)."]
+t14 = stats["tabel"]["14"]
+pt = prio[prio.prioritas == "Tinggi"].sort_values("id_lokasi")
+t14["baris"] = [[clean(v) for v in [r.id_lokasi, PULAU[r.pulau], r.luas_ha, round(r.skor_rerata, 4), r.x_utm, r.y_utm,
+                                     round(r.lintang, 4), round(r.bujur, 4)]] for _, r in pt.iterrows()]
+t14["catatan"] = ["Sumber: Analisis kesesuaian & prioritas MGV-KS 2026 v04",
+                  "Catatan: Koordinat titik tengah poligon; WGS 1984 UTM Zona 48S dan geografis."]
+bobot = pd.read_excel(KESESUAIAN, sheet_name="BOBOT_AHP")
+zona = pd.read_excel(KESESUAIAN, sheet_name="ZONA_PASUT_ELEVASI")
+stats["kesesuaian"] = {
+    "versi": "v04",
+    "bobot": [{"kode": r.iloc[0], "kriteria": r.kriteria, "bobot": round(float(r.bobot), 3)} for _, r in bobot.iterrows()],
+    "cr": round(float(bobot.CR.iloc[0]), 3),
+    "zona_pasut": [{k: clean(v) for k, v in r.items()} for _, r in
+                   zona[["pulau", "stasiun_pasut", "LAT_m", "LLWS_m", "MLW_m", "MHW_m", "HHWS_m", "HAT_m"]].iterrows()],
+}
 
 # Ringkasan per pulau (lembar RINGKASAN_PULAU, berorientasi baris=indikator)
 ws = openpyxl.load_workbook(AN / "15_Ringkasan_Per_Pulau/MGV-KS_Ringkasan_KS_v03.xlsx", data_only=True)

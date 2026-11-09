@@ -129,7 +129,7 @@
     { id: "prioritas", grp: "Pemulihan", label: "Lokasi prioritas pemulihan", file: "lokasi_prioritas", on: true, sw: "#c0392b",
       style: f => ({ color: PRIOR[f.properties.prioritas], weight: 1, fillColor: PRIOR[f.properties.prioritas], fillOpacity: .55 }),
       popup: p => popupTable(`Lokasi ${p.id_lokasi || ""}`, [["Pulau", PULAU[p.pulau]], ["Prioritas", p.prioritas], ["Luas (ha)", p.luas_ha], ["Skor rerata", p.skor_rerata],
-        ["Lintang", p.lintang, 6], ["Bujur", p.bujur, 6]]),
+        ["Elevasi median (m MSL)", p.elevasi_median_m], ["Lintang", p.lintang, 6], ["Bujur", p.bujur, 6]]),
       legend: () => `<div class="lt">Prioritas pemulihan</div>` + Object.entries(PRIOR).map(([k, c]) => `<div class="row"><span class="sw" style="background:${c}"></span>${k}</div>`).join("") },
   ];
   let s2Year = S.s2sr_tahun[S.s2sr_tahun.length - 1], airMode = "ket";
@@ -305,7 +305,7 @@
     <div class="chartbox" style="height:240px"><canvas id="ch-tren"></canvas></div>
     <h3>Kesesuaian lahan pemulihan (ha)</h3>
     <div class="chartbox"><canvas id="ch-sesuai"></canvas></div>
-    <p class="muted" style="font-size:.8rem">AHP 6 kriteria: elevasi 36,6 %, gelombang Hs 23,1 %, substrat 13,6 %, jarak ke mangrove 13,6 %, LRR 8 %, salinitas 5,2 % (CR = 0,012). Grid 10 m; 300 m ke laut, 30 m ke darat.</p>
+    <p class="muted" style="font-size:.8rem">Kesesuaian ${S.kesesuaian.versi}: elevasi terhadap zona pasut (MSL lokal; S1 = MLW–MHW, S2 = LLWS–MLW / MHW–HHWS), batimetri dikoreksi dengan kedalaman terukur di lapangan. AHP 6 kriteria: ${S.kesesuaian.bobot.map(b => `${esc(({ elevasi: "elevasi", gelombang: "gelombang Hs", substrat: "substrat", jarak_mangrove: "jarak ke mangrove", garis_pantai: "LRR", salinitas: "salinitas" })[b.kode] || b.kriteria)} ${fmt(b.bobot * 100, 1)} %`).join(", ")} (CR = ${fmt(S.kesesuaian.cr, 3)}). Grid 10 m; 300 m ke laut, 30 m ke darat.</p>
     <h3>Perubahan garis pantai 1990–2025</h3>
     <div class="chartbox"><canvas id="ch-lrr"></canvas></div>
     <h3>Stok karbon batas bawah (t C/ha)</h3>
@@ -378,7 +378,7 @@
       <tr><td>Seri waktu mangrove Sentinel-2 super-resolusi 2,5 m (dipotong AOI pulau)</td><td>${S.s2sr_tahun[0]}–${S.s2sr_tahun.at(-1)}</td></tr>
       <tr><td>Survei vegetasi, kualitas air, sumur, foto hemispherical</td><td>Sep–Nov 2026</td></tr>
       <tr><td>Garis pantai (DSAS, koreksi pasut GOT4.10c)</td><td>1990–2025</td></tr>
-      <tr><td>Kesesuaian &amp; prioritas (AHP)</td><td>v03</td></tr>
+      <tr><td>Kesesuaian &amp; prioritas (AHP, elevasi berdatum pasut)</td><td>${S.kesesuaian.versi}</td></tr>
     </table>
     <p class="muted" style="font-size:.85rem">Semua lapisan ditampilkan dalam WGS84; sumber asli dalam UTM 48S (EPSG:32748). Geometri disederhanakan (toleransi 0,5–4 m) untuk tampilan web, sehingga luas di peta bisa sedikit berbeda dari tabel.</p>
     <h3>Unduh data</h3>
