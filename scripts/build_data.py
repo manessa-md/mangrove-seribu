@@ -190,6 +190,14 @@ RENTANG = {"ph": (4, 10), "salinitas_ppt": (0, 45), "do_mg_l": (0, 20), "suhu_c"
 
 def buang_salah(df, nama):
     df = df.copy()
+    # baris yang semua parameternya 0 = tidak diukur (kode isian kosong)
+    par = [c for c in ["salinitas_ppt", "do_mg_l", "tds_ppt", "ec_ms_cm"] if c in df]
+    nol = (df[par].apply(pd.to_numeric, errors="coerce").fillna(-1) == 0).all(axis=1)
+    if nol.any():
+        print(f"  {nama}: {int(nol.sum())} titik tanpa pengukuran (semua 0) dikosongkan")
+        for c in par + ["ph", "suhu_c", "kedalaman_cm"]:
+            if c in df:
+                df.loc[nol, c] = None
     for c, (lo, hi) in RENTANG.items():
         if c in df:
             v = pd.to_numeric(df[c], errors="coerce")
