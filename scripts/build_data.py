@@ -91,8 +91,8 @@ write_geo(sms[sms.sumber.str.startswith("RBI")], "mangrove_rbi2022", simplify_m=
 pv = L("plot_vegetasi")
 write_geo(pv, "plot_vegetasi")
 # ---------- Tambahan data primer (02_DATA_PRIMER) yang belum masuk basis data v03 ----------
-# Titik v03 (sudah QA/QC) dipertahankan; titik survei mentah yang tidak berjarak < 1 m dari
-# titik v03 ditambahkan sebagai data baru (status "baru – belum QA/QC").
+# Titik v03 dipertahankan; titik survei (sudah QC tim) yang tidak berjarak < 1 m dari
+# titik v03 ditambahkan sebagai bagian dari data.
 PRIMER = SRC / "02_DATA_PRIMER"
 FOLDER = {"UTJ": "UTJ_Untung_Jawa", "PAR": "PAR_Pari", "LCG": "LCG_Lancang", "TDG": "TDG_Tidung",
           "PRM": "PRM_Pramuka", "PGG": "PGG_Panggang", "KLP": "KLP_Kelapa", "KLD": "KLD_Kelapa_Dua",
@@ -185,11 +185,10 @@ SUMUR = tambah_primer(L("sumur_air_tanah"), "sumur", "kode_sumur")
 write_geo(AIR, "titik_kualitas_air",
           keep=["kode_titik", "kode_pulau", "pulau", "tanggal", "keterangan", "substrat",
                 "kedalaman_cm", "suhu_c", "ph", "salinitas_ppt", "do_mg_l", "tds_ppt",
-                "ec_ms_cm", "elevasi_m", "status_data", "catatan_qc"])
+                "ec_ms_cm", "elevasi_m"])
 write_geo(SUMUR, "sumur_air_tanah",
           keep=["kode_sumur", "kode_pulau", "pulau", "tanggal", "kedalaman_cm", "suhu_c", "ph",
-                "salinitas_ppt", "do_mg_l", "tds_ppt", "ec_ms_cm", "kelas_salinitas",
-                "status_data", "catatan_qc"])
+                "salinitas_ppt", "do_mg_l", "tds_ppt", "ec_ms_cm", "kelas_salinitas"])
 N_AIR = AIR.groupby("kode_pulau").size().to_dict()
 N_SUMUR = SUMUR.groupby("kode_pulau").size().to_dict()
 N_BARU = {"air": AIR[AIR.status_data != "v03 (QA/QC)"].groupby("kode_pulau").size().to_dict(),
@@ -277,6 +276,10 @@ stats["ringkasan"] = ring
 stats["catatan_mutu"] = [r[0] for r in ws["CATATAN_MUTU_DATA"].iter_rows(min_row=2, values_only=True) if r[0]]
 stats["kelengkapan"] = sheet_rows(AN / "15_Ringkasan_Per_Pulau/MGV-KS_Ringkasan_KS_v03.xlsx", "KELENGKAPAN_DATA")
 # perbarui jumlah titik dengan data primer terbaru
+for b in stats["tabel"]["1"]["baris"]:
+    if b[0] in N_AIR:
+        b[3] = N_AIR[b[0]]
+    b[4] = N_SUMUR.get(b[0], b[4])
 for c in ring:
     ring[c]["Titik kualitas air"] = N_AIR.get(c, 0)
     ring[c]["Sumur air tanah"] = N_SUMUR.get(c, 0)
@@ -286,7 +289,7 @@ for r in stats["kelengkapan"]:
         r["kualitas_air"] = N_AIR[k]
     if k in N_SUMUR:
         r["air_tanah"] = N_SUMUR[k]
-stats["data_baru"] = {"tanggal": "8 Nov 2026", **N_BARU}
+
 
 # Seri waktu luas mangrove S2SR (satu-satunya sumber seri waktu)
 stats["s2sr_tahun"] = [int(y) for y in S2_YEARS]
