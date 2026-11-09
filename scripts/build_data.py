@@ -182,6 +182,29 @@ def tambah_primer(old, jenis, key):
 
 AIR = tambah_primer(L("titik_kualitas_air"), "air", "kode_titik")
 SUMUR = tambah_primer(L("sumur_air_tanah"), "sumur", "kode_sumur")
+
+# Rentang wajar parameter; nilai di luar rentang dianggap salah input dan tidak ditampilkan
+RENTANG = {"ph": (4, 10), "salinitas_ppt": (0, 45), "do_mg_l": (0, 20), "suhu_c": (20, 40),
+           "tds_ppt": (0, 45), "ec_ms_cm": (0, 80)}
+
+
+def buang_salah(df, nama):
+    df = df.copy()
+    for c, (lo, hi) in RENTANG.items():
+        if c in df:
+            v = pd.to_numeric(df[c], errors="coerce")
+            bad = v.notna() & ((v < lo) | (v > hi))
+            for _, r in df[bad].iterrows():
+                print(f"  {nama}: {r.iloc[0]} {c}={r[c]} disembunyikan")
+            df.loc[bad, c] = None
+    if "kelas_salinitas" in df:
+        df["kelas_salinitas"] = pd.to_numeric(df["salinitas_ppt"], errors="coerce").map(
+            lambda x: kelas_sal(x) if pd.notna(x) else None)
+    return df
+
+
+AIR = buang_salah(AIR, "air")
+SUMUR = buang_salah(SUMUR, "sumur")
 write_geo(AIR, "titik_kualitas_air",
           keep=["kode_titik", "kode_pulau", "pulau", "tanggal", "keterangan", "substrat",
                 "kedalaman_cm", "suhu_c", "ph", "salinitas_ppt", "do_mg_l", "tds_ppt",
