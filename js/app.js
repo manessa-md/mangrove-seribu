@@ -50,6 +50,8 @@
   const LRRc = Object.fromEntries(LRR);
   const KONDISI = { "Baik - sangat padat": "#1a9850", "Baik - sedang": "#91cf60", "Rusak - jarang": "#d73027" };
   const SAL_SUMUR = { "Tawar": "#4575b4", "Payau ringan": "#91bfdb", "Payau": "#fc8d59", "Payau tinggi": "#d73027" };
+  const NEW_RING = "#e6007e";
+  const isNew = f => (f.properties.status_data || "").startsWith("baru");
   const KET_AIR = { "Mangrove": "#1a9850", "Non-mangrove": "#f1c40f", "Laut": "#2c7fb8" };
   const yearColor = (y) => { const t = Math.max(0, Math.min(1, (y - 1990) / 35)); return `hsl(${50 - t * 50 + (1 - t) * 160}, 80%, ${55 - t * 10}%)`; };
   const salColor = v => v == null ? "#999" : v < 0.5 ? "#4575b4" : v < 10 ? "#91bfdb" : v < 25 ? "#fee090" : v < 30 ? "#fc8d59" : "#d73027";
@@ -92,20 +94,21 @@
       legend: () => `<div class="lt">Plot vegetasi – kondisi</div>` +
         Object.entries(KONDISI).map(([k, c]) => `<div class="row"><span class="sw c" style="background:${c}"></span>${k}</div>`).join("") },
     { id: "air", grp: "Survei lapangan", label: "Titik kualitas air / groundcheck", file: "titik_kualitas_air", on: false, sw: "#2c7fb8", point: true,
-      style: f => ({ radius: 3.5, color: "#000", weight: .4, fillColor: airMode === "ket" ? (KET_AIR[f.properties.keterangan] || "#999") : salColor(f.properties.salinitas_ppt), fillOpacity: .95 }),
+      style: f => ({ radius: isNew(f) ? 4.5 : 3.5, color: isNew(f) ? NEW_RING : "#000", weight: isNew(f) ? 1.8 : .4, fillColor: airMode === "ket" ? (KET_AIR[f.properties.keterangan] || "#999") : salColor(f.properties.salinitas_ppt), fillOpacity: .95 }),
       popup: p => popupTable(`Titik ${p.kode_titik}`, [["Tanggal", p.tanggal], ["Tutupan", p.keterangan], ["Substrat", p.substrat],
         ["Kedalaman (cm)", p.kedalaman_cm], ["Suhu (°C)", p.suhu_c], ["pH", p.ph], ["Salinitas (ppt)", p.salinitas_ppt], ["DO (mg/L)", p.do_mg_l],
-        ["TDS (ppt)", p.tds_ppt], ["Elevasi (m)", p.elevasi_m]]),
+        ["TDS (ppt)", p.tds_ppt], ["Elevasi (m)", p.elevasi_m], ["Status data", p.status_data], ["Catatan QC", p.catatan_qc]]),
       extra: () => `<select id="air-mode"><option value="ket" ${airMode === "ket" ? "selected" : ""}>Warna: tutupan groundcheck</option><option value="sal" ${airMode === "sal" ? "selected" : ""}>Warna: salinitas</option></select>`,
       legend: () => airMode === "ket"
-        ? `<div class="lt">Groundcheck</div>` + Object.entries(KET_AIR).map(([k, c]) => `<div class="row"><span class="sw c" style="background:${c}"></span>${k}</div>`).join("")
+        ? `<div class="lt">Groundcheck</div>` + Object.entries(KET_AIR).map(([k, c]) => `<div class="row"><span class="sw c" style="background:${c}"></span>${k}</div>`).join("") + `<div class="row"><span class="sw c" style="background:#fff;border:2px solid ${NEW_RING}"></span>data baru 8 Nov (belum QA/QC)</div>`
         : `<div class="lt">Salinitas air (ppt)</div>` + [["< 0,5", 0], ["0,5–10", 5], ["10–25", 15], ["25–30", 27], ["≥ 30", 31]]
-          .map(([k, v]) => `<div class="row"><span class="sw c" style="background:${salColor(v)}"></span>${k}</div>`).join("") },
+          .map(([k, v]) => `<div class="row"><span class="sw c" style="background:${salColor(v)}"></span>${k}</div>`).join("") + `<div class="row"><span class="sw c" style="background:#fff;border:2px solid ${NEW_RING}"></span>data baru 8 Nov (belum QA/QC)</div>` },
     { id: "sumur", grp: "Survei lapangan", label: "Sumur air tanah", file: "sumur_air_tanah", on: false, sw: "#fc8d59", point: true,
-      style: f => ({ radius: 5, color: "#222", weight: 1, fillColor: SAL_SUMUR[f.properties.kelas_salinitas] || "#999", fillOpacity: 1 }),
+      style: f => ({ radius: isNew(f) ? 6 : 5, color: isNew(f) ? NEW_RING : "#222", weight: isNew(f) ? 2 : 1, fillColor: SAL_SUMUR[f.properties.kelas_salinitas] || "#999", fillOpacity: 1 }),
       popup: p => popupTable(`Sumur ${p.kode_sumur}`, [["Tanggal", p.tanggal], ["Salinitas (ppt)", p.salinitas_ppt], ["Kelas", p.kelas_salinitas],
-        ["pH", p.ph], ["TDS (ppt)", p.tds_ppt], ["Suhu (°C)", p.suhu_c], ["Kedalaman (cm)", p.kedalaman_cm]]),
-      legend: () => `<div class="lt">Sumur – salinitas</div>` + Object.entries(SAL_SUMUR).map(([k, c]) => `<div class="row"><span class="sw c" style="background:${c}"></span>${k}</div>`).join("") },
+        ["pH", p.ph], ["DO (mg/L)", p.do_mg_l], ["TDS (ppt)", p.tds_ppt], ["Suhu (°C)", p.suhu_c], ["Kedalaman (cm)", p.kedalaman_cm],
+        ["Status data", p.status_data], ["Catatan QC", p.catatan_qc]]),
+      legend: () => `<div class="lt">Sumur – salinitas</div>` + Object.entries(SAL_SUMUR).map(([k, c]) => `<div class="row"><span class="sw c" style="background:${c}"></span>${k}</div>`).join("") + `<div class="row"><span class="sw c" style="background:#fff;border:2px solid ${NEW_RING}"></span>data baru 8 Nov (belum QA/QC)</div>` },
     { id: "lai", grp: "Survei lapangan", label: "Foto hemispherical (tutupan kanopi)", file: "foto_lai", on: false, sw: "#7fbc41", point: true,
       style: f => { const t = f.properties.tutupan_kanopi_pct; return { radius: 3.5, color: "#000", weight: .4, fillOpacity: 1,
         fillColor: t == null ? "#999" : t >= 75 ? "#1a9850" : t >= 50 ? "#fee08b" : "#d73027" }; },
@@ -213,6 +216,11 @@
       <div class="kpi"><div class="v">${fmt(S.tabel["5"].baris.reduce((a, r) => a + (+r[1] || 0), 0), 0)}</div><div class="l">foto hemispherical</div></div>
       <div class="kpi"><div class="v">${fmt(sum("Responden sosek"), 0)}</div><div class="l">responden sosial-ekonomi</div></div>
     </div>
+    ${S.data_baru ? `<div class="note ok"><b>Data baru ${esc(S.data_baru.tanggal)}:</b> ${[
+        ...Object.entries(S.data_baru.air || {}).map(([k, n]) => `${n} titik kualitas air ${PULAU[k]}`),
+        ...Object.entries(S.data_baru.sumur || {}).map(([k, n]) => `${n} sumur ${PULAU[k]}`)].join(", ")}.
+        Ditandai lingkar magenta di peta; belum melalui QA/QC v03.
+        <br><button class="btn" id="btn-baru" style="margin-top:6px">Lihat di peta</button></div>` : ""}
     <h3>Tahapan</h3>
     <ul class="timeline">${P.tahapan.map(t => `<li class="${t.status}"><span class="dot"></span>
       <div class="nm">${esc(t.nama)}</div><div class="meta">${esc(t.tanggal)} · ${t.status}${t.catatan ? " — " + esc(t.catatan) : ""}</div></li>`).join("")}</ul>
@@ -225,7 +233,10 @@
     <h3>Catatan mutu data</h3>
     ${S.catatan_mutu.map(c => `<div class="note">${esc(c)}</div>`).join("")}
   `;
-  $("#tab-progres").addEventListener("click", e => { const tr = e.target.closest("tr[data-k]"); if (tr) selectIsland(tr.dataset.k); });
+  $("#tab-progres").addEventListener("click", e => {
+    const tr = e.target.closest("tr[data-k]"); if (tr) return selectIsland(tr.dataset.k);
+    if (e.target.id === "btn-baru") { airMode = "ket"; Promise.all([ensureOn("air"), ensureOn("sumur")]).then(() => map.flyTo([-5.75, 106.6], 11)); }
+  });
 
   /* ---------------- Per pulau ---------------- */
   let current = null;

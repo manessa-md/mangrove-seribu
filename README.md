@@ -24,8 +24,9 @@ Lapisan peta: daratan 2025, kontur topo-batimetri, mangrove eksisting (digitasi 
    python scripts/build_data.py "D:/06_Work/12_SUDIN/Mangrove"
    ```
    Skrip membaca `MGV-KS_HasilAnalisis_KS_v03.gpkg`, raster kelas `MGV-KS_S2SR_2018-2026/<KODE>/*_Kerapatan.tif`, `MGV-KS_DigitasiMangrove2025_*.shp` dan tabel `*_v03.xlsx`, lalu menulis ulang `data/*.geojson` dan `data/statistik.json`. Jika versi naik (v04), ganti nama berkas di bagian atas skrip.
-3. Untuk panel tahapan, edit langsung `data/progres.json` (status: `selesai` / `berjalan` / `belum`).
-4. Commit & push — GitHub Pages memperbarui situs dalam 1–2 menit.
+3. Data primer baru yang belum masuk basis data v03 (titik kualitas air, sumur) dibaca dari `02_DATA_PRIMER/<PULAU>/` sesuai daftar `PRIMER_BARU` di awal skrip. Titik v03 dipertahankan; titik baru ditambahkan dan ditandai "baru – belum QA/QC". Kosongkan daftar ini setelah basis data v04 terbit.
+4. Untuk panel tahapan, edit langsung `data/progres.json` (status: `selesai` / `berjalan` / `belum`).
+5. Commit & push — GitHub Pages memperbarui situs dalam 1–2 menit.
 
 ## Teknis
 

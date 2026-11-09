@@ -90,13 +90,110 @@ write_geo(sms[sms.sumber.str.startswith("RBI")], "mangrove_rbi2022", simplify_m=
 
 pv = L("plot_vegetasi")
 write_geo(pv, "plot_vegetasi")
-write_geo(L("titik_kualitas_air"), "titik_kualitas_air",
+# ---------- Tambahan data primer (02_DATA_PRIMER) yang belum masuk basis data v03 ----------
+# Titik v03 (sudah QA/QC) dipertahankan; titik survei mentah yang tidak berjarak < 1 m dari
+# titik v03 ditambahkan sebagai data baru (status "baru – belum QA/QC").
+PRIMER = SRC / "02_DATA_PRIMER"
+FOLDER = {"UTJ": "UTJ_Untung_Jawa", "PAR": "PAR_Pari", "LCG": "LCG_Lancang", "TDG": "TDG_Tidung",
+          "PRM": "PRM_Pramuka", "PGG": "PGG_Panggang", "KLP": "KLP_Kelapa", "KLD": "KLD_Kelapa_Dua",
+          "HRP": "HRP_Harapan", "SBR": "SBR_Sebira"}
+PRIMER_BARU = {  # pulau yang punya pembaruan data primer setelah v03 (8 Nov 2026)
+    "air": ["PAR", "KLD"],
+    "sumur": ["PAR", "HRP", "KLP"],
+}
+
+
+def num(v):
+    if v is None:
+        return None
+    try:
+        x = float(str(v).replace(",", ".").strip())
+        return None if math.isnan(x) else x
+    except ValueError:
+        return None
+
+
+def tgl(v):
+    s = str(v or "").replace("DATE:", "").strip()
+    for fmt in ("%m-%d-%Y", "%Y-%m-%d"):
+        try:
+            return datetime.datetime.strptime(s[:10], fmt).strftime("%Y-%m-%d")
+        except ValueError:
+            pass
+    return None
+
+
+def kelas_sal(s):
+    if s is None:
+        return None
+    return "Tawar" if s < 0.5 else "Payau ringan" if s < 5 else "Payau" if s < 18 else "Payau tinggi"
+
+
+def qc_flag(r):
+    f = []
+    if r.get("do_mg_l") is not None and not (0 < r["do_mg_l"] <= 20):
+        f.append("DO di luar 0–20 mg/L")
+    if r.get("ph") is not None and not (5 <= r["ph"] <= 10):
+        f.append("pH di luar 5–10")
+    if r.get("salinitas_ppt") is not None and not (0 <= r["salinitas_ppt"] <= 45):
+        f.append("salinitas di luar 0–45 ppt")
+    return "; ".join(f) or None
+
+
+def tambah_primer(old, jenis, key):
+    """Gabungkan titik v03 dengan titik baru dari shapefile survei mentah."""
+    old = old.copy()
+    old["status_data"] = "v03 (QA/QC)"
+    baru = []
+    for k in PRIMER_BARU[jenis]:
+        sub = "06_Sampel_Substrat_WaterQuality/MGV-KS_Survei_{k}_Substrat_WaterQuality.shp" if jenis == "air" \
+            else "07_GroundWaterQuality/MGV-KS_Survei_{k}_AirTanah.shp"
+        f = PRIMER / FOLDER[k] / sub.format(k=k)
+        if not f.exists():
+            print("  (lewati, tidak ada)", f.name)
+            continue
+        r = gpd.read_file(f).to_crs(old.crs)
+        ref = old[old.kode_pulau == k]
+        if len(ref):
+            d = r.geometry.apply(lambda p: ref.distance(p).min())
+            r = r[d >= 1.0]
+        for _, x in r.iterrows():
+            g = lambda *names: next((x[n] for n in names if n in x and x[n] is not None), None)
+            rec = {key: str(x["ID_Titik"]), "kode_pulau": k, "pulau": k, "tanggal": tgl(g("Tanggal")),
+                   "kedalaman_cm": num(g("Kedalaman", "Kedalaman_")),
+                   "suhu_c": num(g("Temp_", "Suhu_C")), "ph": num(g("pH")),
+                   "salinitas_ppt": num(g("Sal", "Salinitas_")), "do_mg_l": num(g("DO_", "DO_mg_l")),
+                   "tds_ppt": num(g("TDS", "TDS_ppt")), "ec_ms_cm": num(g("EC", "EC_mS_cm")),
+                   "status_data": "baru – belum QA/QC", "geometry": x.geometry}
+            if jenis == "air":
+                ket = str(g("Ket") or "").strip()
+                rec["keterangan"] = {"non mangrove": "Non-mangrove", "non-mangrove": "Non-mangrove",
+                                     "mangrove": "Mangrove", "laut": "Laut"}.get(ket.lower(), ket or None)
+                rec["substrat"] = (g("Substrat") or "").lower() or None
+            else:
+                rec["kelas_salinitas"] = kelas_sal(rec["salinitas_ppt"])
+            rec["catatan_qc"] = qc_flag(rec)
+            baru.append(rec)
+        print(f"  {jenis} {k}: +{len(r)} titik baru (v03: {len(ref)})")
+    if baru:
+        old = pd.concat([old, gpd.GeoDataFrame(baru, crs=old.crs)], ignore_index=True)
+    return gpd.GeoDataFrame(old, crs=old.crs)
+
+
+AIR = tambah_primer(L("titik_kualitas_air"), "air", "kode_titik")
+SUMUR = tambah_primer(L("sumur_air_tanah"), "sumur", "kode_sumur")
+write_geo(AIR, "titik_kualitas_air",
           keep=["kode_titik", "kode_pulau", "pulau", "tanggal", "keterangan", "substrat",
                 "kedalaman_cm", "suhu_c", "ph", "salinitas_ppt", "do_mg_l", "tds_ppt",
-                "ec_ms_cm", "elevasi_m"])
-write_geo(L("sumur_air_tanah"), "sumur_air_tanah",
+                "ec_ms_cm", "elevasi_m", "status_data", "catatan_qc"])
+write_geo(SUMUR, "sumur_air_tanah",
           keep=["kode_sumur", "kode_pulau", "pulau", "tanggal", "kedalaman_cm", "suhu_c", "ph",
-                "salinitas_ppt", "do_mg_l", "tds_ppt", "ec_ms_cm", "kelas_salinitas"])
+                "salinitas_ppt", "do_mg_l", "tds_ppt", "ec_ms_cm", "kelas_salinitas",
+                "status_data", "catatan_qc"])
+N_AIR = AIR.groupby("kode_pulau").size().to_dict()
+N_SUMUR = SUMUR.groupby("kode_pulau").size().to_dict()
+N_BARU = {"air": AIR[AIR.status_data != "v03 (QA/QC)"].groupby("kode_pulau").size().to_dict(),
+          "sumur": SUMUR[SUMUR.status_data != "v03 (QA/QC)"].groupby("kode_pulau").size().to_dict()}
 write_geo(L("foto_hemispherical_lai"), "foto_lai",
           keep=["pulau", "id_titik", "Tanggal", "ID_Transek", "Spesies", "LAI_Ring4",
                 "Canopy_Openness_pct", "tutupan_kanopi_pct", "kode_plot"])
@@ -179,6 +276,17 @@ for c in ring:
 stats["ringkasan"] = ring
 stats["catatan_mutu"] = [r[0] for r in ws["CATATAN_MUTU_DATA"].iter_rows(min_row=2, values_only=True) if r[0]]
 stats["kelengkapan"] = sheet_rows(AN / "15_Ringkasan_Per_Pulau/MGV-KS_Ringkasan_KS_v03.xlsx", "KELENGKAPAN_DATA")
+# perbarui jumlah titik dengan data primer terbaru
+for c in ring:
+    ring[c]["Titik kualitas air"] = N_AIR.get(c, 0)
+    ring[c]["Sumur air tanah"] = N_SUMUR.get(c, 0)
+for r in stats["kelengkapan"]:
+    k = r.get(None) or r.get("null") or next(iter(r.values()))
+    if k in N_AIR:
+        r["kualitas_air"] = N_AIR[k]
+    if k in N_SUMUR:
+        r["air_tanah"] = N_SUMUR[k]
+stats["data_baru"] = {"tanggal": "8 Nov 2026", **N_BARU}
 
 # Seri waktu luas mangrove S2SR (satu-satunya sumber seri waktu)
 stats["s2sr_tahun"] = [int(y) for y in S2_YEARS]
