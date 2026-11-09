@@ -1,0 +1,5 @@
+{
+  "_petunjuk": "Pulau yang data survei kualitas air (air) / sumur (sumur) di 02_DATA_PRIMER lebih baru dari basis data v03. Titik v03 dipertahankan; titik survei yang > 1 m dari titik v03 ditambahkan.",
+  "air": ["PAR", "KLD"],
+  "sumur": ["PAR", "HRP", "KLP"]
+}

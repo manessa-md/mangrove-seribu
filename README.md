@@ -31,3 +31,7 @@ Lapisan peta: daratan 2025, kontur topo-batimetri, mangrove eksisting (digitasi 
 ## Teknis
 
 HTML + [Leaflet 1.9.4](https://leafletjs.com) + [Chart.js 4.4.1](https://www.chartjs.org), tanpa build. Data asli UTM 48S (EPSG:32748) dikonversi ke WGS84 dan disederhanakan 0,5–4 m.
+
+## Pembaruan otomatis
+
+Tugas terjadwal Claude mengecek folder Mangrove setiap sore. `scripts/cek_sumber.py` membandingkan waktu ubah berkas sumber dengan `data/_manifest_sumber.json`; bila ada yang berubah, berkas yang diperlukan diambil, `build_data.py` dijalankan, lalu hasilnya di-commit & push ke GitHub. Pulau dengan data survei kualitas air/sumur yang lebih baru dari basis data diatur di `scripts/primer_baru.json`. Nilai di luar rentang wajar (`RENTANG` di `build_data.py`) otomatis tidak ditampilkan.

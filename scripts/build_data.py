@@ -97,10 +97,8 @@ PRIMER = SRC / "02_DATA_PRIMER"
 FOLDER = {"UTJ": "UTJ_Untung_Jawa", "PAR": "PAR_Pari", "LCG": "LCG_Lancang", "TDG": "TDG_Tidung",
           "PRM": "PRM_Pramuka", "PGG": "PGG_Panggang", "KLP": "KLP_Kelapa", "KLD": "KLD_Kelapa_Dua",
           "HRP": "HRP_Harapan", "SBR": "SBR_Sebira"}
-PRIMER_BARU = {  # pulau yang punya pembaruan data primer setelah v03 (8 Nov 2026)
-    "air": ["PAR", "KLD"],
-    "sumur": ["PAR", "HRP", "KLP"],
-}
+# pulau yang punya pembaruan data primer setelah v03 — diatur di scripts/primer_baru.json
+PRIMER_BARU = json.loads((Path(__file__).resolve().parent / "primer_baru.json").read_text(encoding="utf-8"))
 
 
 def num(v):
