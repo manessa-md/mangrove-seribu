@@ -41,7 +41,9 @@ PANTAU = (
        AN + "16_Bahan_Laporan/MGV-KS_TabelLaporan_KS_v*.xlsx",
        AN + "13_Oseanografi_Fisik/MGV-KS_KriteriaFisik_KS_v*.xlsx",
        AN + "08_Kesesuaian_Pemulihan/MGV-KS_Kesesuaian_KS_v*.xlsx",
-       AN + "09_Lokasi_Prioritas/MGV-KS_LokasiPrioritas_KS_v*.gpkg"]
+       AN + "09_Lokasi_Prioritas/MGV-KS_LokasiPrioritas_KS_v*.gpkg",
+       AN + "13_Oseanografi_Fisik/MGV-KS_Gelombang4Musim_v*/MGV-KS_Gelombang4Musim_KS_v*.xlsx"]
+    + [DB + "MGV-KS_Batimetri_*_v01.tif"]
     + [f"02_DATA_PRIMER/*/06_Sampel_Substrat_WaterQuality/MGV-KS_Survei_*_Substrat_WaterQuality.{e}" for e in SHP]
     + [f"02_DATA_PRIMER/*/07_GroundWaterQuality/MGV-KS_Survei_*_AirTanah.{e}" for e in SHP]
 )
@@ -66,7 +68,7 @@ def dipantau(rel):
 
 def versi_dipakai():
     s = (ROOT / "scripts" / "build_data.py").read_text(encoding="utf-8")
-    return {m.group(1): int(m.group(2)) for m in re.finditer(r'(MGV-KS_[A-Za-z]+_KS)_v(\d+)\.(?:gpkg|xlsx)"', s)}
+    return {m.group(1): int(m.group(2)) for m in re.finditer(r'(MGV-KS_[A-Za-z0-9]+_KS)_v(\d+)\.(?:gpkg|xlsx)"', s)}
 
 
 def primer_baru():
@@ -83,7 +85,7 @@ def daftar_stage(files, pulau_tambahan=()):
     for rel in files:
         if not dipantau(rel):
             continue
-        m = re.search(r"(MGV-KS_[A-Za-z]+_KS)_v(\d+)\.", rel)
+        m = re.search(r"(MGV-KS_[A-Za-z0-9]+_KS)_v(\d+)\.", rel)
         if m and m.group(1) in vers and int(m.group(2)) != vers[m.group(1)]:
             continue  # hanya versi yang dipakai skrip
         if rel.startswith("02_DATA_PRIMER/"):
@@ -102,7 +104,7 @@ def cek(listing):
     berubah = sorted(r for r, t in files.items() if lama.get(r) != t)
     vers = versi_dipakai()
     versi_baru = sorted({r for r in files
-                         for m in [re.search(r"(MGV-KS_[A-Za-z]+_KS)_v(\d+)\.", r)]
+                         for m in [re.search(r"(MGV-KS_[A-Za-z0-9]+_KS)_v(\d+)\.", r)]
                          if m and m.group(1) in vers and int(m.group(2)) > vers[m.group(1)]})
     pulau = sorted({re.search(r"MGV-KS_Survei_([A-Z]{3})_", r).group(1)
                     for r in berubah if r.startswith("02_DATA_PRIMER/")})

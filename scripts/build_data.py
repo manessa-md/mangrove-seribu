@@ -237,6 +237,48 @@ write_geo(prio, "lokasi_prioritas", simplify_m=1,
           keep=["id_lokasi", "pulau", "prioritas", "luas_ha", "skor_rerata", "elevasi_median_m", "lintang", "bujur"])
 kb = L("kontur_batimetri_gabungan")
 kb = kb[(kb.elevasi_m % 1 == 0)]  # kontur tiap 1 m saja untuk web
+
+
+def kontur_batimetri_v01(kode):
+    """Kontur 1 m dari MGV-KS_Batimetri_<KODE>_v01.tif (elevasi re MSL, 2,5 m).
+    Hanya sel bersumber SDB (band 2 = 1); sel proksi ICESat-2/GEBCO tidak dikonturkan."""
+    import rasterio, contourpy, numpy as np
+    from shapely.geometry import LineString
+    f = DB / f"MGV-KS_Batimetri_{kode}_v01.tif"
+    if not f.exists():
+        return None
+    with rasterio.open(f) as r:
+        e, src, T, crs = r.read(1), r.read(2), r.transform, r.crs
+    e = np.where(src == 1, e, np.nan)
+    # rerata blok 4x4 (10 m) agar kontur tidak bergerigi
+    import warnings
+    B = 4
+    h, w = (e.shape[0] // B) * B, (e.shape[1] // B) * B
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        e5 = np.nanmean(e[:h, :w].reshape(h // B, B, w // B, B), axis=(1, 3))
+    cg = contourpy.contour_generator(z=np.ma.masked_invalid(e5), line_type="SeparateCode")
+    rows = []
+    for lv in range(-10, 0):
+        for seg in cg.lines(lv)[0]:
+            if len(seg) < 4:
+                continue
+            xs = T.c + (seg[:, 0] * B + B / 2) * T.a
+            ys = T.f + (seg[:, 1] * B + B / 2) * T.e
+            rows.append({"pulau": kode, "elevasi_m": float(lv), "interval_sumber": "batimetri SDB v01 (MSL) 2,5 m",
+                         "geometry": LineString(np.c_[xs, ys])})
+    return gpd.GeoDataFrame(rows, crs=crs).to_crs(kb.crs) if rows else None
+
+
+BATI_V01 = []
+for k_ in ("PAR", "PGG", "KLP"):
+    if k_ not in set(kb.pulau):
+        g_ = kontur_batimetri_v01(k_)
+        if g_ is not None:
+            g_ = g_[g_.length >= 100]  # buang potongan kontur < 100 m
+            kb = pd.concat([kb, g_], ignore_index=True)
+            BATI_V01.append(k_)
+            print(f"  kontur batimetri v01 {k_}: {len(g_)} garis")
 write_geo(kb, "kontur_batimetri", simplify_m=4, precision=5)
 
 # Sebaran mangrove Sentinel-2 super-resolusi 2,5 m per tahun, langsung dari raster kelas
@@ -369,7 +411,45 @@ stats["s2sr_total"] = [{"tahun": int(y), "luas_ha": round(g.total.sum(), 3), "n_
                         "jarang": round(g.jarang.sum(), 3), "sedang": round(g.sedang.sum(), 3), "lebat": round(g.lebat.sum(), 3)}
                        for y, g in s2df.groupby("tahun")]
 stats["luas_digitasi_2025"] = LUAS_DIGIT
-stats["gelombang"] = sheet_rows(AN / "13_Oseanografi_Fisik/MGV-KS_KriteriaFisik_KS_v03.xlsx", "GELOMBANG")
+# Angin & gelombang 4 musim (model fetch-terbatas, 10 pulau) — menggantikan GELOMBANG KriteriaFisik v03 (6 pulau)
+GEL4 = AN / "13_Oseanografi_Fisik/MGV-KS_Gelombang4Musim_v03/MGV-KS_Gelombang4Musim_KS_v03.xlsx"
+g4 = pd.read_excel(GEL4, sheet_name="RINGKASAN")
+g4 = g4[g4.pasut == "MSL"]
+MUSIM = ["DJF", "MAM", "JJA", "SON"]
+g4["urut"] = g4.musim.map({m: i for i, m in enumerate(MUSIM)})
+g4["urut_p"] = g4.kode.map({k: i for i, k in enumerate(PULAU)})
+g4 = g4.sort_values(["urut_p", "urut"])
+rnd = lambda v, n=2: None if pd.isna(v) else round(float(v), n)
+stats["gelombang"] = [{"pulau": r.kode, "musim": r.musim, "U10_ms": rnd(r.U10_ms), "arah_angin_dari": rnd(r.arah_angin_dari, 0),
+                       "Hs_p90_pesisir": rnd(r.pesisir_Hs_p90), "Hs_p90_depan_mangrove": rnd(r.depanMGV_Hs_p90),
+                       "arah_gelombang_dari": rnd(r.pesisir_Dir_from, 0), "Tp_med_s": rnd(r.pesisir_Tp_med)}
+                      for r in g4.itertuples()]
+stats["tabel"]["16"] = {
+    "judul": "Tabel 16. Angin dan gelombang per musim (muka air MSL)",
+    "kolom": ["Kode", "Pulau", "Musim", "U10 (m/s)", "Arah angin dari (°)", "Hs P90 pesisir (m)",
+              "Hs P90 depan mangrove (m)", "Tp median (s)", "Arah gelombang dari (°)"],
+    "baris": [[r.kode, PULAU[r.kode], r.nama_musim, rnd(r.U10_ms, 1), rnd(r.arah_angin_dari, 0), rnd(r.pesisir_Hs_p90),
+               rnd(r.depanMGV_Hs_p90), rnd(r.pesisir_Tp_med, 1), rnd(r.pesisir_Dir_from, 0)] for r in g4.itertuples()],
+    "catatan": ["Sumber: Model gelombang 4 musim MGV-KS 2026 v03 (angin Sentinel-1 + ERA5; batimetri per pulau + GEBCO).",
+                "Hs P90 = persentil 90 tinggi gelombang signifikan; pesisir = sel perairan dekat pantai, depan mangrove = sel di depan tegakan mangrove."],
+}
+HS90 = g4.groupby("kode").pesisir_Hs_p90.max().round(2).to_dict()
+for c in ring:  # ganti Hs P90 lama (KriteriaFisik v03, 6 pulau) dengan model 4 musim
+    ring[c].pop("Hs P90 (m)", None)
+    ring[c]["Hs P90 musim tertinggi (m)"] = HS90.get(c)
+ADA = set(g4.kode)
+i_g, i_b = stats["tabel"]["1"]["kolom"].index("Gelombang"), stats["tabel"]["1"]["kolom"].index("Batimetri")
+for b in stats["tabel"]["1"]["baris"]:
+    if b[0] in ADA:
+        b[i_g] = "Ada"
+    if b[0] in BATI_V01:
+        b[i_b] = "Ada"
+for r in stats["kelengkapan"]:
+    k = r.get(None) or r.get("null") or next(iter(r.values()))
+    if k in ADA:
+        r["gelombang"] = 1
+    if k in BATI_V01:
+        r["batimetri"] = 1
 stats["pulau"] = PULAU
 
 # Titik pusat pulau dari daratan
