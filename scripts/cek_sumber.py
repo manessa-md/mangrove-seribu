@@ -46,6 +46,7 @@ PANTAU = (
     + [DB + "MGV-KS_Batimetri_*_v01.tif"]
     + [f"02_DATA_PRIMER/*/06_Sampel_Substrat_WaterQuality/MGV-KS_Survei_*_Substrat_WaterQuality.{e}" for e in SHP]
     + [f"02_DATA_PRIMER/*/07_GroundWaterQuality/MGV-KS_Survei_*_AirTanah.{e}" for e in SHP]
+    + [f"02_DATA_PRIMER/*/05_Groundcheck/MGV-KS_Survei_*_Groundcheck.{e}" for e in SHP]
 )
 
 
@@ -81,6 +82,7 @@ def daftar_stage(files, pulau_tambahan=()):
     pb = primer_baru()
     pulau_air = set(pb["air"]) | set(pulau_tambahan)
     pulau_sumur = set(pb["sumur"]) | set(pulau_tambahan)
+    pulau_veg = set(pb.get("veg", [])) | set(pulau_tambahan)
     st = []
     for rel in files:
         if not dipantau(rel):
@@ -93,6 +95,8 @@ def daftar_stage(files, pulau_tambahan=()):
             if "_AirTanah." in rel and k not in pulau_sumur:
                 continue
             if "_Substrat_WaterQuality." in rel and k not in pulau_air:
+                continue
+            if "_Groundcheck." in rel and k not in pulau_veg:
                 continue
         st.append(rel)
     return sorted(st)

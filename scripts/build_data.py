@@ -206,6 +206,16 @@ def buang_salah(df, nama):
             for _, r in df[bad].iterrows():
                 print(f"  {nama}: {r.iloc[0]} {c}={r[c]} disembunyikan")
             df.loc[bad, c] = None
+    # konsistensi silang dengan TDS untuk air permukaan (EC ≈ 2 × TDS, salinitas ≈ 1,2 × TDS):
+    # nilai yang jauh di bawahnya salah input. Tidak untuk sumur (satuan TDS sumur tidak seragam).
+    if nama == "air" and {"tds_ppt", "ec_ms_cm", "salinitas_ppt"} <= set(df.columns):
+        tds = pd.to_numeric(df.tds_ppt, errors="coerce")
+        for c, fak in [("ec_ms_cm", 1.0), ("salinitas_ppt", 0.5)]:
+            v = pd.to_numeric(df[c], errors="coerce")
+            bad = (tds > 5) & v.notna() & (v < fak * tds)
+            for _, r in df[bad].iterrows():
+                print(f"  {nama}: {r.iloc[0]} {c}={r[c]} disembunyikan (tidak sesuai TDS {r.tds_ppt})")
+            df.loc[bad, c] = None
     if "kelas_salinitas" in df:
         df["kelas_salinitas"] = pd.to_numeric(df["salinitas_ppt"], errors="coerce").map(
             lambda x: kelas_sal(x) if pd.notna(x) else None)
@@ -225,7 +235,35 @@ N_AIR = AIR.groupby("kode_pulau").size().to_dict()
 N_SUMUR = SUMUR.groupby("kode_pulau").size().to_dict()
 N_BARU = {"air": AIR[AIR.status_data != "v03 (QA/QC)"].groupby("kode_pulau").size().to_dict(),
           "sumur": SUMUR[SUMUR.status_data != "v03 (QA/QC)"].groupby("kode_pulau").size().to_dict()}
-write_geo(L("foto_hemispherical_lai"), "foto_lai",
+
+
+def tambah_groundcheck(lai):
+    """Groundcheck vegetasi (05_Groundcheck) untuk pulau di primer_baru.json["veg"] yang belum ada di v03.
+    Tiap titik = satu foto hemispherical; LAI 0 dengan keterbukaan 0 = foto belum diolah (dikosongkan)."""
+    baru, plot = [], {}
+    for k in PRIMER_BARU.get("veg", []):
+        f = PRIMER / FOLDER[k] / f"05_Groundcheck/MGV-KS_Survei_{k}_Groundcheck.shp"
+        if not f.exists() or (lai.pulau == k).any():
+            continue
+        g = gpd.read_file(f).to_crs(lai.crs)
+        plot[k] = g.groupby(["ID_Transek", "Jarak_Tran"]).ngroups
+        for _, x in g.iterrows():
+            l4, op = num(x.get("LAI_Ring4")), num(x.get("Canopy_Ope"))
+            olah = not ((l4 or 0) == 0 and (op or 0) == 0)
+            sp = str(x.get("Spesies") or "").strip()
+            baru.append({"pulau": k, "id_titik": str(x["ID_Titik"]), "Tanggal": tgl(x.get("Tanggal")),
+                         "ID_Transek": num(x.get("ID_Transek")), "Spesies": sp.capitalize() if len(sp) > 2 else None,
+                         "LAI_Ring4": l4 if olah else None, "Canopy_Openness_pct": op if olah else None,
+                         "tutupan_kanopi_pct": round(100 - op, 2) if olah and op is not None else None,
+                         "kode_plot": f"{k}-T{int(num(x.get('ID_Transek')) or 0):02d}", "geometry": x.geometry})
+        print(f"  groundcheck {k}: {len(g)} titik, {plot[k]} plot, {sum(b['LAI_Ring4'] is not None for b in baru if b['pulau'] == k)} foto terolah")
+    if baru:
+        lai = pd.concat([lai, gpd.GeoDataFrame(baru, crs=lai.crs)], ignore_index=True)
+    return gpd.GeoDataFrame(lai, crs=lai.crs), plot
+
+
+LAI, PLOT_GC = tambah_groundcheck(L("foto_hemispherical_lai"))
+write_geo(LAI, "foto_lai",
           keep=["pulau", "id_titik", "Tanggal", "ID_Transek", "Spesies", "LAI_Ring4",
                 "Canopy_Openness_pct", "tutupan_kanopi_pct", "kode_plot"])
 write_geo(L("transek_garis_pantai"), "transek_garis_pantai",
@@ -450,6 +488,28 @@ for r in stats["kelengkapan"]:
         r["gelombang"] = 1
     if k in BATI_V01:
         r["batimetri"] = 1
+# Groundcheck vegetasi baru (belum di basis data v03): jumlah plot, LAI & tutupan dari foto terolah
+i_p = stats["tabel"]["1"]["kolom"].index("Plot vegetasi")
+t5 = stats["tabel"]["5"]
+for k, n in PLOT_GC.items():
+    f = LAI[(LAI.pulau == k) & LAI.LAI_Ring4.notna()]
+    for b in stats["tabel"]["1"]["baris"]:
+        if b[0] == k:
+            b[i_p] = n
+    for r in stats["kelengkapan"]:
+        if (r.get(None) or r.get("null") or next(iter(r.values()))) == k:
+            r["plot_vegetasi"] = n
+    if k in ring:
+        ring[k]["Plot vegetasi"] = n
+    if len(f):
+        tut = f.tutupan_kanopi_pct
+        kls = "Baik - sangat padat" if tut.mean() >= 75 else "Baik - sedang" if tut.mean() >= 50 else "Rusak - jarang"
+        if k in ring:
+            ring[k]["LAI rerata"] = round(f.LAI_Ring4.mean(), 2)
+            ring[k]["Tutupan kanopi rerata (%)"] = round(tut.mean(), 2)
+        t5["baris"] = [b for b in t5["baris"] if b[0] != PULAU[k]] + [
+            [PULAU[k], len(f), int(f.kode_plot.nunique()), round(f.LAI_Ring4.mean(), 2), round(tut.mean(), 2),
+             f"{tut.min():.0f}–{tut.max():.0f}", kls, None]]
 # Kesesuaian v04 (LUAS_KELAS) menentukan pulau yang sudah dianalisis — ganti status v03 di Ringkasan
 SES = {r.pulau: r for _, r in lk.iterrows()}
 N_TINGGI = pt.groupby("pulau").size().to_dict()
