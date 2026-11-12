@@ -1,6 +1,6 @@
 {
   "_petunjuk": "Ubah berkas ini untuk memperbarui panel Progres. status: selesai | berjalan | belum",
-  "diperbarui": "2026-11-11",
+  "diperbarui": "2026-11-12",
   "tahapan": [
     {"nama": "Persiapan & desain sampling", "status": "selesai", "tanggal": "Sep 2026"},
     {"nama": "Laporan pendahuluan", "status": "selesai", "tanggal": "5 Okt 2026"},
