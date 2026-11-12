@@ -450,6 +450,28 @@ for r in stats["kelengkapan"]:
         r["gelombang"] = 1
     if k in BATI_V01:
         r["batimetri"] = 1
+# Kesesuaian v04 (LUAS_KELAS) menentukan pulau yang sudah dianalisis — ganti status v03 di Ringkasan
+SES = {r.pulau: r for _, r in lk.iterrows()}
+N_TINGGI = pt.groupby("pulau").size().to_dict()
+for r in stats["kelengkapan"]:
+    k = r.get(None) or r.get("null") or next(iter(r.values()))
+    if k in SES:
+        r["lengkap"] = True
+        r["dianalisis"] = True
+        r["elevasi"] = 1
+i_a = stats["tabel"]["1"]["kolom"].index("Analisis spasial")
+for b in stats["tabel"]["1"]["baris"]:
+    if b[0] in SES:
+        b[i_a] = "Ya"
+for c in ring:
+    if c in SES:
+        s = SES[c]
+        for kol, src in [("S1 (ha)", "S1"), ("S2 (ha)", "S2"), ("S3 (ha)", "S3"), ("N (ha)", "N"),
+                         ("Prioritas Tinggi (ha)", "Prioritas Tinggi"), ("Prioritas Sedang (ha)", "Prioritas Sedang"),
+                         ("Prioritas Rendah (ha)", "Prioritas Rendah")]:
+            ring[c][kol] = clean(s[src])
+        ring[c]["Elevasi dari"] = clean(s.sumber_elevasi)
+        ring[c]["Jumlah lokasi prioritas tinggi"] = int(N_TINGGI.get(c, 0))
 stats["pulau"] = PULAU
 
 # Titik pusat pulau dari daratan
