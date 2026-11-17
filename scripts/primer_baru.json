@@ -4,13 +4,25 @@
     "PAR",
     "KLD",
     "SBR",
-    "UTJ"
+    "UTJ",
+    "HRP",
+    "KLP",
+    "LCG",
+    "PGG",
+    "PRM",
+    "TDG"
   ],
   "sumur": [
     "PAR",
     "HRP",
     "KLP",
-    "SBR"
+    "SBR",
+    "KLD",
+    "LCG",
+    "PGG",
+    "PRM",
+    "TDG",
+    "UTJ"
   ],
   "veg": [
     "SBR"

@@ -158,13 +158,16 @@ def tambah_primer(old, jenis, key):
         if len(ref):
             d = r.geometry.apply(lambda p: ref.distance(p).min())
             r = r[d >= 1.0]
+        kol = {c.lower(): c for c in r.columns}  # nama kolom tidak peka huruf besar/kecil
         for _, x in r.iterrows():
-            g = lambda *names: next((x[n] for n in names if n in x and x[n] is not None), None)
-            rec = {key: str(x["ID_Titik"]), "kode_pulau": k, "pulau": k, "tanggal": tgl(g("Tanggal")),
+            g = lambda *names: next((x[kol[n.lower()]] for n in names
+                                     if n.lower() in kol and x[kol[n.lower()]] is not None), None)
+            rec = {key: str(g("ID_Titik", "ID_Sumur")), "kode_pulau": k, "pulau": k, "tanggal": tgl(g("Tanggal")),
                    "kedalaman_cm": num(g("Kedalaman", "Kedalaman_")),
-                   "suhu_c": num(g("Temp_", "Suhu_C")), "ph": num(g("pH")),
-                   "salinitas_ppt": num(g("Sal", "Salinitas_")), "do_mg_l": num(g("DO_", "DO_mg_l")),
-                   "tds_ppt": num(g("TDS", "TDS_ppt")), "ec_ms_cm": num(g("EC", "EC_mS_cm")),
+                   "suhu_c": num(g("Temp_", "Temp", "Suhu_C")), "ph": num(g("pH")),
+                   "salinitas_ppt": num(g("Sal", "Salinitas_", "Salin_ppt")),
+                   "do_mg_l": num(g("DO_", "DO", "DO_mg_l", "DO_mg")),
+                   "tds_ppt": num(g("TDS", "TDS_ppt")), "ec_ms_cm": num(g("EC", "EC_mS_cm", "EC_mS")),
                    "status_data": "baru – belum QA/QC", "geometry": x.geometry}
             if jenis == "air":
                 ket = str(g("Ket") or "").strip()
