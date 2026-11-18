@@ -41,15 +41,15 @@
   },
   "LCG": {
    "kesesuaian_ha": {
-    "S1": 8.85,
-    "S2": 5.15,
-    "S3": 0.3,
-    "N": 89.44
+    "S1": 8.83,
+    "S2": 3.98,
+    "S3": 0.28,
+    "N": 96.12
    },
    "prioritas_ahp_ha": {
-    "Tinggi": 5.21,
+    "Tinggi": 4.67,
     "Sedang": 7.65,
-    "Rendah": 1.44
+    "Rendah": 0.77
    },
    "prioritas_masyarakat_ha": {
     "Tinggi": 1.92,
@@ -192,10 +192,10 @@
    "setuju_tidak_sesuai_ha": 1.81
   }
  },
- "dibangun": "2026-11-18 13:15",
+ "dibangun": "2026-11-18 13:25",
  "total": {
-  "sesuai_ha": 139.42,
-  "prioritas_ahp_ha": 139.42,
+  "sesuai_ha": 138.21,
+  "prioritas_ahp_ha": 138.21,
   "prioritas_masyarakat_ha": 15.84
  }
 }
