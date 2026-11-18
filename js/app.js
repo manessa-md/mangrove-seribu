@@ -8,11 +8,11 @@
   const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
   const [S, P] = await Promise.all([
-    fetch("data/statistik.json").then(r => r.json()),
-    fetch("data/progres.json").then(r => r.json()),
+    fetch("data/statistik.json", { cache: "no-cache" }).then(r => r.json()),
+    fetch("data/progres.json", { cache: "no-cache" }).then(r => r.json()),
   ]);
-  const SO = await fetch("data/sosek.json").then(r => r.ok ? r.json() : {}).catch(() => ({}));
-  const AN = await fetch("data/analisis.json").then(r => r.ok ? r.json() : {}).catch(() => ({}));
+  const SO = await fetch("data/sosek.json", { cache: "no-cache" }).then(r => r.ok ? r.json() : {}).catch(() => ({}));
+  const AN = await fetch("data/analisis.json", { cache: "no-cache" }).then(r => r.ok ? r.json() : {}).catch(() => ({}));
   const PULAU = S.pulau;
   const KODE = Object.keys(PULAU);
   $("#tgl-update").textContent = "diperbarui " + P.diperbarui;
@@ -158,7 +158,7 @@
   const cache = {};
 
   async function getGeo(file) {
-    if (!cache[file]) cache[file] = fetch(`data/${file}.geojson`).then(r => r.json());
+    if (!cache[file]) cache[file] = fetch(`data/${file}.geojson`, { cache: "no-cache" }).then(r => r.json());
     return cache[file];
   }
   async function buildLayer(def) {
