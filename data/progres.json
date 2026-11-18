@@ -2,14 +2,48 @@
   "_petunjuk": "Ubah berkas ini untuk memperbarui panel Progres. status: selesai | berjalan | belum",
   "diperbarui": "2026-11-18",
   "tahapan": [
-    {"nama": "Persiapan & desain sampling", "status": "selesai", "tanggal": "Sep 2026"},
-    {"nama": "Laporan pendahuluan", "status": "selesai", "tanggal": "5 Okt 2026"},
-    {"nama": "Survei lapangan (vegetasi, kualitas air, sumur, sosek)", "status": "berjalan", "tanggal": "Sep–Nov 2026", "catatan": "Kuesioner sosek & FGD 10 pulau (106 responden)"},
-    {"nama": "Entri, QA/QC & basis data", "status": "berjalan", "tanggal": "Okt–Nov 2026"},
-    {"nama": "Analisis spasial & kesesuaian pemulihan (v06)", "status": "berjalan", "tanggal": "Okt–Nov 2026", "catatan": "10 pulau, 6 kriteria AHP; v06: gelombang 4 musim v03 diredam breakwater, jalur kapal & struktur pantai dikeluarkan; batimetri baru Lancang, Panggang, Kelapa, Tidung; prioritas dipadukan dengan area FGD"},
-    {"nama": "Paparan awal hasil", "status": "selesai", "tanggal": "2 Nov 2026"},
-    {"nama": "Laporan antara", "status": "belum", "tanggal": "—"},
-    {"nama": "Strategi & rencana aksi pemulihan", "status": "belum", "tanggal": "—"},
-    {"nama": "Laporan akhir", "status": "belum", "tanggal": "—", "catatan": "Kerangka v01 sudah disusun (19 Okt 2026)"}
+    {
+      "nama": "Persiapan & desain sampling",
+      "status": "selesai",
+      "tanggal": "Sep 2026"
+    },
+    {
+      "nama": "Survei lapangan (vegetasi, kualitas air, sumur, sosek)",
+      "status": "berjalan",
+      "tanggal": "Sep–Nov 2026",
+      "catatan": "Kuesioner sosek & FGD 10 pulau (106 responden)"
+    },
+    {
+      "nama": "Entri, QA/QC & basis data",
+      "status": "berjalan",
+      "tanggal": "Okt–Nov 2026"
+    },
+    {
+      "nama": "Analisis spasial & kesesuaian pemulihan (v06)",
+      "status": "berjalan",
+      "tanggal": "Okt–Nov 2026",
+      "catatan": "10 pulau, 6 kriteria AHP; v06: gelombang 4 musim v03 diredam breakwater, jalur kapal & struktur pantai dikeluarkan; batimetri baru Lancang, Panggang, Kelapa, Tidung; prioritas dipadukan dengan area FGD"
+    },
+    {
+      "nama": "Paparan awal hasil",
+      "status": "selesai",
+      "tanggal": "2 Nov 2026"
+    },
+    {
+      "nama": "Laporan awal",
+      "status": "selesai",
+      "tanggal": "3 Nov 2026"
+    },
+    {
+      "nama": "Strategi & rencana aksi pemulihan",
+      "status": "belum",
+      "tanggal": "—"
+    },
+    {
+      "nama": "Laporan akhir",
+      "status": "berjalan",
+      "tanggal": "Nov 2026",
+      "catatan": "Sedang disusun (kerangka v01 sejak 19 Okt 2026)"
+    }
   ]
 }
