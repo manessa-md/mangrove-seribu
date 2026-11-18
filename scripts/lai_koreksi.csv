@@ -1,0 +1,26 @@
+# LAI/keterbukaan kanopi dari Google Sheet MGV-KS_Survei_SBR_Groundcheck (18 Nov 2026): ekspor .shp membaca desimal koma sebagai 0.
+# Dipakai hanya bila nilai di .shp = 0. Hapus baris bila .shp sudah diekspor ulang dengan desimal titik.
+ID_Titik,LAI_Ring4,LAI_Ring5,Canopy_Ope
+SBR23,2.61,2.2,14.45
+SBR24,1.54,1.22,32.64
+SBR25,1.48,1.23,39.77
+SBR26,1.89,1.73,20.84
+SBR27,3.27,2.5,13.13
+SBR28,1.97,1.71,24.51
+SBR29,1.32,1.05,41.72
+SBR30,2.83,2.33,18.68
+SBR31,2.24,1.92,20.82
+SBR32,2.26,1.91,20.45
+SBR33,1.81,1.49,30.51
+SBR34,0.89,0.64,70.24
+SBR35,2.56,1.96,29.25
+SBR36,1.27,1.05,41.76
+SBR37,1.06,0.85,48.04
+SBR38,1.03,0.82,49.43
+SBR39,1.87,1.5,28.55
+SBR40,2.31,1.87,19.77
+SBR41,1.18,0.98,43.02
+SBR42,1.84,1.49,27.17
+SBR43,1.61,1.38,30.35
+SBR44,1.35,1.14,34.02
+SBR45,0.88,0.67,71.66

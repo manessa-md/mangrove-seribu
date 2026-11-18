@@ -263,7 +263,9 @@ def tambah_groundcheck(lai):
         if not f.exists() or (lai.pulau == k).any():
             continue
         g = gpd.read_file(f).to_crs(lai.crs)
-        plot[k] = g.groupby(["ID_Transek", "Jarak_Tran"]).ngroups
+        sys.path.insert(0, str(Path(__file__).parent)); from veg_primer import koreksi_lai
+        g = koreksi_lai(g)
+        plot[k] = g[g.ID_Transek > 0].groupby(["ID_Transek", "Jarak_Tran"]).ngroups
         for _, x in g.iterrows():
             l4, op = num(x.get("LAI_Ring4")), num(x.get("Canopy_Ope"))
             olah = not ((l4 or 0) == 0 and (op or 0) == 0)

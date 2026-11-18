@@ -46,11 +46,23 @@ def tanggal(v):
     return f"{m.group(3)}-{int(m.group(1)):02d}-{int(m.group(2)):02d}" if m else None
 
 
+def koreksi_lai(g):
+    """Isi LAI/keterbukaan kanopi yang 0 di .shp dari scripts/lai_koreksi.csv (salinan Google Sheet; desimal koma hilang saat ekspor)."""
+    f = Path(__file__).with_name("lai_koreksi.csv")
+    if not f.exists():
+        return g
+    k = pd.read_csv(f, comment="#").set_index("ID_Titik")
+    for c in ["LAI_Ring4", "LAI_Ring5", "Canopy_Ope"]:
+        kosong = g.ID_Titik.isin(k.index) & (pd.to_numeric(g[c], errors="coerce").fillna(0) == 0)
+        g.loc[kosong, c] = g.loc[kosong, "ID_Titik"].map(k[c])
+    return g
+
+
 def plot_pulau(k):
     f = SRC / "02_DATA_PRIMER" / FOLDER[k] / "05_Groundcheck" / f"MGV-KS_Survei_{k}_Groundcheck.shp"
     if not f.exists():
         return None, None
-    g = gpd.read_file(f).to_crs(32748)
+    g = koreksi_lai(gpd.read_file(f).to_crs(32748))
     g = g[g.Spesies.notna() & (g.ID_Transek > 0)].copy()
     if not len(g):
         return None, None
