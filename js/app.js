@@ -187,7 +187,8 @@
   let s2Year = S.s2sr_tahun[S.s2sr_tahun.length - 1], airMode = "ket", musim = "DJF";
   function arahMA(d) { return d == null ? "–" : ["U", "TL", "T", "TG", "S", "BD", "B", "BL"][Math.floor(((d % 360) + 22.5) / 45) % 8]; }
   const loaded = {};
-  let urut = [];   // id lapisan sesuai urutan dinyalakan
+  let urut = [];
+  const ATAS = ["angin", "gelombang", "struktur", "jalur"];   // id lapisan sesuai urutan dinyalakan
   const cache = {};
 
   async function getGeo(file) {
@@ -208,7 +209,8 @@
     if (loaded[def.id]) { map.removeLayer(loaded[def.id]); delete loaded[def.id]; }
     urut = urut.filter(id => id !== def.id);
     if (on) { loaded[def.id] = await buildLayer(def); loaded[def.id].addTo(map); urut.push(def.id); }
-    // jaga urutan: poligon di bawah, titik di atas
+    // jaga urutan: poligon di bawah, lalu infrastruktur & gelombang/angin, titik paling atas
+    [...ATAS].reverse().forEach(id => loaded[id]?.bringToFront?.());
     LAYERS.forEach(d => { if (loaded[d.id] && d.point) loaded[d.id].bringToFront?.(); });
     renderLegend();
   }
@@ -217,7 +219,9 @@
     // urutan legenda = urutan tumpukan di peta: lapisan paling atas tampil paling atas
     // (titik selalu di atas poligon/garis; di dalam tiap jenis, yang terakhir dinyalakan di atas)
     const aktif = urut.map(id => LAYERS.find(d => d.id === id)).filter(d => d && loaded[d.id] && d.legend).reverse();
-    const isi = [...aktif.filter(d => d.point), ...aktif.filter(d => !d.point)].map(d => `<div class="lg">${d.legend()}</div>`).join("");
+    // angin, gelombang & infrastruktur pesisir selalu di bagian atas legenda
+    const atas = ATAS.map(id => LAYERS.find(d => d.id === id)).filter(d => loaded[d.id] && d.legend);
+    const isi = [...atas, ...aktif.filter(d => d.point), ...aktif.filter(d => !d.point && !ATAS.includes(d.id))].map(d => `<div class="lg">${d.legend()}</div>`).join("");
     $("#legend").innerHTML = isi ? `<button class="lg-head" id="lg-toggle">Legenda <span>${legendOpen ? "▾" : "▸"}</span></button>${legendOpen ? `<div class="lg-body">${isi}</div>` : ""}` : "";
   }
   $("#legend").addEventListener("click", e => { if (e.target.closest("#lg-toggle")) { legendOpen = !legendOpen; renderLegend(); } });
