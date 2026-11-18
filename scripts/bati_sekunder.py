@@ -76,35 +76,47 @@ def kontur(kode, f, ref):
 
 
 # Pulau yang batimetrinya diganti (Batimetri_<Pulau>_v02.tif) → kontur dari topo-batimetri v05 (sudah terkoreksi pasut)
-TOPO_V05 = ["PGG", "KLP"]
+TOPO_V05 = ["PGG", "KLP", "TDG"]
+# Pulau yang kontur daratnya juga diganti (DTM v04 Tidung memuat 'daratan' palsu di laut; Sebira tanpa kontur di v03)
+KONTUR_DARAT = ["TDG", "SBR"]
+# Pulau tanpa kontur di basis data v03 (Sebira) → kontur dari topo-batimetri versi terbaru
+TOPO_TAMBAH = ["SBR"]
 
 
-def kontur_topo(kode, f, B=4):
-    """Kontur 1 m (−10…−1 m) dari sel batimetri (band 2 = 2) topo-batimetri v05; rerata blok B×B agar tidak bergerigi."""
+def kontur_topo(kode, f, B=None, darat=False):
+    """Kontur 1 m: −10…−1 m dari sel batimetri (band 2 = 2); bila darat=True juga 0…5 m dari sel DTM (band 2 = 1).
+    Rerata blok ±10 m agar tidak bergerigi."""
     import rasterio, contourpy, warnings
     from shapely.geometry import LineString, mapping
     from shapely.ops import transform as stransform
     from pyproj import Transformer
     with rasterio.open(f) as r:
-        e, src, T, crs = r.read(1), r.read(2), r.transform, r.crs
+        e0, src, T, crs = r.read(1), r.read(2), r.transform, r.crs
         c = r.tags().get("koreksi_datum_c_m", "")
-    e = np.where(src == 2, e, np.nan)
-    h, w = (e.shape[0] // B) * B, (e.shape[1] // B) * B
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore")
-        eb = np.nanmean(e[:h, :w].reshape(h // B, B, w // B, B), axis=(1, 3))
-    cg = contourpy.contour_generator(z=np.ma.masked_invalid(eb), line_type="SeparateCode")
+    B = B or max(1, int(round(10 / abs(T.a))))
     to84 = Transformer.from_crs(crs, 4326, always_xy=True).transform
-    lab = f"batimetri v02 2,5 m terkoreksi pasut (c = {float(c):+.2f} m; topo-batimetri v05)".replace(".", ",", 1) if c else "batimetri v02 (topo-batimetri v05)"
+    ver = f.stem.split("_")[-1]
+    lab_air = (f"batimetri {abs(T.a):g} m terkoreksi pasut (c = {float(c):+.2f} m; topo-batimetri {ver})" if c
+               else f"batimetri (topo-batimetri {ver})").replace(".", ",")
+    tugas = [(src == 2, range(-10, 0), lab_air)]
+    if darat:
+        tugas.append((src == 1, range(0, 6), f"DTM LiDAR (topo-batimetri {ver})"))
     feats = []
-    for lv in range(-10, 0):
-        for seg in cg.lines(lv)[0]:
-            if len(seg) < 4:
-                continue
-            ln = LineString(np.c_[T.c + (seg[:, 0] * B + B / 2) * T.a, T.f + (seg[:, 1] * B + B / 2) * T.e]).simplify(4)
-            if ln.length >= 100:
-                feats.append({"type": "Feature", "properties": {"pulau": kode, "elevasi_m": float(lv), "interval_sumber": lab},
-                              "geometry": mapping(stransform(to84, ln))})
+    for mask, levels, lab in tugas:
+        e = np.where(mask, e0, np.nan)
+        h, w = (e.shape[0] // B) * B, (e.shape[1] // B) * B
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            eb = np.nanmean(e[:h, :w].reshape(h // B, B, w // B, B), axis=(1, 3))
+        cg = contourpy.contour_generator(z=np.ma.masked_invalid(eb), line_type="SeparateCode")
+        for lv in levels:
+            for seg in cg.lines(lv)[0]:
+                if len(seg) < 4:
+                    continue
+                ln = LineString(np.c_[T.c + (seg[:, 0] * B + B / 2) * T.a, T.f + (seg[:, 1] * B + B / 2) * T.e]).simplify(4)
+                if ln.length >= 100:
+                    feats.append({"type": "Feature", "properties": {"pulau": kode, "elevasi_m": float(lv), "interval_sumber": lab},
+                                  "geometry": mapping(stransform(to84, ln))})
     return feats
 
 
@@ -139,14 +151,16 @@ def main():
                     f"(median selisih terhadap TopoBatimetri {kode} v04). Kontur bersifat indikatif sampai versi olahan v01 tersedia."))
         st["catatan_mutu"] = [c for c in st["catatan_mutu"]
                               if not (c.startswith("Batimetri") and (nama in c or kode in c))] + [catat]
-    for kode in TOPO_V05:
-        f = DB / f"MGV-KS_TopoBatimetri_{kode}_v05.tif"
-        if not f.exists():
+    for kode in TOPO_V05 + TOPO_TAMBAH:
+        fs_ = sorted(DB.glob(f"MGV-KS_TopoBatimetri_{kode}_v0*.tif"))
+        f = DB / f"MGV-KS_TopoBatimetri_{kode}_v05.tif" if kode in TOPO_V05 else (fs_[-1] if fs_ else None)
+        if f is None or not f.exists():
             continue
-        feats = kontur_topo(kode, f)
+        feats = kontur_topo(kode, f, darat=kode in KONTUR_DARAT)
         if feats:
-            kb["features"] = [x for x in kb["features"] if x["properties"]["pulau"] != kode or float(x["properties"]["elevasi_m"]) >= 0] + feats
-            print(f"  kontur batimetri v05 {kode}: {len(feats)} garis")
+            kb["features"] = [x for x in kb["features"] if x["properties"]["pulau"] != kode
+                              or (float(x["properties"]["elevasi_m"]) >= 0 and kode not in KONTUR_DARAT)] + feats
+            print(f"  kontur batimetri {f.stem}: {len(feats)} garis")
     txt = json.dumps(kb, ensure_ascii=False, separators=(",", ":"))
     txt = re.sub(r"(-?\d+\.\d{5})\d+", r"\1", txt)
     fk.write_text(txt, encoding="utf-8")
