@@ -187,3 +187,5 @@ select, .btn {
 .bar .bv { text-align: right; font-variant-numeric: tabular-nums; }
 .kv .sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; margin-right: 4px; }
 .kv td[colspan] { text-align: left; padding-top: 10px; }
+.kv.wave td { font-size: .78rem; text-align: left !important; padding-left: 4px; font-weight: 400; }
+.kv.wave td:first-child { padding-left: 0; }

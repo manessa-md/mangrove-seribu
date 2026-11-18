@@ -42,7 +42,8 @@ PANTAU = (
        AN + "13_Oseanografi_Fisik/MGV-KS_KriteriaFisik_KS_v*.xlsx",
        AN + "08_Kesesuaian_Pemulihan/MGV-KS_Kesesuaian_KS_v*.xlsx",
        AN + "09_Lokasi_Prioritas/MGV-KS_LokasiPrioritas_KS_v*.gpkg",
-       AN + "13_Oseanografi_Fisik/MGV-KS_Gelombang4Musim_v*/MGV-KS_Gelombang4Musim_KS_v*.xlsx"]
+       AN + "13_Oseanografi_Fisik/MGV-KS_Gelombang4Musim_v*/MGV-KS_Gelombang4Musim_KS_v*.xlsx",
+       AN + "13_Oseanografi_Fisik/MGV-KS_Gelombang4Musim_v03/MGV-KS_Gelombang4Musim_*_HHWS_50m_v03.tif"]
     + [DB + "MGV-KS_Batimetri_*_v01.tif"]
     + ["01_DATA_SEKUNDER/05_Oseanografi/Batimetri/batimetri_Lancang.tif", DB + "MGV-KS_TopoBatimetri_LCG_v04.tif"]
     + [f"02_DATA_PRIMER/*/06_Sampel_Substrat_WaterQuality/MGV-KS_Survei_*_Substrat_WaterQuality.{e}" for e in SHP]

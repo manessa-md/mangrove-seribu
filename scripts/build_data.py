@@ -564,3 +564,6 @@ subprocess.run([sys.executable, str(Path(__file__).with_name("bati_sekunder.py")
 
 # Lapisan analisis: kesesuaian AHP & prioritas ∩ persetujuan masyarakat; Tabel 13/14 dari versi kesesuaian terbaru
 subprocess.run([sys.executable, str(Path(__file__).with_name("build_analisis.py")), str(SRC)], check=True)
+
+# Angin & gelombang 4 musim: ringkasan per pulau + lapisan panah (muka air HHWS)
+subprocess.run([sys.executable, str(Path(__file__).with_name("build_gelombang.py")), str(SRC)], check=True)

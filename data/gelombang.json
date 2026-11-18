@@ -1,0 +1,675 @@
+{
+ "muka_air": "HHWS",
+ "pulau": {
+  "HRP": {
+   "musim": [
+    {
+     "musim": "DJF",
+     "nama": "Musim Barat (Des–Feb)",
+     "U10_ms": 10.0,
+     "angin_dari": 233.0,
+     "angin_dari_ma": "BD",
+     "gelombang_dari": 227.0,
+     "gelombang_dari_ma": "BD",
+     "Hs_p90": 0.39,
+     "Hs_maks": 0.51,
+     "Hs_p90_mgv": 0.37,
+     "Hs_maks_mgv": 0.69,
+     "Tp_s": 2.8
+    },
+    {
+     "musim": "MAM",
+     "nama": "Peralihan I (Mar–Mei)",
+     "U10_ms": 11.8,
+     "angin_dari": 205.0,
+     "angin_dari_ma": "BD",
+     "gelombang_dari": 196.0,
+     "gelombang_dari_ma": "S",
+     "Hs_p90": 0.4,
+     "Hs_maks": 0.6,
+     "Hs_p90_mgv": 0.44,
+     "Hs_maks_mgv": 0.76,
+     "Tp_s": 3.0
+    },
+    {
+     "musim": "JJA",
+     "nama": "Musim Timur (Jun–Agu)",
+     "U10_ms": 7.6,
+     "angin_dari": 63.0,
+     "angin_dari_ma": "TL",
+     "gelombang_dari": 63.0,
+     "gelombang_dari_ma": "TL",
+     "Hs_p90": 0.59,
+     "Hs_maks": 0.69,
+     "Hs_p90_mgv": 0.3,
+     "Hs_maks_mgv": 0.55,
+     "Tp_s": 3.7
+    },
+    {
+     "musim": "SON",
+     "nama": "Peralihan II (Sep–Nov)",
+     "U10_ms": 12.6,
+     "angin_dari": 194.0,
+     "angin_dari_ma": "S",
+     "gelombang_dari": 174.0,
+     "gelombang_dari_ma": "S",
+     "Hs_p90": 0.48,
+     "Hs_maks": 0.65,
+     "Hs_p90_mgv": 0.46,
+     "Hs_maks_mgv": 0.71,
+     "Tp_s": 3.4
+    }
+   ],
+   "ekstrem": {
+    "Hs_maks": 0.69,
+    "musim": "JJA",
+    "nama": "Musim Timur (Jun–Agu)",
+    "gelombang_dari": 63.0,
+    "gelombang_dari_ma": "TL"
+   }
+  },
+  "KLD": {
+   "musim": [
+    {
+     "musim": "DJF",
+     "nama": "Musim Barat (Des–Feb)",
+     "U10_ms": 9.5,
+     "angin_dari": 237.0,
+     "angin_dari_ma": "BD",
+     "gelombang_dari": 242.0,
+     "gelombang_dari_ma": "BD",
+     "Hs_p90": 0.77,
+     "Hs_maks": 0.87,
+     "Hs_p90_mgv": 0.4,
+     "Hs_maks_mgv": 0.8,
+     "Tp_s": 3.9
+    },
+    {
+     "musim": "MAM",
+     "nama": "Peralihan I (Mar–Mei)",
+     "U10_ms": 10.9,
+     "angin_dari": 208.0,
+     "angin_dari_ma": "BD",
+     "gelombang_dari": 222.0,
+     "gelombang_dari_ma": "BD",
+     "Hs_p90": 0.79,
+     "Hs_maks": 0.94,
+     "Hs_p90_mgv": 0.43,
+     "Hs_maks_mgv": 0.84,
+     "Tp_s": 3.8
+    },
+    {
+     "musim": "JJA",
+     "nama": "Musim Timur (Jun–Agu)",
+     "U10_ms": 7.6,
+     "angin_dari": 59.0,
+     "angin_dari_ma": "TL",
+     "gelombang_dari": 50.0,
+     "gelombang_dari_ma": "TL",
+     "Hs_p90": 0.52,
+     "Hs_maks": 0.57,
+     "Hs_p90_mgv": 0.37,
+     "Hs_maks_mgv": 0.43,
+     "Tp_s": 3.1
+    },
+    {
+     "musim": "SON",
+     "nama": "Peralihan II (Sep–Nov)",
+     "U10_ms": 13.0,
+     "angin_dari": 192.0,
+     "angin_dari_ma": "S",
+     "gelombang_dari": 212.0,
+     "gelombang_dari_ma": "BD",
+     "Hs_p90": 0.8,
+     "Hs_maks": 1.04,
+     "Hs_p90_mgv": 0.46,
+     "Hs_maks_mgv": 0.75,
+     "Tp_s": 3.6
+    }
+   ],
+   "ekstrem": {
+    "Hs_maks": 1.04,
+    "musim": "SON",
+    "nama": "Peralihan II (Sep–Nov)",
+    "gelombang_dari": 212.0,
+    "gelombang_dari_ma": "BD"
+   }
+  },
+  "KLP": {
+   "musim": [
+    {
+     "musim": "DJF",
+     "nama": "Musim Barat (Des–Feb)",
+     "U10_ms": 9.6,
+     "angin_dari": 237.0,
+     "angin_dari_ma": "BD",
+     "gelombang_dari": 237.0,
+     "gelombang_dari_ma": "BD",
+     "Hs_p90": 0.54,
+     "Hs_maks": 0.77,
+     "Hs_p90_mgv": 0.37,
+     "Hs_maks_mgv": 0.45,
+     "Tp_s": 3.4
+    },
+    {
+     "musim": "MAM",
+     "nama": "Peralihan I (Mar–Mei)",
+     "U10_ms": 11.6,
+     "angin_dari": 204.0,
+     "angin_dari_ma": "BD",
+     "gelombang_dari": 219.0,
+     "gelombang_dari_ma": "BD",
+     "Hs_p90": 0.56,
+     "Hs_maks": 0.82,
+     "Hs_p90_mgv": 0.43,
+     "Hs_maks_mgv": 0.58,
+     "Tp_s": 3.7
+    },
+    {
+     "musim": "JJA",
+     "nama": "Musim Timur (Jun–Agu)",
+     "U10_ms": 7.6,
+     "angin_dari": 60.0,
+     "angin_dari_ma": "TL",
+     "gelombang_dari": 65.0,
+     "gelombang_dari_ma": "TL",
+     "Hs_p90": 0.42,
+     "Hs_maks": 0.55,
+     "Hs_p90_mgv": 0.28,
+     "Hs_maks_mgv": 0.32,
+     "Tp_s": 2.8
+    },
+    {
+     "musim": "SON",
+     "nama": "Peralihan II (Sep–Nov)",
+     "U10_ms": 13.0,
+     "angin_dari": 194.0,
+     "angin_dari_ma": "S",
+     "gelombang_dari": 211.0,
+     "gelombang_dari_ma": "BD",
+     "Hs_p90": 0.56,
+     "Hs_maks": 0.87,
+     "Hs_p90_mgv": 0.46,
+     "Hs_maks_mgv": 0.62,
+     "Tp_s": 3.6
+    }
+   ],
+   "ekstrem": {
+    "Hs_maks": 0.87,
+    "musim": "SON",
+    "nama": "Peralihan II (Sep–Nov)",
+    "gelombang_dari": 211.0,
+    "gelombang_dari_ma": "BD"
+   }
+  },
+  "LCG": {
+   "musim": [
+    {
+     "musim": "DJF",
+     "nama": "Musim Barat (Des–Feb)",
+     "U10_ms": 11.0,
+     "angin_dari": 212.0,
+     "angin_dari_ma": "BD",
+     "gelombang_dari": 211.0,
+     "gelombang_dari_ma": "BD",
+     "Hs_p90": 0.46,
+     "Hs_maks": 0.61,
+     "Hs_p90_mgv": 0.36,
+     "Hs_maks_mgv": 0.47,
+     "Tp_s": 3.3
+    },
+    {
+     "musim": "MAM",
+     "nama": "Peralihan I (Mar–Mei)",
+     "U10_ms": 6.6,
+     "angin_dari": 261.0,
+     "angin_dari_ma": "B",
+     "gelombang_dari": 247.0,
+     "gelombang_dari_ma": "BD",
+     "Hs_p90": 0.34,
+     "Hs_maks": 0.49,
+     "Hs_p90_mgv": 0.25,
+     "Hs_maks_mgv": 0.39,
+     "Tp_s": 3.1
+    },
+    {
+     "musim": "JJA",
+     "nama": "Musim Timur (Jun–Agu)",
+     "U10_ms": 7.8,
+     "angin_dari": 87.0,
+     "angin_dari_ma": "T",
+     "gelombang_dari": 59.0,
+     "gelombang_dari_ma": "TL",
+     "Hs_p90": 0.45,
+     "Hs_maks": 0.68,
+     "Hs_p90_mgv": 0.63,
+     "Hs_maks_mgv": 0.69,
+     "Tp_s": 2.8
+    },
+    {
+     "musim": "SON",
+     "nama": "Peralihan II (Sep–Nov)",
+     "U10_ms": 6.1,
+     "angin_dari": 223.0,
+     "angin_dari_ma": "BD",
+     "gelombang_dari": 219.0,
+     "gelombang_dari_ma": "BD",
+     "Hs_p90": 0.28,
+     "Hs_maks": 0.35,
+     "Hs_p90_mgv": 0.22,
+     "Hs_maks_mgv": 0.3,
+     "Tp_s": 2.6
+    }
+   ],
+   "ekstrem": {
+    "Hs_maks": 0.68,
+    "musim": "JJA",
+    "nama": "Musim Timur (Jun–Agu)",
+    "gelombang_dari": 59.0,
+    "gelombang_dari_ma": "TL"
+   }
+  },
+  "PAR": {
+   "musim": [
+    {
+     "musim": "DJF",
+     "nama": "Musim Barat (Des–Feb)",
+     "U10_ms": 11.3,
+     "angin_dari": 222.0,
+     "angin_dari_ma": "BD",
+     "gelombang_dari": 205.0,
+     "gelombang_dari_ma": "BD",
+     "Hs_p90": 0.48,
+     "Hs_maks": 0.83,
+     "Hs_p90_mgv": 0.45,
+     "Hs_maks_mgv": 0.51,
+     "Tp_s": 3.6
+    },
+    {
+     "musim": "MAM",
+     "nama": "Peralihan I (Mar–Mei)",
+     "U10_ms": 8.2,
+     "angin_dari": 225.0,
+     "angin_dari_ma": "BD",
+     "gelombang_dari": 214.0,
+     "gelombang_dari_ma": "BD",
+     "Hs_p90": 0.38,
+     "Hs_maks": 0.59,
+     "Hs_p90_mgv": 0.35,
+     "Hs_maks_mgv": 0.42,
+     "Tp_s": 3.0
+    },
+    {
+     "musim": "JJA",
+     "nama": "Musim Timur (Jun–Agu)",
+     "U10_ms": 8.0,
+     "angin_dari": 83.0,
+     "angin_dari_ma": "T",
+     "gelombang_dari": 81.0,
+     "gelombang_dari_ma": "T",
+     "Hs_p90": 0.43,
+     "Hs_maks": 0.73,
+     "Hs_p90_mgv": 0.36,
+     "Hs_maks_mgv": 0.54,
+     "Tp_s": 3.5
+    },
+    {
+     "musim": "SON",
+     "nama": "Peralihan II (Sep–Nov)",
+     "U10_ms": 7.4,
+     "angin_dari": 218.0,
+     "angin_dari_ma": "BD",
+     "gelombang_dari": 210.0,
+     "gelombang_dari_ma": "BD",
+     "Hs_p90": 0.35,
+     "Hs_maks": 0.53,
+     "Hs_p90_mgv": 0.32,
+     "Hs_maks_mgv": 0.36,
+     "Tp_s": 2.9
+    }
+   ],
+   "ekstrem": {
+    "Hs_maks": 0.83,
+    "musim": "DJF",
+    "nama": "Musim Barat (Des–Feb)",
+    "gelombang_dari": 205.0,
+    "gelombang_dari_ma": "BD"
+   }
+  },
+  "PGG": {
+   "musim": [
+    {
+     "musim": "DJF",
+     "nama": "Musim Barat (Des–Feb)",
+     "U10_ms": 9.5,
+     "angin_dari": 235.0,
+     "angin_dari_ma": "BD",
+     "gelombang_dari": 219.0,
+     "gelombang_dari_ma": "BD",
+     "Hs_p90": 0.45,
+     "Hs_maks": 0.54,
+     "Hs_p90_mgv": null,
+     "Hs_maks_mgv": null,
+     "Tp_s": 3.9
+    },
+    {
+     "musim": "MAM",
+     "nama": "Peralihan I (Mar–Mei)",
+     "U10_ms": 11.5,
+     "angin_dari": 204.0,
+     "angin_dari_ma": "BD",
+     "gelombang_dari": 207.0,
+     "gelombang_dari_ma": "BD",
+     "Hs_p90": 0.5,
+     "Hs_maks": 0.61,
+     "Hs_p90_mgv": null,
+     "Hs_maks_mgv": null,
+     "Tp_s": 4.0
+    },
+    {
+     "musim": "JJA",
+     "nama": "Musim Timur (Jun–Agu)",
+     "U10_ms": 7.6,
+     "angin_dari": 81.0,
+     "angin_dari_ma": "T",
+     "gelombang_dari": 83.0,
+     "gelombang_dari_ma": "T",
+     "Hs_p90": 0.35,
+     "Hs_maks": 0.44,
+     "Hs_p90_mgv": null,
+     "Hs_maks_mgv": null,
+     "Tp_s": 2.7
+    },
+    {
+     "musim": "SON",
+     "nama": "Peralihan II (Sep–Nov)",
+     "U10_ms": 10.7,
+     "angin_dari": 206.0,
+     "angin_dari_ma": "BD",
+     "gelombang_dari": 204.0,
+     "gelombang_dari_ma": "BD",
+     "Hs_p90": 0.47,
+     "Hs_maks": 0.57,
+     "Hs_p90_mgv": null,
+     "Hs_maks_mgv": null,
+     "Tp_s": 3.9
+    }
+   ],
+   "ekstrem": {
+    "Hs_maks": 0.61,
+    "musim": "MAM",
+    "nama": "Peralihan I (Mar–Mei)",
+    "gelombang_dari": 207.0,
+    "gelombang_dari_ma": "BD"
+   }
+  },
+  "PRM": {
+   "musim": [
+    {
+     "musim": "DJF",
+     "nama": "Musim Barat (Des–Feb)",
+     "U10_ms": 10.2,
+     "angin_dari": 230.0,
+     "angin_dari_ma": "BD",
+     "gelombang_dari": 232.0,
+     "gelombang_dari_ma": "BD",
+     "Hs_p90": 0.81,
+     "Hs_maks": 0.89,
+     "Hs_p90_mgv": 0.42,
+     "Hs_maks_mgv": 0.77,
+     "Tp_s": 3.8
+    },
+    {
+     "musim": "MAM",
+     "nama": "Peralihan I (Mar–Mei)",
+     "U10_ms": 11.7,
+     "angin_dari": 201.0,
+     "angin_dari_ma": "S",
+     "gelombang_dari": 205.0,
+     "gelombang_dari_ma": "BD",
+     "Hs_p90": 0.87,
+     "Hs_maks": 0.98,
+     "Hs_p90_mgv": 0.4,
+     "Hs_maks_mgv": 0.82,
+     "Tp_s": 4.0
+    },
+    {
+     "musim": "JJA",
+     "nama": "Musim Timur (Jun–Agu)",
+     "U10_ms": 7.7,
+     "angin_dari": 85.0,
+     "angin_dari_ma": "T",
+     "gelombang_dari": 81.0,
+     "gelombang_dari_ma": "T",
+     "Hs_p90": 0.63,
+     "Hs_maks": 0.7,
+     "Hs_p90_mgv": 0.31,
+     "Hs_maks_mgv": 0.58,
+     "Tp_s": 3.7
+    },
+    {
+     "musim": "SON",
+     "nama": "Peralihan II (Sep–Nov)",
+     "U10_ms": 10.7,
+     "angin_dari": 204.0,
+     "angin_dari_ma": "BD",
+     "gelombang_dari": 204.0,
+     "gelombang_dari_ma": "BD",
+     "Hs_p90": 0.78,
+     "Hs_maks": 0.87,
+     "Hs_p90_mgv": 0.37,
+     "Hs_maks_mgv": 0.74,
+     "Tp_s": 3.8
+    }
+   ],
+   "ekstrem": {
+    "Hs_maks": 0.98,
+    "musim": "MAM",
+    "nama": "Peralihan I (Mar–Mei)",
+    "gelombang_dari": 205.0,
+    "gelombang_dari_ma": "BD"
+   }
+  },
+  "SBR": {
+   "musim": [
+    {
+     "musim": "DJF",
+     "nama": "Musim Barat (Des–Feb)",
+     "U10_ms": 10.7,
+     "angin_dari": 335.0,
+     "angin_dari_ma": "BL",
+     "gelombang_dari": 342.0,
+     "gelombang_dari_ma": "U",
+     "Hs_p90": 1.04,
+     "Hs_maks": 1.07,
+     "Hs_p90_mgv": 1.01,
+     "Hs_maks_mgv": 1.06,
+     "Tp_s": 4.5
+    },
+    {
+     "musim": "MAM",
+     "nama": "Peralihan I (Mar–Mei)",
+     "U10_ms": 10.6,
+     "angin_dari": 181.0,
+     "angin_dari_ma": "S",
+     "gelombang_dari": 172.0,
+     "gelombang_dari_ma": "S",
+     "Hs_p90": 0.99,
+     "Hs_maks": 1.04,
+     "Hs_p90_mgv": 0.44,
+     "Hs_maks_mgv": 0.82,
+     "Tp_s": 4.5
+    },
+    {
+     "musim": "JJA",
+     "nama": "Musim Timur (Jun–Agu)",
+     "U10_ms": 6.8,
+     "angin_dari": 114.0,
+     "angin_dari_ma": "TG",
+     "gelombang_dari": 110.0,
+     "gelombang_dari_ma": "T",
+     "Hs_p90": 0.58,
+     "Hs_maks": 0.6,
+     "Hs_p90_mgv": 0.42,
+     "Hs_maks_mgv": 0.59,
+     "Tp_s": 3.4
+    },
+    {
+     "musim": "SON",
+     "nama": "Peralihan II (Sep–Nov)",
+     "U10_ms": 12.8,
+     "angin_dari": 198.0,
+     "angin_dari_ma": "S",
+     "gelombang_dari": 199.0,
+     "gelombang_dari_ma": "S",
+     "Hs_p90": 1.24,
+     "Hs_maks": 1.32,
+     "Hs_p90_mgv": 0.56,
+     "Hs_maks_mgv": 1.14,
+     "Tp_s": 4.9
+    }
+   ],
+   "ekstrem": {
+    "Hs_maks": 1.32,
+    "musim": "SON",
+    "nama": "Peralihan II (Sep–Nov)",
+    "gelombang_dari": 199.0,
+    "gelombang_dari_ma": "S"
+   }
+  },
+  "TDG": {
+   "musim": [
+    {
+     "musim": "DJF",
+     "nama": "Musim Barat (Des–Feb)",
+     "U10_ms": 8.8,
+     "angin_dari": 235.0,
+     "angin_dari_ma": "BD",
+     "gelombang_dari": 232.0,
+     "gelombang_dari_ma": "BD",
+     "Hs_p90": 0.69,
+     "Hs_maks": 0.76,
+     "Hs_p90_mgv": 0.35,
+     "Hs_maks_mgv": 0.36,
+     "Tp_s": 3.0
+    },
+    {
+     "musim": "MAM",
+     "nama": "Peralihan I (Mar–Mei)",
+     "U10_ms": 10.4,
+     "angin_dari": 216.0,
+     "angin_dari_ma": "BD",
+     "gelombang_dari": 217.0,
+     "gelombang_dari_ma": "BD",
+     "Hs_p90": 0.8,
+     "Hs_maks": 0.88,
+     "Hs_p90_mgv": 0.39,
+     "Hs_maks_mgv": 0.41,
+     "Tp_s": 3.3
+    },
+    {
+     "musim": "JJA",
+     "nama": "Musim Timur (Jun–Agu)",
+     "U10_ms": 7.3,
+     "angin_dari": 71.0,
+     "angin_dari_ma": "T",
+     "gelombang_dari": 61.0,
+     "gelombang_dari_ma": "TL",
+     "Hs_p90": 0.47,
+     "Hs_maks": 0.61,
+     "Hs_p90_mgv": 0.29,
+     "Hs_maks_mgv": 0.31,
+     "Tp_s": 3.1
+    },
+    {
+     "musim": "SON",
+     "nama": "Peralihan II (Sep–Nov)",
+     "U10_ms": 9.9,
+     "angin_dari": 216.0,
+     "angin_dari_ma": "BD",
+     "gelombang_dari": 217.0,
+     "gelombang_dari_ma": "BD",
+     "Hs_p90": 0.75,
+     "Hs_maks": 0.83,
+     "Hs_p90_mgv": 0.38,
+     "Hs_maks_mgv": 0.39,
+     "Tp_s": 3.2
+    }
+   ],
+   "ekstrem": {
+    "Hs_maks": 0.88,
+    "musim": "MAM",
+    "nama": "Peralihan I (Mar–Mei)",
+    "gelombang_dari": 217.0,
+    "gelombang_dari_ma": "BD"
+   }
+  },
+  "UTJ": {
+   "musim": [
+    {
+     "musim": "DJF",
+     "nama": "Musim Barat (Des–Feb)",
+     "U10_ms": 9.9,
+     "angin_dari": 215.0,
+     "angin_dari_ma": "BD",
+     "gelombang_dari": 215.0,
+     "gelombang_dari_ma": "BD",
+     "Hs_p90": 0.4,
+     "Hs_maks": 0.43,
+     "Hs_p90_mgv": 0.34,
+     "Hs_maks_mgv": 0.4,
+     "Tp_s": 2.6
+    },
+    {
+     "musim": "MAM",
+     "nama": "Peralihan I (Mar–Mei)",
+     "U10_ms": 9.7,
+     "angin_dari": 227.0,
+     "angin_dari_ma": "BD",
+     "gelombang_dari": 240.0,
+     "gelombang_dari_ma": "BD",
+     "Hs_p90": 0.46,
+     "Hs_maks": 0.48,
+     "Hs_p90_mgv": 0.38,
+     "Hs_maks_mgv": 0.46,
+     "Tp_s": 2.5
+    },
+    {
+     "musim": "JJA",
+     "nama": "Musim Timur (Jun–Agu)",
+     "U10_ms": 7.9,
+     "angin_dari": 96.0,
+     "angin_dari_ma": "T",
+     "gelombang_dari": 88.0,
+     "gelombang_dari_ma": "T",
+     "Hs_p90": 0.63,
+     "Hs_maks": 0.68,
+     "Hs_p90_mgv": 0.5,
+     "Hs_maks_mgv": 0.55,
+     "Tp_s": 3.5
+    },
+    {
+     "musim": "SON",
+     "nama": "Peralihan II (Sep–Nov)",
+     "U10_ms": 6.4,
+     "angin_dari": 220.0,
+     "angin_dari_ma": "BD",
+     "gelombang_dari": 232.0,
+     "gelombang_dari_ma": "BD",
+     "Hs_p90": 0.28,
+     "Hs_maks": 0.29,
+     "Hs_p90_mgv": 0.24,
+     "Hs_maks_mgv": 0.27,
+     "Tp_s": 2.1
+    }
+   ],
+   "ekstrem": {
+    "Hs_maks": 0.68,
+    "musim": "JJA",
+    "nama": "Musim Timur (Jun–Agu)",
+    "gelombang_dari": 88.0,
+    "gelombang_dari_ma": "T"
+   }
+  }
+ }
+}

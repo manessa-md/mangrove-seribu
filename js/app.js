@@ -13,6 +13,7 @@
   ]);
   const SO = await fetch("data/sosek.json", { cache: "no-cache" }).then(r => r.ok ? r.json() : {}).catch(() => ({}));
   const AN = await fetch("data/analisis.json", { cache: "no-cache" }).then(r => r.ok ? r.json() : {}).catch(() => ({}));
+  const GL = await fetch("data/gelombang.json", { cache: "no-cache" }).then(r => r.ok ? r.json() : {}).catch(() => ({}));
   const PULAU = S.pulau;
   const KODE = Object.keys(PULAU);
   $("#tgl-update").textContent = "diperbarui " + P.diperbarui;
@@ -54,6 +55,9 @@
   const LRRc = Object.fromEntries(LRR);
   const KONDISI = { "Baik - sangat padat": "#1a9850", "Baik - sedang": "#91cf60", "Rusak - jarang": "#d73027" };
   const SAL_SUMUR = { "Tawar": "#4575b4", "Payau ringan": "#91bfdb", "Payau": "#fc8d59", "Payau tinggi": "#d73027" };
+  const MUSIM_NM = { DJF: "Musim Barat (Des–Feb)", MAM: "Peralihan I (Mar–Mei)", JJA: "Musim Timur (Jun–Agu)", SON: "Peralihan II (Sep–Nov)" };
+  const HS_KLS = [[0.15, "#c6dbef", "< 0,15"], [0.3, "#6baed6", "0,15–0,3"], [0.5, "#2171b5", "0,3–0,5"], [0.75, "#f16913", "0,5–0,75"], [99, "#a50f15", "≥ 0,75"]];
+  const hsColor = v => (HS_KLS.find(([b]) => v < b) || HS_KLS.at(-1))[1];
   const SETUJU = { "Setuju": "#2b8cbe", "Tidak setuju": "#e7298a", "Belum ada keterangan": "#bdbdbd" };
   const KET_AIR = { "Mangrove": "#1a9850", "Non-mangrove": "#f1c40f", "Laut": "#2c7fb8" };
   const yearColor = (y) => { const t = Math.max(0, Math.min(1, (y - 1990) / 35)); return `hsl(${50 - t * 50 + (1 - t) * 160}, 80%, ${55 - t * 10}%)`; };
@@ -152,8 +156,22 @@
       popup: p => popupTable(`Area FGD ${p.id}`, [["Pulau", PULAU[p.pulau]], ["Masyarakat", p.status], ["Catatan", p.catatan], ["Luas (ha)", p.luas_ha]]),
       legend: () => `<div class="lt">Penanaman mangrove – sikap masyarakat (FGD)</div>` +
         Object.entries(SETUJU).map(([k, c]) => `<div class="row"><span class="sw" style="background:${c}"></span>${k}</div>`).join("") },
+    { id: "gelombang", grp: "Angin & gelombang", label: "Gelombang (tinggi & arah, pasang tertinggi)", fileFn: () => `gelombang_${musim}`, on: false, sw: "#2171b5",
+      style: f => ({ color: hsColor(f.properties.hs), weight: 1.6, opacity: .95 }),
+      popup: p => popupTable(`Gelombang – ${MUSIM_NM[p.musim]}`, [["Pulau", PULAU[p.pulau]], ["Tinggi gelombang Hs (m)", p.hs], ["Periode Tp (s)", p.tp],
+        ["Arah datang (°)", `${p.dari}° (${arahMA(p.dari)})`]]),
+      legend: () => `<div class="lt">Gelombang ${MUSIM_NM[musim]} – Hs (m), muka air HHWS</div>` +
+        HS_KLS.map(([, c, l]) => `<div class="row"><span class="sw l" style="background:${c}"></span>${l}</div>`).join("") +
+        `<div class="row muted" style="font-size:.72rem">panah = arah rambat gelombang</div>`,
+      extra: () => `<select id="musim-sel">${Object.entries(MUSIM_NM).map(([k, v]) => `<option value="${k}" ${k === musim ? "selected" : ""}>${v}</option>`).join("")}</select>` },
+    { id: "angin", grp: "Angin & gelombang", label: "Angin (arah & kecepatan rata-rata)", file: "angin", on: false, sw: "#444",
+      filter: f => f.properties.musim === musim,
+      style: () => ({ color: "#222", weight: 4, opacity: .85 }),
+      popup: p => popupTable(`Angin – ${MUSIM_NM[p.musim]}`, [["Pulau", PULAU[p.pulau]], ["Kecepatan U10 (m/s)", p.U10_ms], ["Arah datang (°)", `${p.dari}° (${p.dari_ma})`]]),
+      legend: () => `<div class="lt">Angin ${MUSIM_NM[musim]}</div><div class="row"><span class="sw l" style="background:#222"></span>panah = arah tiup (dari pilihan musim di atas)</div>` },
   ];
-  let s2Year = S.s2sr_tahun[S.s2sr_tahun.length - 1], airMode = "ket";
+  let s2Year = S.s2sr_tahun[S.s2sr_tahun.length - 1], airMode = "ket", musim = "DJF";
+  function arahMA(d) { return d == null ? "–" : ["U", "TL", "T", "TG", "S", "BD", "B", "BL"][Math.floor(((d % 360) + 22.5) / 45) % 8]; }
   const loaded = {};
   const cache = {};
 
@@ -165,7 +183,7 @@
     const file = def.fileFn ? def.fileFn() : def.file;
     const gj = await getGeo(file);
     const opt = {
-      style: def.style,
+      style: def.style, filter: def.filter,
       onEachFeature: def.popup ? (f, l) => l.bindPopup(() => def.popup(f.properties), { maxWidth: 320 }) : undefined,
     };
     if (def.point) opt.pointToLayer = (f, ll) => L.circleMarker(ll, { ...def.style(f), renderer: canvas });
@@ -196,6 +214,8 @@
       if (t.id === "basemap") { Object.values(bases).forEach(b => map.removeLayer(b)); bases[t.value].addTo(map); return; }
       if (t.id === "lbl") { t.checked ? labels.addTo(map) : map.removeLayer(labels); return; }
       if (t.id === "s2-year") { s2Year = +t.value; const d = LAYERS.find(x => x.id === "s2sr"); setChecked("s2sr"); toggle(d, true); return; }
+      if (t.id === "musim-sel") { musim = t.value; ["gelombang", "angin"].forEach(id => { if (loaded[id]) toggle(LAYERS.find(x => x.id === id), true); });
+        if (!loaded.gelombang && !loaded.angin) { setChecked("gelombang"); toggle(LAYERS.find(x => x.id === "gelombang"), true); } return; }
       if (t.id === "air-mode") { airMode = t.value; const d = LAYERS.find(x => x.id === "air"); setChecked("air"); toggle(d, true); return; }
       if (t.dataset.id) toggle(LAYERS.find(d => d.id === t.dataset.id), t.checked);
     });
@@ -278,6 +298,17 @@
         : `<div class="note">Belum ada peta FGD untuk pulau ini, sehingga prioritas belum dapat dipadukan dengan keinginan masyarakat.</div>`}
       ${fg ? `<p class="muted" style="font-size:.82rem">Area FGD: ${Object.entries(fg).map(([st, v]) => `${esc(st.toLowerCase())} ${fmt(v.luas_ha)} ha`).join(" · ")} — <a href="#" id="lnk-setuju">tampilkan di peta</a></p>` : ""}`;
   }
+  function panelGelombang(k) {
+    const g = (GL.pulau || {})[k];
+    if (!g) return "";
+    const e = g.ekstrem;
+    return `<h3>Angin &amp; gelombang</h3>
+      <div class="kpis"><div class="kpi"><div class="v">${fmt(e.Hs_maks)} m</div><div class="l">tinggi gelombang ekstrem (Hs maks pesisir, ${esc(e.nama)}, dari ${esc(e.gelombang_dari_ma)})</div></div></div>
+      <table class="kv wave"><tr><td><b>Musim</b></td><td><b>Angin dari</b></td><td><b>Gelombang dari</b></td><td><b>Hs P90 / maks (m)</b></td></tr>
+      ${g.musim.map(r => `<tr><td>${esc(r.nama)}</td><td>${esc(r.angin_dari_ma)} ${fmt(r.angin_dari, 0)}° · ${fmt(r.U10_ms, 1)} m/s</td>
+        <td>${esc(r.gelombang_dari_ma)} ${fmt(r.gelombang_dari, 0)}°</td><td>${fmt(r.Hs_p90)} / ${fmt(r.Hs_maks)}</td></tr>`).join("")}</table>
+      <p class="muted" style="font-size:.78rem">Model gelombang 4 musim MGV-KS v03 pada muka air pasang tertinggi (HHWS); Hs = tinggi gelombang signifikan di perairan dekat pantai (≤ 300 m). Angin = rata-rata Sentinel-1 + ERA5. <a href="#" id="lnk-gel">Tampilkan di peta</a></p>`;
+  }
   function panelSosek(k) {
     const s = (SO.survei || {})[k];
     if (!s) return `<h3>Sosial-ekonomi</h3><div class="note">Survei sosial-ekonomi belum tersedia untuk pulau ini.</div>`;
@@ -310,6 +341,7 @@
         : `<div class="note">Data Sentinel-2 SR untuk pulau ini belum tersedia.</div>`}
       <h3>Indikator</h3>
       <table class="kv">${rowsFor(k)}</table>
+      ${panelGelombang(k)}
       ${panelAnalisis(k)}
       ${panelSosek(k)}
       <p><button class="btn" id="btn-layers">Tampilkan lapisan survei di peta</button></p>`;
@@ -333,6 +365,7 @@
     const c = e.target.closest(".chip"); if (c) return selectIsland(c.dataset.k);
     const a = e.target.closest("a[data-ll]"); if (a) { e.preventDefault(); const [la, lo] = a.dataset.ll.split(",").map(Number); map.flyTo([la, lo], 17); ensureOn("prioritas"); }
     if (e.target.id === "btn-layers") { ["plot", "air", "lai", "transek"].forEach(ensureOn); flyIsland(current); }
+    if (e.target.id === "lnk-gel") { e.preventDefault(); ensureOn("gelombang"); ensureOn("angin"); flyIsland(current); }
     if (e.target.id === "lnk-setuju") {
       e.preventDefault(); ensureOn("setuju");
       getGeo("persetujuan_masyarakat").then(gj => {
@@ -431,7 +464,7 @@
     </table>
     <p class="muted" style="font-size:.85rem">Semua lapisan ditampilkan dalam WGS84; sumber asli dalam UTM 48S (EPSG:32748). Geometri disederhanakan (toleransi 0,5–4 m) untuk tampilan web, sehingga luas di peta bisa sedikit berbeda dari tabel.</p>
     <h3>Unduh data</h3>
-    <p style="font-size:.88rem">${["mangrove_eksisting", "plot_vegetasi", "titik_kualitas_air", "sumur_air_tanah", "foto_lai", "transek_garis_pantai", "kesesuaian_ahp", "prioritas_masyarakat", "lokasi_prioritas", "persetujuan_masyarakat", `mangrove_s2sr_${S.s2sr_tahun.at(-1)}`]
+    <p style="font-size:.88rem">${["mangrove_eksisting", "plot_vegetasi", "titik_kualitas_air", "sumur_air_tanah", "foto_lai", "transek_garis_pantai", "kesesuaian_ahp", "prioritas_masyarakat", "angin", "gelombang_DJF", "lokasi_prioritas", "persetujuan_masyarakat", `mangrove_s2sr_${S.s2sr_tahun.at(-1)}`]
       .map(f => `<a href="data/${f}.geojson" download>${f}.geojson</a>`).join(" · ")}</p>
     <p class="muted" style="font-size:.8rem">Data dibangun: ${esc(S.dibangun)}</p>`;
 })();
