@@ -559,6 +559,7 @@ print(stats["pusat"])
 
 # Persetujuan masyarakat (FGD) dari 02_DATA_PRIMER/<PULAU>/09_Sosek/Rekomendasi_<KODE>.shp
 import subprocess
+subprocess.run([sys.executable, str(Path(__file__).with_name("veg_primer.py")), str(SRC)], check=True)
 subprocess.run([sys.executable, str(Path(__file__).with_name("build_sosek.py")), str(SRC)], check=True)
 
 # Kontur batimetri dari berkas sekunder yang belum punya versi v01 (Lancang), digeser ke MSL pasut lokal

@@ -32,6 +32,7 @@ Lapisan peta: daratan 2025, kontur topo-batimetri, mangrove eksisting (digitasi 
 8. Untuk panel tahapan, edit langsung `data/progres.json` (status: `selesai` / `berjalan` / `belum`).
    Struktur pantai & jalur kapal: `scripts/build_infrastruktur.py` membaca `01_DATA_SEKUNDER/12_Break_Water/SHP_Breakwater_Per_Pulau/*/Breakwater_*.shp` dan `01_DATA_SEKUNDER/11_Jalur_Kapal/01_Per_Pulau/*/Jalur_Kapal_*.shp` → `data/struktur_pantai.geojson`, `data/jalur_kapal.geojson`, `data/infrastruktur.json` (ditampilkan di sub-tab Pesisir).
    Strategi & rencana aksi: `scripts/build_strategi.py` membaca versi tertinggi `06_STRATEGI_RENCANA_AKSI/03_Rencana_Aksi/MGV-KS_RencanaAksi_KS_vNN.xlsx`, `MGV-KS_LokasiAksi_KS_vNN.gpkg`, `MGV-KS_PetaTahapRencanaAksi_KS_vNN.png` dan bab strategi `02_Strategi_Pemulihan/MGV-KS_StrategiRencanaAksi_KS_vNN.docx` → `data/strategi.json`, `data/rencana_aksi.geojson`, `data/peta_rencana_aksi.png` (tab Strategi, lapisan "Lokasi rencana aksi", ringkasan per pulau di sub-tab Pemulihan).
+   Plot vegetasi pulau yang belum ada di basis data v03 (`primer_baru.json["veg"]`, kini Sebira): `scripts/veg_primer.py` membaca `02_DATA_PRIMER/<PULAU>/05_Groundcheck/MGV-KS_Survei_<KODE>_Groundcheck.shp` (Transek + jarak = plot; Grid 10×10/5×5/2×2 = pohon/pancang/semai; DBH = keliling/π) dan menambahkannya ke `data/plot_vegetasi.geojson` serta Tabel 1–6 & ringkasan dengan metode yang sama dengan v03.
 9. Commit & push — GitHub Pages memperbarui situs dalam 1–2 menit.
 
 ## Teknis
