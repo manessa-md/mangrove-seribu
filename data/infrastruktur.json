@@ -1,0 +1,315 @@
+{
+ "pulau": {
+  "HRP": {
+   "struktur": {
+    "Breakwater laut dangkal": {
+     "n": 6,
+     "panjang_m": 787
+    },
+    "Jetty / dermaga": {
+     "n": 8,
+     "panjang_m": 497
+    },
+    "Tanggul beton / seawall": {
+     "n": 2,
+     "panjang_m": 391
+    }
+   },
+   "jalur": [
+    {
+     "id": "JK-HP-01",
+     "nama": "Rute Muara Angke - Pulau Harapan",
+     "tipe": "Trayek Reguler Dishub",
+     "panjang_km": 62.1
+    },
+    {
+     "id": "JK-HP-03",
+     "nama": "Alur Masuk Dermaga Harapan",
+     "tipe": "Alur Masuk Dermaga",
+     "panjang_km": 0.25
+    }
+   ]
+  },
+  "KLD": {
+   "struktur": {
+    "Breakwater laut dangkal": {
+     "n": 6,
+     "panjang_m": 812
+    },
+    "Jetty / dermaga": {
+     "n": 6,
+     "panjang_m": 319
+    },
+    "Tanggul beton / seawall": {
+     "n": 2,
+     "panjang_m": 177
+    }
+   },
+   "jalur": [
+    {
+     "id": "JK-KD-01",
+     "nama": "Rute Muara Angke - Kelapa Dua",
+     "tipe": "Trayek Reguler Dishub",
+     "panjang_km": 58.51
+    }
+   ]
+  },
+  "KLP": {
+   "struktur": {
+    "Breakwater laut dangkal": {
+     "n": 3,
+     "panjang_m": 365
+    },
+    "Jetty / dermaga": {
+     "n": 9,
+     "panjang_m": 1366
+    }
+   },
+   "jalur": [
+    {
+     "id": "JK-KP-01",
+     "nama": "Rute Muara Angke - Pulau Kelapa",
+     "tipe": "Trayek Reguler Dishub",
+     "panjang_km": 62.21
+    },
+    {
+     "id": "JK-KP-02",
+     "nama": "Alur Pelayaran Harapan - Kelapa",
+     "tipe": "Jalur Antar Pulau",
+     "panjang_km": 0.34
+    },
+    {
+     "id": "JK-KP-03",
+     "nama": "Alur Masuk Dermaga Kelapa",
+     "tipe": "Alur Masuk Dermaga",
+     "panjang_km": 0.34
+    }
+   ]
+  },
+  "LCG": {
+   "struktur": {
+    "Breakwater laut dangkal": {
+     "n": 7,
+     "panjang_m": 1078
+    },
+    "Breakwater lepas pantai": {
+     "n": 3,
+     "panjang_m": 141
+    },
+    "Jetty / dermaga": {
+     "n": 33,
+     "panjang_m": 897
+    },
+    "Tanggul beton / seawall": {
+     "n": 6,
+     "panjang_m": 1823
+    }
+   },
+   "jalur": [
+    {
+     "id": "JK-LC-01",
+     "nama": "Rute Tanjung Pasir - Pulau Lancang",
+     "tipe": "Trayek Penyeberangan Tradisional",
+     "panjang_km": 17.21
+    },
+    {
+     "id": "JK-LC-02",
+     "nama": "Rute Muara Angke - Pulau Lancang",
+     "tipe": "Trayek Reguler Dishub",
+     "panjang_km": 32.91
+    },
+    {
+     "id": "JK-LC-03",
+     "nama": "Alur Celah Terumbu Lancang",
+     "tipe": "Alur Masuk Dermaga",
+     "panjang_km": 0.74
+    }
+   ]
+  },
+  "PAR": {
+   "struktur": {
+    "Breakwater laut dangkal": {
+     "n": 1,
+     "panjang_m": 317
+    },
+    "Breakwater lepas pantai": {
+     "n": 1,
+     "panjang_m": 125
+    },
+    "Jetty / dermaga": {
+     "n": 6,
+     "panjang_m": 628
+    }
+   },
+   "jalur": [
+    {
+     "id": "JK-PR-01",
+     "nama": "Rute Muara Angke - Pulau Pari",
+     "tipe": "Trayek Reguler Dishub",
+     "panjang_km": 34.28
+    }
+   ]
+  },
+  "PGG": {
+   "struktur": {
+    "Breakwater laut dangkal": {
+     "n": 12,
+     "panjang_m": 1211
+    },
+    "Breakwater lepas pantai": {
+     "n": 1,
+     "panjang_m": 373
+    },
+    "Jetty / dermaga": {
+     "n": 6,
+     "panjang_m": 349
+    }
+   },
+   "jalur": [
+    {
+     "id": "JK-PG-01",
+     "nama": "Rute Muara Angke - Pulau Panggang",
+     "tipe": "Trayek Reguler Dishub",
+     "panjang_km": 51.96
+    },
+    {
+     "id": "JK-PG-02",
+     "nama": "Jalur Penyeberangan Pramuka - Panggang",
+     "tipe": "Jalur Antar Pulau",
+     "panjang_km": 1.87
+    },
+    {
+     "id": "JK-PG-03",
+     "nama": "Alur Masuk Dermaga Panggang",
+     "tipe": "Alur Masuk Dermaga",
+     "panjang_km": 1.05
+    }
+   ]
+  },
+  "PRM": {
+   "struktur": {
+    "Breakwater lepas pantai": {
+     "n": 12,
+     "panjang_m": 1184
+    },
+    "Jetty / dermaga": {
+     "n": 10,
+     "panjang_m": 909
+    },
+    "Struktur lain (tanpa atribut)": {
+     "n": 1,
+     "panjang_m": 302
+    },
+    "Tanggul beton / seawall": {
+     "n": 2,
+     "panjang_m": 1410
+    }
+   },
+   "jalur": [
+    {
+     "id": "JK-PM-01",
+     "nama": "Rute Muara Angke - Pulau Pramuka",
+     "tipe": "Trayek Reguler Dishub",
+     "panjang_km": 50.09
+    }
+   ]
+  },
+  "SBR": {
+   "struktur": {
+    "Breakwater laut dangkal": {
+     "n": 9,
+     "panjang_m": 744
+    },
+    "Jetty / dermaga": {
+     "n": 4,
+     "panjang_m": 518
+    },
+    "Tanggul beton / seawall": {
+     "n": 2,
+     "panjang_m": 939
+    }
+   },
+   "jalur": [
+    {
+     "id": "JK-SB-01",
+     "nama": "Rute Perintis Muara Angke - Pulau Sabira",
+     "tipe": "Trayek Perintis Dishub",
+     "panjang_km": 110.49
+    },
+    {
+     "id": "JK-SB-02",
+     "nama": "Rute Kapal Cepat Harapan - Pulau Sabira",
+     "tipe": "Trayek Kapal Cepat",
+     "panjang_km": 54.68
+    },
+    {
+     "id": "JK-SB-03",
+     "nama": "Alur Masuk Pelabuhan Sabira",
+     "tipe": "Alur Masuk Dermaga",
+     "panjang_km": 38.59
+    }
+   ]
+  },
+  "TDG": {
+   "struktur": {
+    "Breakwater laut dangkal": {
+     "n": 43,
+     "panjang_m": 3326
+    },
+    "Jetty / dermaga": {
+     "n": 11,
+     "panjang_m": 959
+    },
+    "Tanggul beton / seawall": {
+     "n": 29,
+     "panjang_m": 3311
+    }
+   },
+   "jalur": [
+    {
+     "id": "JK-TD-01",
+     "nama": "Rute Muara Angke - Pulau Tidung",
+     "tipe": "Trayek Reguler Dishub",
+     "panjang_km": 52.59
+    }
+   ]
+  },
+  "UTJ": {
+   "struktur": {
+    "Breakwater laut dangkal": {
+     "n": 10,
+     "panjang_m": 731
+    },
+    "Breakwater lepas pantai": {
+     "n": 5,
+     "panjang_m": 782
+    },
+    "Jetty / dermaga": {
+     "n": 19,
+     "panjang_m": 2226
+    }
+   },
+   "jalur": [
+    {
+     "id": "JK-UJ-01",
+     "nama": "Rute Tanjung Pasir - Pulau Untung Jawa",
+     "tipe": "Trayek Penyeberangan Tradisional",
+     "panjang_km": 6.07
+    },
+    {
+     "id": "JK-UJ-02",
+     "nama": "Rute Muara Angke - Pulau Untung Jawa",
+     "tipe": "Trayek Reguler Dishub",
+     "panjang_km": 17.52
+    },
+    {
+     "id": "JK-UJ-03",
+     "nama": "Alur Masuk Kolam Labuh Untung Jawa",
+     "tipe": "Alur Masuk Dermaga",
+     "panjang_km": 1.63
+    }
+   ]
+  }
+ },
+ "dibangun": "2026-11-18 13:48"
+}

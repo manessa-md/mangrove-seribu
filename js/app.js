@@ -13,6 +13,7 @@
   ]);
   const SO = await fetch("data/sosek.json", { cache: "no-cache" }).then(r => r.ok ? r.json() : {}).catch(() => ({}));
   const AN = await fetch("data/analisis.json", { cache: "no-cache" }).then(r => r.ok ? r.json() : {}).catch(() => ({}));
+  const IF = await fetch("data/infrastruktur.json", { cache: "no-cache" }).then(r => r.ok ? r.json() : {}).catch(() => ({}));
   const GL = await fetch("data/gelombang.json", { cache: "no-cache" }).then(r => r.ok ? r.json() : {}).catch(() => ({}));
   const PULAU = S.pulau;
   const KODE = Object.keys(PULAU);
@@ -69,6 +70,10 @@
       .map(([k, v, d]) => `<tr><td>${esc(k)}</td><td><b>${esc(fmt(v, d))}</b></td></tr>`).join("")}</table></div>`;
   }
 
+  const STRUK = { "Breakwater laut dangkal": "#6a3d9a", "Breakwater lepas pantai": "#e31a1c", "Jetty / dermaga": "#ff7f00",
+    "Tanggul beton / seawall": "#525252", "Struktur lain (tanpa atribut)": "#a6761d" };
+  const JALUR = { "Trayek Reguler Dishub": "#d6604d", "Trayek Perintis Dishub": "#b2182b", "Trayek Kapal Cepat": "#f4a582",
+    "Trayek Penyeberangan Tradisional": "#8c510a", "Jalur Antar Pulau": "#35978f", "Alur Masuk Dermaga": "#fdd835" };
   const LAYERS = [
     { id: "daratan", grp: "Dasar", label: "Daratan 2025", file: "daratan_2025", on: false, sw: "#ffffff; outline:1px solid #999",
       style: () => ({ color: "#ffffff", weight: 1.2, fill: false, dashArray: "3 3" }) },
@@ -170,6 +175,14 @@
       style: () => ({ color: "#222", weight: 4, opacity: .85 }),
       popup: p => popupTable(`Angin – ${MUSIM_NM[p.musim]}`, [["Pulau", PULAU[p.pulau]], ["Kecepatan U10 (m/s)", p.U10_ms], ["Arah datang (°)", `${p.dari}° (${p.dari_ma})`]]),
       legend: () => `<div class="lt">Angin ${MUSIM_NM[musim]}</div><div class="row"><span class="sw l" style="background:#222"></span>panah = arah tiup (dari pilihan musim di atas)</div>` },
+    { id: "struktur", grp: "Infrastruktur pesisir", label: "Breakwater, jetty & tanggul", file: "struktur_pantai", on: false, sw: "#6a3d9a",
+      style: f => ({ color: STRUK[f.properties.kelompok] || "#555", weight: 3.5, opacity: .95 }),
+      popup: p => popupTable(p.tipe || p.kelompok, [["Pulau", PULAU[p.pulau]], ["Kelompok", p.kelompok], ["Panjang (m)", p.panjang_m, 0], ["Tahun data", p.tahun, 0]]),
+      legend: () => `<div class="lt">Struktur pantai</div>` + Object.entries(STRUK).map(([k, c]) => `<div class="row"><span class="sw l" style="background:${c}"></span>${k}</div>`).join("") },
+    { id: "jalur", grp: "Infrastruktur pesisir", label: "Jalur kapal", file: "jalur_kapal", on: false, sw: "#d6604d",
+      style: f => ({ color: JALUR[f.properties.tipe] || "#d6604d", weight: f.properties.tipe === "Alur Masuk Dermaga" ? 3 : 2, dashArray: "8 5", opacity: .9 }),
+      popup: p => popupTable(p.nama, [["Pulau", PULAU[p.pulau]], ["Jenis", p.tipe], ["Asal", p.asal], ["Tujuan", p.tujuan], ["Panjang (km)", p.panjang_km]]),
+      legend: () => `<div class="lt">Jalur kapal</div>` + Object.entries(JALUR).map(([k, c]) => `<div class="row"><span class="sw l" style="background:${c}"></span>${k}</div>`).join("") },
   ];
   let s2Year = S.s2sr_tahun[S.s2sr_tahun.length - 1], airMode = "ket", musim = "DJF";
   function arahMA(d) { return d == null ? "–" : ["U", "TL", "T", "TG", "S", "BD", "B", "BL"][Math.floor(((d % 360) + 22.5) / 45) % 8]; }
@@ -316,6 +329,17 @@
         <td>${esc(r.gelombang_dari_ma)} ${fmt(r.gelombang_dari, 0)}°</td><td>${fmt(r.Hs_p90)} / ${fmt(r.Hs_maks)}</td></tr>`).join("")}</table>
       <p class="muted" style="font-size:.78rem">Model gelombang 4 musim MGV-KS v03 pada muka air pasang tertinggi (HHWS); Hs = tinggi gelombang signifikan di perairan dekat pantai (≤ 300 m). Angin = rata-rata Sentinel-1 + ERA5. <a href="#" id="lnk-gel">Tampilkan di peta</a></p>`;
   }
+  function panelInfra(k) {
+    const d = (IF.pulau || {})[k];
+    if (!d) return "";
+    const st = d.struktur || {}, tot = Object.values(st).reduce((a, v) => a + v.panjang_m, 0);
+    return `<h3>Struktur pelindung pantai</h3>
+      ${Object.keys(st).length ? `<table class="kv">${Object.entries(st).map(([n, v]) => `<tr><td><span class="sw" style="background:${STRUK[n] || "#555"}"></span> ${esc(n)}</td><td>${v.n} ruas · ${fmt(v.panjang_m, 0)} m</td></tr>`).join("")}
+        <tr><td>Total</td><td>${fmt(tot, 0)} m</td></tr></table>` : `<div class="note">Tidak ada data struktur pantai.</div>`}
+      <h3>Jalur kapal</h3>
+      ${(d.jalur || []).length ? `<table class="kv">${d.jalur.map(j => `<tr><td><span class="sw" style="background:${JALUR[j.tipe] || "#d6604d"}"></span> ${esc(j.nama)}<br><small class="muted">${esc(j.tipe)}</small></td><td>${fmt(j.panjang_km, j.panjang_km < 10 ? 2 : 1)} km</td></tr>`).join("")}</table>` : `<div class="note">Tidak ada data jalur kapal.</div>`}
+      <p class="muted" style="font-size:.78rem">Sumber: data sekunder breakwater &amp; jalur kapal per pulau (01_DATA_SEKUNDER). <a href="#" id="lnk-infra">Tampilkan di peta</a></p>`;
+  }
   function panelSosek(k) {
     const s = (SO.survei || {})[k];
     if (!s) return `<h3>Sosial-ekonomi</h3><div class="note">Survei sosial-ekonomi belum tersedia untuk pulau ini.</div>`;
@@ -326,7 +350,7 @@
       ${["kelebatan", "kondisi", "program", "pelibatan", "kesediaan", "peran", "dukungan", "pengaruh_ikan", "perilaku", "pemanfaatan", "sektor_laut"].map(blok).join("")}
       <p class="muted" style="font-size:.78rem">Ringkasan kuesioner survei sosial ekonomi-kelembagaan MGV-KS 2026; data pribadi responden tidak ditampilkan.</p>`;
   }
-  const SUBTAB = [["ringkasan", "Ringkasan"], ["vegetasi", "Vegetasi"], ["gelombang", "Gelombang"], ["pemulihan", "Pemulihan"], ["sosek", "Sosek"]];
+  const SUBTAB = [["ringkasan", "Ringkasan"], ["vegetasi", "Vegetasi"], ["gelombang", "Pesisir"], ["pemulihan", "Pemulihan"], ["sosek", "Sosek"]];
   let subTab = "ringkasan";
   function selectIsland(k, open = true) {
     current = k; showTab("pulau", open);
@@ -348,7 +372,7 @@
         : `<div class="note">Data Sentinel-2 SR untuk pulau ini belum tersedia.</div>`}`,
       vegetasi: `<h3>Indikator vegetasi &amp; pesisir</h3><table class="kv">${rowsFor(k)}</table>
         <p><button class="btn" id="btn-layers">Tampilkan lapisan survei di peta</button></p>`,
-      gelombang: panelGelombang(k) || `<div class="note">Data angin &amp; gelombang belum tersedia.</div>`,
+      gelombang: (panelGelombang(k) || `<div class="note">Data angin &amp; gelombang belum tersedia.</div>`) + panelInfra(k),
       pemulihan: panelAnalisis(k),
       sosek: panelSosek(k),
     };
@@ -389,12 +413,13 @@
       document.querySelectorAll("#tab-pulau .subtabs button").forEach(b => b.classList.toggle("active", b === sb));
       document.querySelectorAll("#tab-pulau .subsec").forEach(d => d.classList.toggle("active", d.dataset.sub === subTab));
       $("#panel").scrollTop = 0; gambarS2(current);
-      if (subTab === "gelombang") { ensureOn("gelombang"); ensureOn("angin"); }
+      if (subTab === "gelombang") { ensureOn("gelombang"); ensureOn("angin"); ensureOn("struktur"); }
       if (subTab === "pemulihan") { ensureOn("kesesuaian"); ensureOn("prioritas"); }
       return;
     }
     const a = e.target.closest("a[data-ll]"); if (a) { e.preventDefault(); const [la, lo] = a.dataset.ll.split(",").map(Number); map.flyTo([la, lo], 17); ensureOn("prioritas"); }
     if (e.target.id === "btn-layers") { ["plot", "air", "lai", "transek"].forEach(ensureOn); flyIsland(current); }
+    if (e.target.id === "lnk-infra") { e.preventDefault(); ensureOn("struktur"); ensureOn("jalur"); flyIsland(current); }
     if (e.target.id === "lnk-gel") { e.preventDefault(); ensureOn("gelombang"); ensureOn("angin"); flyIsland(current); }
     if (e.target.id === "lnk-setuju") {
       e.preventDefault(); ensureOn("setuju");
@@ -494,7 +519,7 @@
     </table>
     <p class="muted" style="font-size:.85rem">Semua lapisan ditampilkan dalam WGS84; sumber asli dalam UTM 48S (EPSG:32748). Geometri disederhanakan (toleransi 0,5–4 m) untuk tampilan web, sehingga luas di peta bisa sedikit berbeda dari tabel.</p>
     <h3>Unduh data</h3>
-    <p style="font-size:.88rem">${["mangrove_eksisting", "plot_vegetasi", "titik_kualitas_air", "sumur_air_tanah", "foto_lai", "transek_garis_pantai", "kesesuaian_ahp", "prioritas_masyarakat", "angin", "gelombang_DJF", "lokasi_prioritas", "persetujuan_masyarakat", `mangrove_s2sr_${S.s2sr_tahun.at(-1)}`]
+    <p style="font-size:.88rem">${["mangrove_eksisting", "plot_vegetasi", "titik_kualitas_air", "sumur_air_tanah", "foto_lai", "transek_garis_pantai", "kesesuaian_ahp", "prioritas_masyarakat", "angin", "gelombang_DJF", "struktur_pantai", "jalur_kapal", "lokasi_prioritas", "persetujuan_masyarakat", `mangrove_s2sr_${S.s2sr_tahun.at(-1)}`]
       .map(f => `<a href="data/${f}.geojson" download>${f}.geojson</a>`).join(" · ")}</p>
     <p class="muted" style="font-size:.8rem">Data dibangun: ${esc(S.dibangun)}</p>`;
 })();

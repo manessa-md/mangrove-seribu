@@ -567,3 +567,4 @@ subprocess.run([sys.executable, str(Path(__file__).with_name("build_analisis.py"
 
 # Angin & gelombang 4 musim: ringkasan per pulau + lapisan panah (muka air HHWS)
 subprocess.run([sys.executable, str(Path(__file__).with_name("build_gelombang.py")), str(SRC)], check=True)
+subprocess.run([sys.executable, str(Path(__file__).with_name("build_infrastruktur.py")), str(SRC)], check=True)
