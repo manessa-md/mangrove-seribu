@@ -447,20 +447,6 @@
   const AP = AN.pulau || {}, sumHa = o => Object.values(o || {}).reduce((x, y) => x + (+y || 0), 0);
   const lrrOf = k => (t11.find(r => r[0] === PULAU[k]) || [])[4];
   const NM_KRIT = { gelombang: "gelombang", substrat: "substrat", jarak_mangrove: "jarak mangrove", garis_pantai: "LRR", salinitas: "salinitas", elevasi: "elevasi" };
-  const peringatan = [];
-  KODE.forEach(k => {
-    const m = (AP[k] || {}).masukan; if (!m) return;
-    const n0 = peringatan.length;
-    if (m.tanpa_kriteria.length) peringatan.push(`<b>${PULAU[k]}</b>: AHP hanya ${m.jumlah_kriteria} kriteria (tanpa ${m.tanpa_kriteria.map(c => NM_KRIT[c] || c).join(", ")}); bobot dinormalisasi ulang.`);
-    if (m.r_bati_lapangan != null && m.r_bati_lapangan < 0.3) peringatan.push(`<b>${PULAU[k]}</b>: batimetri berkorelasi lemah dengan kedalaman lapangan (r = ${fmt(m.r_bati_lapangan)}), kelas elevasi kurang andal.`);
-    if (m.rmse_m > 0.5) peringatan.push(`<b>${PULAU[k]}</b>: galat elevasi setelah koreksi besar (RMSE ${fmt(m.rmse_m)} m).`);
-    if (m.tanpa_data_ha > 30) peringatan.push(`<b>${PULAU[k]}</b>: ${fmt(m.tanpa_data_ha)} ha zona kajian tanpa data elevasi (tidak terklasifikasi).`);
-    if (m.mangrove_sel === 0) peringatan.push(`<b>${PULAU[k]}</b>: mangrove eksisting belum didigitasi, kriteria jarak ke mangrove bernilai minimum.`);
-    else if (m.mangrove_S1S2_pct != null && m.mangrove_S1S2_pct < 70) peringatan.push(`<b>${PULAU[k]}</b>: hanya ${fmt(m.mangrove_S1S2_pct, 0)} % sel mangrove eksisting jatuh di elevasi S1/S2 (validasi lemah).`);
-    const pm = sumHa((AP[k] || {}).prioritas_masyarakat_ha), pa = sumHa((AP[k] || {}).prioritas_ahp_ha);
-    if (SO.persetujuan && SO.persetujuan[k] && pa > 1 && pm < 0.1 * pa) peringatan.push(`<b>${PULAU[k]}</b>: area prioritas yang disetujui masyarakat sangat kecil (${fmt(pm)} dari ${fmt(pa)} ha AHP).`);
-    if (peringatan.length > n0) { const it = peringatan.splice(n0).map(t => t.replace(/^<b>[^<]+<\/b>: /, "").replace(/\.$/, "")); peringatan.push(`<b>${PULAU[k]}</b>: ${it.join("; ")}.`); }
-  });
   $("#tab-analisis").innerHTML = `
     <h2>Hasil analisis terbaru</h2>
     <p class="cap">Kesesuaian &amp; prioritas ${esc(AN.versi || S.kesesuaian.versi)} · gelombang 4 musim v03 · luas mangrove Sentinel-2 SR ${S.s2sr_tahun[0]}–${S.s2sr_tahun.at(-1)} · garis pantai DSAS 1990–2025.</p>
@@ -492,7 +478,6 @@
     <tbody>${KODE.map(k => { const m = (AP[k] || {}).masukan || {}, g = (GL.pulau || {})[k];
       return `<tr><td>${PULAU[k]}</td><td>${g ? fmt(g.ekstrem.Hs_maks) : "–"}</td><td>${fmt(m.terlindung_ha)}</td><td>${fmt(m.sesuai_terlindung_ha)}</td><td>${fmt((m.struktur_ha || 0) + (m.jalur_ha || 0))}</td></tr>`; }).join("")}</tbody></table></div>
     <ul class="cap" style="padding-left:16px">${Object.values(AN.metode || {}).map(t => `<li>${esc(t)}</li>`).join("")}</ul>` : ""}
-    ${peringatan.length ? `<div class="note"><b>Catatan evaluasi</b><ul style="margin:6px 0 0;padding-left:18px">${peringatan.map(t => `<li>${t}</li>`).join("")}</ul></div>` : ""}
     <p class="muted" style="font-size:.8rem">Kesesuaian ${esc(S.kesesuaian.versi)}: elevasi terhadap zona pasut (MSL lokal; S1 = MLW–MHW, S2 = LLWS–MLW / MHW–HHWS, S3 = batas bawah–LLWS / HHWS–HAT + 0,2; batas bawah mengikuti dasar tempat mangrove eksisting tumbuh, dasar di bawah LLWS paling tinggi S3), batimetri dikoreksi dengan kedalaman terukur di lapangan (c = koreksi datum). AHP 6 kriteria untuk semua pulau: ${S.kesesuaian.bobot.map(b => `${esc(({ elevasi: "elevasi", gelombang: "gelombang Hs", substrat: "substrat", jarak_mangrove: "jarak ke mangrove", garis_pantai: "LRR", salinitas: "salinitas" })[b.kode] || b.kriteria)} ${fmt(b.bobot * 100, 1)} %`).join(", ")} (CR = ${fmt(S.kesesuaian.cr, 3)}). Grid 10 m; 300 m ke laut, 30 m ke darat.</p>
     <h3>Luas mangrove total Kepulauan Seribu</h3>
     <div class="chartbox"><canvas id="ch-total"></canvas></div>
