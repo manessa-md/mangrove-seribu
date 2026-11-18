@@ -12,6 +12,7 @@
     fetch("data/progres.json").then(r => r.json()),
   ]);
   const SO = await fetch("data/sosek.json").then(r => r.ok ? r.json() : {}).catch(() => ({}));
+  const AN = await fetch("data/analisis.json").then(r => r.ok ? r.json() : {}).catch(() => ({}));
   const PULAU = S.pulau;
   const KODE = Object.keys(PULAU);
   $("#tgl-update").textContent = "diperbarui " + P.diperbarui;
@@ -45,6 +46,8 @@
 
   /* ---- palet ---- */
   const PRIOR = { Tinggi: "#c0392b", Sedang: "#e68a2e", Rendah: "#f2d16b" };
+  const KES = { S1: "#1a9850", S2: "#91cf60", S3: "#d9ef8b" };
+  const KES_NM = { S1: "S1 sangat sesuai", S2: "S2 sesuai", S3: "S3 sesuai bersyarat" };
   const KELAS_S2 = { lebat: "#0b5d3b", sedang: "#3f9c5a", jarang: "#a5d36e" };
   const LRR = [["Abrasi tinggi (<-2)", "#b2182b"], ["Abrasi (-2…-0,5)", "#ef8a62"], ["Stabil (±0,5)", "#e0e0e0"],
                ["Akresi (0,5…2)", "#67a9cf"], ["Akresi tinggi (>2)", "#2166ac"]];
@@ -128,12 +131,23 @@
       popup: p => popupTable("Garis pantai", [["Tahun", p.year, 0], ["Pulau", PULAU[p.pulau]]]),
       legend: () => `<div class="lt">Garis pantai</div>` + [1990, 2000, 2010, 2020, 2025].map(y => `<div class="row"><span class="sw l" style="background:${yearColor(y)}"></span>${y}</div>`).join("") },
 
-    { id: "prioritas", grp: "Pemulihan", label: "Lokasi prioritas pemulihan", file: "lokasi_prioritas", on: true, sw: "#c0392b",
-      style: f => ({ color: PRIOR[f.properties.prioritas], weight: 1, fillColor: PRIOR[f.properties.prioritas], fillOpacity: .55 }),
-      popup: p => popupTable(`Lokasi ${p.id_lokasi || ""}`, [["Pulau", PULAU[p.pulau]], ["Prioritas", p.prioritas], ["Luas (ha)", p.luas_ha], ["Skor rerata", p.skor_rerata],
-        ["Elevasi median (m MSL)", p.elevasi_median_m], ["Lintang", p.lintang, 6], ["Bujur", p.bujur, 6]]),
-      legend: () => `<div class="lt">Prioritas pemulihan</div>` + Object.entries(PRIOR).map(([k, c]) => `<div class="row"><span class="sw" style="background:${c}"></span>${k}</div>`).join("") },
-    { id: "setuju", grp: "Pemulihan", label: "Persetujuan masyarakat (FGD)", file: "persetujuan_masyarakat", on: false, sw: "#2b8cbe",
+    { id: "kesesuaian", grp: "Analisis pemulihan", label: "Kesesuaian lahan (hasil AHP)", file: "kesesuaian_ahp", on: true, sw: "#1a9850",
+      style: f => ({ color: KES[f.properties.kelas], weight: .6, fillColor: KES[f.properties.kelas], fillOpacity: .6 }),
+      popup: p => popupTable(`Kesesuaian ${p.kelas}`, [["Pulau", PULAU[p.pulau]], ["Kelas", KES_NM[p.kelas]], ["Luas kelas di pulau (ha)", p.luas_ha]]),
+      legend: () => `<div class="lt">Kesesuaian lahan (AHP ${esc(AN.versi || "")})</div>` +
+        Object.entries(KES).map(([k, c]) => `<div class="row"><span class="sw" style="background:${c}"></span>${KES_NM[k]}</div>`).join("") +
+        `<div class="row muted" style="font-size:.72rem">tanpa warna = N tidak sesuai</div>` },
+    { id: "prioritas", grp: "Analisis pemulihan", label: "Prioritas pemulihan (sesuai + disetujui masyarakat)", file: "prioritas_masyarakat", on: true, sw: "#c0392b",
+      style: f => ({ color: "#3b0d0d", weight: 1.2, fillColor: PRIOR[f.properties.prioritas], fillOpacity: .8 }),
+      popup: p => popupTable(`Prioritas ${p.id}`, [["Pulau", PULAU[p.pulau]], ["Prioritas", p.prioritas], ["Luas (ha)", p.luas_ha], ["Skor AHP rerata", p.skor_rerata],
+        ["Lokasi AHP", p.id_lokasi], ["Area FGD", p.id_fgd], ["Lintang", p.lintang, 6], ["Bujur", p.bujur, 6]]),
+      legend: () => `<div class="lt">Prioritas pemulihan (AHP ∩ FGD setuju)</div>` + Object.entries(PRIOR).map(([k, c]) => `<div class="row"><span class="sw" style="background:${c}"></span>${k}</div>`).join("") },
+    { id: "prioritas_ahp", grp: "Analisis pemulihan", label: "Prioritas AHP (belum mempertimbangkan masyarakat)", file: "lokasi_prioritas", on: false, sw: "#e68a2e",
+      style: f => ({ color: PRIOR[f.properties.prioritas], weight: 1.5, dashArray: "3 3", fill: false }),
+      popup: p => popupTable(`Lokasi ${p.id_lokasi || ""}`, [["Pulau", PULAU[p.pulau]], ["Prioritas AHP", p.prioritas], ["Luas (ha)", p.luas_ha], ["Skor rerata", p.skor_rerata],
+        ["Elevasi median (m MSL)", p.elevasi_median_m]]),
+      legend: () => `<div class="lt">Prioritas AHP (garis putus)</div>` + Object.entries(PRIOR).map(([k, c]) => `<div class="row"><span class="sw l" style="background:${c}"></span>${k}</div>`).join("") },
+    { id: "setuju", grp: "Analisis pemulihan", label: "Persetujuan masyarakat (FGD)", file: "persetujuan_masyarakat", on: false, sw: "#2b8cbe",
       style: f => ({ color: SETUJU[f.properties.status] || "#999", weight: 2, dashArray: "5 3", fillColor: SETUJU[f.properties.status] || "#999", fillOpacity: .3 }),
       popup: p => popupTable(`Area FGD ${p.id}`, [["Pulau", PULAU[p.pulau]], ["Masyarakat", p.status], ["Catatan", p.catatan], ["Luas (ha)", p.luas_ha]]),
       legend: () => `<div class="lt">Penanaman mangrove – sikap masyarakat (FGD)</div>` +
@@ -248,11 +262,37 @@
       "LRR rerata (m/th)", "% transek abrasi", "Hs P90 musim tertinggi (m)", "% bersedia berpartisipasi"];
     return keys.filter(x => r[x] != null && r[x] !== "-").map(x => `<tr><td>${esc(x)}</td><td>${esc(fmt(r[x]))}</td></tr>`).join("");
   }
+  const bar = (obj, n, warna = "#3f9c5a") => Object.entries(obj).map(([a, b]) =>
+    `<div class="bar"><span class="bl">${esc(a)}</span><span class="bt"><span style="width:${Math.round(100 * b / Math.max(n, 1))}%;background:${warna}"></span></span><span class="bv">${b}</span></div>`).join("");
+  function panelAnalisis(k) {
+    const a = (AN.pulau || {})[k] || {}, ks = a.kesesuaian_ha, pa = a.prioritas_ahp_ha, pm = a.prioritas_masyarakat_ha || {};
+    if (!ks) return `<div class="note">Analisis kesesuaian belum tersedia untuk pulau ini.</div>`;
+    const tot = o => Object.values(o || {}).reduce((x, y) => x + y, 0);
+    const fg = SO.persetujuan && SO.persetujuan[k];
+    return `<h3>Analisis pemulihan</h3>
+      <table class="kv"><tr><td colspan="2"><b>1. Kesesuaian lahan (AHP ${esc(AN.versi)})</b></td></tr>
+        ${["S1", "S2", "S3"].map(c => `<tr><td><span class="sw" style="background:${KES[c]}"></span> ${KES_NM[c]}</td><td>${fmt(ks[c])} ha</td></tr>`).join("")}
+        <tr><td>N tidak sesuai</td><td>${fmt(ks.N)} ha</td></tr>
+        <tr><td colspan="2"><b>2. Prioritas pemulihan (sesuai + disetujui masyarakat)</b></td></tr>
+        ${["Tinggi", "Sedang", "Rendah"].map(c => `<tr><td><span class="sw" style="background:${PRIOR[c]}"></span> Prioritas ${c.toLowerCase()}</td><td>${fmt(pm[c])} ha <small class="muted">dari ${fmt(pa[c])} ha AHP</small></td></tr>`).join("")}
+        <tr><td>Total prioritas</td><td>${fmt(tot(pm))} ha</td></tr></table>
+      ${fg ? (a.setuju_tidak_sesuai_ha > 0.05 ? `<p class="muted" style="font-size:.8rem">${fmt(a.setuju_tidak_sesuai_ha)} ha area yang disetujui masyarakat tidak termasuk kelas S1–S3 (mangrove eksisting, daratan, atau elevasi di luar zona pasut).</p>` : "")
+        : `<div class="note">Belum ada peta FGD untuk pulau ini, sehingga prioritas belum dapat dipadukan dengan keinginan masyarakat.</div>`}
+      ${fg ? `<p class="muted" style="font-size:.82rem">Area FGD: ${Object.entries(fg).map(([st, v]) => `${esc(st.toLowerCase())} ${fmt(v.luas_ha)} ha`).join(" · ")} — <a href="#" id="lnk-setuju">tampilkan di peta</a></p>` : ""}`;
+  }
+  function panelSosek(k) {
+    const s = (SO.survei || {})[k];
+    if (!s) return `<h3>Sosial-ekonomi</h3><div class="note">Survei sosial-ekonomi belum tersedia untuk pulau ini.</div>`;
+    const q = s.pertanyaan, i = s.indikator;
+    const blok = key => q[key] ? `<div class="qs"><div class="ql">${esc(q[key].label)}</div>${bar(q[key].jawaban, q[key].n)}</div>` : "";
+    return `<h3>Sosial-ekonomi masyarakat <small class="muted">(${s.n} responden)</small></h3>
+      <div class="kpis">${Object.entries(i).map(([a, b]) => `<div class="kpi"><div class="v">${fmt(b, 0)}%</div><div class="l">${esc(a.replace(" (%)", "").toLowerCase())}</div></div>`).join("")}</div>
+      ${["kelebatan", "kondisi", "program", "pelibatan", "kesediaan", "peran", "dukungan", "pengaruh_ikan", "perilaku", "pemanfaatan", "sektor_laut"].map(blok).join("")}
+      <p class="muted" style="font-size:.78rem">Ringkasan kuesioner survei sosial ekonomi-kelembagaan MGV-KS 2026; data pribadi responden tidak ditampilkan.</p>`;
+  }
   function selectIsland(k, open = true) {
     current = k; showTab("pulau", open);
     const r = R[k] || {}, s = s2t[k];
-    const t13 = S.tabel["13"].baris.find(b => b[0] === PULAU[k]);
-    const pri = S.tabel["14"].baris.filter(b => b[1] === PULAU[k]);
     $("#tab-pulau").innerHTML = `
       <div class="chips">${KODE.map(c => `<button class="chip ${c === k ? "active" : ""}" data-k="${c}">${PULAU[c]}</button>`).join("")}</div>
       <h2>Pulau ${PULAU[k]} <small class="muted">(${k})</small></h2>
@@ -272,16 +312,8 @@
         : `<div class="note">Data Sentinel-2 SR untuk pulau ini belum tersedia.</div>`}
       <h3>Indikator</h3>
       <table class="kv">${rowsFor(k)}</table>
-      ${t13 ? `<h3>Kesesuaian &amp; prioritas pemulihan</h3><table class="kv">
-        <tr><td>S1 sangat sesuai</td><td>${fmt(t13[1])} ha</td></tr><tr><td>S2 sesuai</td><td>${fmt(t13[2])} ha</td></tr>
-        <tr><td>S3 sesuai bersyarat</td><td>${fmt(t13[3])} ha</td></tr><tr><td>N tidak sesuai</td><td>${fmt(t13[4])} ha</td></tr>
-        <tr><td>Prioritas tinggi</td><td>${fmt(t13[6])} ha</td></tr><tr><td>Prioritas sedang</td><td>${fmt(t13[7])} ha</td></tr>
-        <tr><td>Prioritas rendah</td><td>${fmt(t13[8])} ha</td></tr></table>
-        ${pri.length ? `<p style="font-size:.85rem"><b>Lokasi prioritas tinggi:</b> ${pri.map(p => `<a href="#" data-ll="${p[6]},${p[7]}">${p[0]}</a> (${fmt(p[2])} ha)`).join(", ")}</p>` : ""}`
-        : `<div class="note">Analisis kesesuaian belum tersedia untuk pulau ini (menunggu data batimetri/DTM/gelombang).</div>`}
-      ${SO.persetujuan && SO.persetujuan[k] ? `<h3>Persetujuan masyarakat (FGD)</h3><table class="kv">${Object.entries(SO.persetujuan[k])
-        .map(([st, v]) => `<tr><td>${esc(st === "Setuju" ? "Area disetujui ditanami mangrove" : st === "Tidak setuju" ? "Area tidak disetujui" : "Area belum ada keterangan")}</td><td>${fmt(v.luas_ha)} ha (${v.n} poligon)</td></tr>`).join("")}</table>
-        <p><a href="#" id="lnk-setuju" style="font-size:.85rem">Tampilkan area FGD di peta</a></p>` : ""}
+      ${panelAnalisis(k)}
+      ${panelSosek(k)}
       <p><button class="btn" id="btn-layers">Tampilkan lapisan survei di peta</button></p>`;
     if (s) {
       const ser = S.s2sr_tahunan[k], dig = S.luas_digitasi_2025[k];
@@ -324,7 +356,7 @@
     <div class="chartbox" style="height:240px"><canvas id="ch-tren"></canvas></div>
     <h3>Kesesuaian lahan pemulihan (ha)</h3>
     <div class="chartbox"><canvas id="ch-sesuai"></canvas></div>
-    <p class="muted" style="font-size:.8rem">Kesesuaian ${S.kesesuaian.versi}: elevasi terhadap zona pasut (MSL lokal; S1 = MLW–MHW, S2 = LLWS–MLW / MHW–HHWS), batimetri dikoreksi dengan kedalaman terukur di lapangan. AHP 6 kriteria: ${S.kesesuaian.bobot.map(b => `${esc(({ elevasi: "elevasi", gelombang: "gelombang Hs", substrat: "substrat", jarak_mangrove: "jarak ke mangrove", garis_pantai: "LRR", salinitas: "salinitas" })[b.kode] || b.kriteria)} ${fmt(b.bobot * 100, 1)} %`).join(", ")} (CR = ${fmt(S.kesesuaian.cr, 3)}). Grid 10 m; 300 m ke laut, 30 m ke darat.</p>
+    <p class="muted" style="font-size:.8rem">Kesesuaian ${S.kesesuaian.versi}: elevasi terhadap zona pasut (MSL lokal; S1 = MLW–MHW, S2 = LLWS–MLW / MHW–HHWS, S3 = HHWS–HAT + 0,2; dasar di bawah LLWS = N), batimetri dikoreksi dengan kedalaman terukur di lapangan. AHP 6 kriteria: ${S.kesesuaian.bobot.map(b => `${esc(({ elevasi: "elevasi", gelombang: "gelombang Hs", substrat: "substrat", jarak_mangrove: "jarak ke mangrove", garis_pantai: "LRR", salinitas: "salinitas" })[b.kode] || b.kriteria)} ${fmt(b.bobot * 100, 1)} %`).join(", ")} (CR = ${fmt(S.kesesuaian.cr, 3)}). Grid 10 m; 300 m ke laut, 30 m ke darat.</p>
     <h3>Perubahan garis pantai 1990–2025</h3>
     <div class="chartbox"><canvas id="ch-lrr"></canvas></div>
     <h3>Stok karbon batas bawah (t C/ha)</h3>
@@ -401,7 +433,7 @@
     </table>
     <p class="muted" style="font-size:.85rem">Semua lapisan ditampilkan dalam WGS84; sumber asli dalam UTM 48S (EPSG:32748). Geometri disederhanakan (toleransi 0,5–4 m) untuk tampilan web, sehingga luas di peta bisa sedikit berbeda dari tabel.</p>
     <h3>Unduh data</h3>
-    <p style="font-size:.88rem">${["mangrove_eksisting", "plot_vegetasi", "titik_kualitas_air", "sumur_air_tanah", "foto_lai", "transek_garis_pantai", "lokasi_prioritas", "persetujuan_masyarakat", `mangrove_s2sr_${S.s2sr_tahun.at(-1)}`]
+    <p style="font-size:.88rem">${["mangrove_eksisting", "plot_vegetasi", "titik_kualitas_air", "sumur_air_tanah", "foto_lai", "transek_garis_pantai", "kesesuaian_ahp", "prioritas_masyarakat", "lokasi_prioritas", "persetujuan_masyarakat", `mangrove_s2sr_${S.s2sr_tahun.at(-1)}`]
       .map(f => `<a href="data/${f}.geojson" download>${f}.geojson</a>`).join(" · ")}</p>
     <p class="muted" style="font-size:.8rem">Data dibangun: ${esc(S.dibangun)}</p>`;
 })();

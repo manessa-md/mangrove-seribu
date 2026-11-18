@@ -6,7 +6,9 @@ data/kontur_batimetri.geojson dan memperbarui data/statistik.json (Tabel 1, kele
 
 Sumber 01_DATA_SEKUNDER/05_Oseanografi/Batimetri/batimetri_Lancang.tif (10 m, datum tidak tertulis)
 digeser ke MSL pasut lokal dengan median selisih terhadap MGV-KS_TopoBatimetri_LCG_v04.tif di sel
-yang bertampalan (keputusan pengguna 18 Nov 2026). Hapus berkas ini bila MGV-KS_Batimetri_LCG_v01.tif terbit.
+yang bertampalan (keputusan pengguna 18 Nov 2026). Bila MGV-KS_TopoBatimetri_LCG_v05.tif ada, dipakai koreksi
+datum c dari berkas itu (kalibrasi dengan titik kedalaman lapangan + prediksi pasut, sama dengan pulau lain).
+Hapus berkas ini bila MGV-KS_Batimetri_LCG_v01.tif terbit.
 """
 import json, re, sys
 from pathlib import Path
@@ -16,7 +18,8 @@ SRC = Path(sys.argv[1] if len(sys.argv) > 1 else "/mnt/user-data/uploads/Mangrov
 OUT = Path(__file__).resolve().parent.parent / "data"
 DB = SRC / "03_DATABASE_MANGROVE/05_Basis_Data_Spasial"
 SUMBER = {"LCG": (SRC / "01_DATA_SEKUNDER/05_Oseanografi/Batimetri/batimetri_Lancang.tif",
-                  DB / "MGV-KS_TopoBatimetri_LCG_v04.tif")}
+                  DB / "MGV-KS_TopoBatimetri_LCG_v05.tif" if (DB / "MGV-KS_TopoBatimetri_LCG_v05.tif").exists()
+                  else DB / "MGV-KS_TopoBatimetri_LCG_v04.tif")}
 
 
 def kontur(kode, f, ref):
@@ -32,11 +35,21 @@ def kontur(kode, f, ref):
         with rasterio.open(ref) as v:
             reproject(v.read(1), b, src_transform=v.transform, src_crs=v.crs, dst_transform=T, dst_crs=crs,
                       resampling=Resampling.average, src_nodata=np.nan, dst_nodata=np.nan)
+    c_tag = None
+    with rasterio.open(ref) as v:
+        try:
+            c_tag = float(v.tags().get("koreksi_datum_c_m", "nan"))
+        except ValueError:
+            pass
     m = np.isfinite(e) & np.isfinite(b)
-    if m.sum() < 100:
+    if c_tag is not None and np.isfinite(c_tag):
+        m = np.ones_like(m)   # koreksi datum dari kalibrasi lapangan (v05)
+    elif m.sum() < 100:
         print(f"  {kode}: tampalan dengan TopoBatimetri v04 terlalu sedikit ({m.sum()} sel) — dilewati")
         return None, None
-    geser = float(np.median(b[m] - e[m]))
+    geser = c_tag if (c_tag is not None and np.isfinite(c_tag)) else float(np.median(b[m] - e[m]))
+    sumber = (f"batimetri 10 m terkoreksi pasut (c = {geser:+.2f} m, kalibrasi titik lapangan; topo-batimetri {ref.stem[-3:]})"
+              if (c_tag is not None and np.isfinite(c_tag)) else f"batimetri sekunder 10 m, digeser {geser:+.2f} m ke MSL pasut lokal (TopoBatimetri v04)")
     e = e + geser
     # penghalusan ringan 3x3 (abaikan NaN) agar kontur tidak bergerigi
     ok = np.isfinite(e)
@@ -57,7 +70,7 @@ def kontur(kode, f, ref):
                 continue
             feats.append({"type": "Feature", "properties": {
                 "pulau": kode, "elevasi_m": float(lv),
-                "interval_sumber": f"batimetri sekunder 10 m, digeser {geser:+.2f} m ke MSL pasut lokal (TopoBatimetri v04)".replace(".", ",")},
+                "interval_sumber": sumber.replace(".", ",")},
                 "geometry": mapping(stransform(to84, ln))})
     return feats, geser
 
@@ -77,7 +90,7 @@ def main():
         if not feats:
             continue
         kb["features"] = [x for x in kb["features"]
-                          if not (x["properties"]["pulau"] == kode and "sekunder" in str(x["properties"].get("interval_sumber", "")))] + feats
+                          if not (x["properties"]["pulau"] == kode and "10 m" in str(x["properties"].get("interval_sumber", "")))] + feats
         print(f"  kontur batimetri sekunder {kode}: {len(feats)} garis, geser {geser:+.2f} m")
         i_b = st["tabel"]["1"]["kolom"].index("Batimetri")
         for b in st["tabel"]["1"]["baris"]:
@@ -88,8 +101,9 @@ def main():
                 r["batimetri"] = 1
         nama = st["pulau"].get(kode, kode)
         g_ = f"{geser:+.2f}".replace(".", ",")
-        catat = (f"Batimetri {nama} ({f.name}, 10 m): datum tidak tertulis; digeser {g_} m ke MSL pasut lokal "
-                 f"(median selisih terhadap TopoBatimetri {kode} v04). Kontur bersifat indikatif sampai versi olahan v01 tersedia.")
+        catat = (f"Batimetri {nama} ({f.name}, 10 m): datum tidak tertulis; dikoreksi {g_} m ke MSL pasut lokal "
+                 + (f"dengan kalibrasi titik kedalaman lapangan ({ref.name})." if "v05" in ref.name else
+                    f"(median selisih terhadap TopoBatimetri {kode} v04). Kontur bersifat indikatif sampai versi olahan v01 tersedia."))
         st["catatan_mutu"] = [c for c in st["catatan_mutu"]
                               if not (c.startswith("Batimetri") and (nama in c or kode in c))] + [catat]
     txt = json.dumps(kb, ensure_ascii=False, separators=(",", ":"))

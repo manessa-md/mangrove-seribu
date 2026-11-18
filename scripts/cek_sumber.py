@@ -49,6 +49,9 @@ PANTAU = (
     + [f"02_DATA_PRIMER/*/07_GroundWaterQuality/MGV-KS_Survei_*_AirTanah.{e}" for e in SHP]
     + [f"02_DATA_PRIMER/*/05_Groundcheck/MGV-KS_Survei_*_Groundcheck.{e}" for e in SHP]
     + [f"02_DATA_PRIMER/*/09_Sosek/Rekomendasi_*.{e}" for e in SHP]
+    + ["02_DATA_PRIMER/*/09_Sosek/MGV-KS_Survei_*_Sosek.xlsx"]
+    + [AN + "08_Kesesuaian_Pemulihan/MGV-KS_Kesesuaian_*_v05.tif", AN + "09_Lokasi_Prioritas/MGV-KS_LokasiPrioritas_KS_v*.gpkg",
+       DB + "MGV-KS_TopoBatimetri_LCG_v05.tif"]
 )
 
 

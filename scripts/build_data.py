@@ -17,8 +17,8 @@ DB = SRC / "03_DATABASE_MANGROVE/05_Basis_Data_Spasial"
 AN = SRC / "04_PENGOLAHAN_ANALISIS"
 GPKG = DB / "MGV-KS_HasilAnalisis_KS_v03.gpkg"
 # Kesesuaian & prioritas v04 (elevasi berdatum pasut/MSL) menggantikan lapisan/tabel v03 di GPKG & TabelLaporan
-KESESUAIAN = AN / "08_Kesesuaian_Pemulihan/MGV-KS_Kesesuaian_KS_v04.xlsx"
-PRIORITAS = AN / "09_Lokasi_Prioritas/MGV-KS_LokasiPrioritas_KS_v04.gpkg"
+KESESUAIAN = AN / "08_Kesesuaian_Pemulihan/MGV-KS_Kesesuaian_KS_v05.xlsx"
+PRIORITAS = AN / "09_Lokasi_Prioritas/MGV-KS_LokasiPrioritas_KS_v05.gpkg"
 S2DIR = DB / "MGV-KS_S2SR_2018-2026"   # raster kelas kerapatan per pulau-tahun (sudah dipotong AOI)
 DIGIT = DB                              # MGV-KS_DigitasiMangrove2025_<KODE>.shp
 KELAS = {1: "jarang", 2: "sedang", 3: "lebat"}
@@ -561,3 +561,6 @@ subprocess.run([sys.executable, str(Path(__file__).with_name("build_sosek.py")),
 
 # Kontur batimetri dari berkas sekunder yang belum punya versi v01 (Lancang), digeser ke MSL pasut lokal
 subprocess.run([sys.executable, str(Path(__file__).with_name("bati_sekunder.py")), str(SRC)], check=True)
+
+# Lapisan analisis: kesesuaian AHP & prioritas ∩ persetujuan masyarakat; Tabel 13/14 dari versi kesesuaian terbaru
+subprocess.run([sys.executable, str(Path(__file__).with_name("build_analisis.py")), str(SRC)], check=True)

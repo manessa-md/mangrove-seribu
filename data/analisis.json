@@ -1,0 +1,201 @@
+{
+ "versi": "v05",
+ "pulau": {
+  "UTJ": {
+   "kesesuaian_ha": {
+    "S1": 3.74,
+    "S2": 3.93,
+    "S3": 0.05,
+    "N": 100.59
+   },
+   "prioritas_ahp_ha": {
+    "Tinggi": 3.5,
+    "Sedang": 3.16,
+    "Rendah": 1.06
+   },
+   "prioritas_masyarakat_ha": {
+    "Tinggi": 1.5,
+    "Sedang": 0.17,
+    "Rendah": 0.06
+   },
+   "setuju_tidak_sesuai_ha": 3.59
+  },
+  "PAR": {
+   "kesesuaian_ha": {
+    "S1": 3.19,
+    "S2": 22.19,
+    "S3": 0.0,
+    "N": 118.65
+   },
+   "prioritas_ahp_ha": {
+    "Tinggi": 0.9,
+    "Sedang": 9.32,
+    "Rendah": 15.16
+   },
+   "prioritas_masyarakat_ha": {
+    "Tinggi": 0.0,
+    "Sedang": 0.28,
+    "Rendah": 0.95
+   },
+   "setuju_tidak_sesuai_ha": 21.02
+  },
+  "LCG": {
+   "kesesuaian_ha": {
+    "S1": 8.85,
+    "S2": 5.15,
+    "S3": 0.3,
+    "N": 89.44
+   },
+   "prioritas_ahp_ha": {
+    "Tinggi": 5.21,
+    "Sedang": 7.65,
+    "Rendah": 1.44
+   },
+   "prioritas_masyarakat_ha": {
+    "Tinggi": 1.92,
+    "Sedang": 2.42,
+    "Rendah": 0.03
+   },
+   "setuju_tidak_sesuai_ha": 10.22
+  },
+  "TDG": {
+   "kesesuaian_ha": {
+    "S1": 1.94,
+    "S2": 6.73,
+    "S3": 0.57,
+    "N": 374.52
+   },
+   "prioritas_ahp_ha": {
+    "Tinggi": 1.81,
+    "Sedang": 4.34,
+    "Rendah": 3.09
+   },
+   "prioritas_masyarakat_ha": {
+    "Tinggi": 0.0,
+    "Sedang": 0.04,
+    "Rendah": 0.0
+   },
+   "setuju_tidak_sesuai_ha": 3.8
+  },
+  "PRM": {
+   "kesesuaian_ha": {
+    "S1": 3.7,
+    "S2": 1.75,
+    "S3": 0.02,
+    "N": 89.13
+   },
+   "prioritas_ahp_ha": {
+    "Tinggi": 0.0,
+    "Sedang": 4.45,
+    "Rendah": 1.02
+   },
+   "prioritas_masyarakat_ha": {
+    "Tinggi": 0.0,
+    "Sedang": 1.13,
+    "Rendah": 0.0
+   },
+   "setuju_tidak_sesuai_ha": 8.76
+  },
+  "PGG": {
+   "kesesuaian_ha": {
+    "S1": 0.0,
+    "S2": 0.05,
+    "S3": 0.01,
+    "N": 85.36
+   },
+   "prioritas_ahp_ha": {
+    "Tinggi": 0.02,
+    "Sedang": 0.03,
+    "Rendah": 0.01
+   },
+   "prioritas_masyarakat_ha": {
+    "Tinggi": 0.0,
+    "Sedang": 0.0,
+    "Rendah": 0.0
+   },
+   "setuju_tidak_sesuai_ha": 2.17
+  },
+  "KLP": {
+   "kesesuaian_ha": {
+    "S1": 0.44,
+    "S2": 0.04,
+    "S3": 0.0,
+    "N": 107.23
+   },
+   "prioritas_ahp_ha": {
+    "Tinggi": 0.0,
+    "Sedang": 0.48,
+    "Rendah": 0.0
+   },
+   "prioritas_masyarakat_ha": {
+    "Tinggi": 0.0,
+    "Sedang": 0.14,
+    "Rendah": 0.0
+   },
+   "setuju_tidak_sesuai_ha": 4.14
+  },
+  "KLD": {
+   "kesesuaian_ha": {
+    "S1": 6.14,
+    "S2": 1.12,
+    "S3": 0.0,
+    "N": 49.82
+   },
+   "prioritas_ahp_ha": {
+    "Tinggi": 0.87,
+    "Sedang": 6.19,
+    "Rendah": 0.2
+   },
+   "prioritas_masyarakat_ha": {
+    "Tinggi": 0.0,
+    "Sedang": 0.77,
+    "Rendah": 0.0
+   },
+   "setuju_tidak_sesuai_ha": 0.23
+  },
+  "HRP": {
+   "kesesuaian_ha": {
+    "S1": 5.12,
+    "S2": 2.42,
+    "S3": 0.0,
+    "N": 64.55
+   },
+   "prioritas_ahp_ha": {
+    "Tinggi": 0.0,
+    "Sedang": 5.84,
+    "Rendah": 1.7
+   },
+   "prioritas_masyarakat_ha": {
+    "Tinggi": 0.0,
+    "Sedang": 0.03,
+    "Rendah": 0.0
+   },
+   "setuju_tidak_sesuai_ha": 2.55
+  },
+  "SBR": {
+   "kesesuaian_ha": {
+    "S1": 2.8,
+    "S2": 1.64,
+    "S3": 0.0,
+    "N": 67.74
+   },
+   "prioritas_ahp_ha": {
+    "Tinggi": 0.17,
+    "Sedang": 3.0,
+    "Rendah": 1.27
+   },
+   "prioritas_masyarakat_ha": {
+    "Tinggi": 0.01,
+    "Sedang": 0.45,
+    "Rendah": 0.1
+   },
+   "setuju_tidak_sesuai_ha": 1.81
+  }
+ },
+ "dibangun": "2026-11-18 12:24",
+ "total": {
+  "sesuai_ha": 81.89,
+  "prioritas_ahp_ha": 81.89,
+  "prioritas_masyarakat_ha": 10.01
+ }
+}

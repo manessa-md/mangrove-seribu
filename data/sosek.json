@@ -98,5 +98,1144 @@
   "Setuju": 70.4,
   "Tidak setuju": 11.92
  },
- "dibangun": "2026-11-18 11:51"
+ "survei": {
+  "HRP": {
+   "n": 10,
+   "pertanyaan": {
+    "kelebatan": {
+     "label": "Kelebatan mangrove dibanding 2020",
+     "n": 10,
+     "jawaban": {
+      "Lebih lebat": 10
+     }
+    },
+    "kondisi": {
+     "label": "Kondisi mangrove 6 tahun terakhir",
+     "n": 10,
+     "jawaban": {
+      "Masih alami": 10
+     }
+    },
+    "tahu_fungsi": {
+     "label": "Mengetahui fungsi mangrove",
+     "n": 10,
+     "jawaban": {
+      "Ya": 10
+     }
+    },
+    "pemanfaatan": {
+     "label": "Memanfaatkan mangrove 2020–2026",
+     "n": 10,
+     "jawaban": {
+      "Tidak pernah": 6,
+      "Jarang": 3,
+      "Sering": 1
+     }
+    },
+    "program": {
+     "label": "Program rehabilitasi mangrove",
+     "n": 10,
+     "jawaban": {
+      "Tahu dan terlibat": 5,
+      "Tahu, tapi tidak terlibat": 4,
+      "Tidak tahu": 1
+     }
+    },
+    "pelibatan": {
+     "label": "Masyarakat dilibatkan dalam program",
+     "n": 9,
+     "jawaban": {
+      "Hanya saat pelaksanaan": 4,
+      "Sejak tahap perencanaan awal": 4,
+      "Tidak tahu": 1
+     }
+    },
+    "kesediaan": {
+     "label": "Kesediaan berpartisipasi",
+     "n": 10,
+     "jawaban": {
+      "Sangat bersedia": 4,
+      "Bersedia": 6
+     }
+    },
+    "peran": {
+     "label": "Peran yang paling bersedia dijalani",
+     "n": 10,
+     "jawaban": {
+      "Pelaksana penanaman/perawatan": 7,
+      "Penyedia lahan": 1,
+      "Tidak bersedia berperan": 1,
+      "Pengawas/patroli": 1
+     }
+    },
+    "dukungan": {
+     "label": "Dukungan agar mau berpartisipasi (boleh > 1)",
+     "n": 10,
+     "jawaban": {
+      "Kompensasi/Insentif finansial": 7,
+      "Bibit disediakan": 7,
+      "Pelatihan/Edukasi": 5,
+      "Kejelasan manfaat jangka panjang": 3,
+      "Dilibatkan dalam pengambilan keputusan": 2
+     }
+    },
+    "pengaruh_ikan": {
+     "label": "Pengaruh mangrove pada kelimpahan ikan/kepiting/udang",
+     "n": 10,
+     "jawaban": {
+      "Berpengaruh": 6,
+      "Tidak berpengaruh": 2,
+      "Sangat Berpengaruh": 2
+     }
+    },
+    "perilaku": {
+     "label": "Perubahan perilaku warga menjaga mangrove",
+     "n": 10,
+     "jawaban": {
+      "Membaik": 6,
+      "Sama saja": 4
+     }
+    },
+    "sektor_laut": {
+     "label": "Bekerja di sektor kelautan/perikanan",
+     "n": 10,
+     "jawaban": {
+      "Tidak": 9,
+      "Ya": 1
+     }
+    }
+   },
+   "indikator": {
+    "Bersedia berpartisipasi (%)": 100.0,
+    "Pernah terlibat program (%)": 50.0,
+    "Menilai mangrove berkurang (%)": 0.0,
+    "Dilibatkan sejak perencanaan (%)": 40.0
+   }
+  },
+  "KLD": {
+   "n": 9,
+   "pertanyaan": {
+    "kelebatan": {
+     "label": "Kelebatan mangrove dibanding 2020",
+     "n": 9,
+     "jawaban": {
+      "Lebih lebat": 9
+     }
+    },
+    "kondisi": {
+     "label": "Kondisi mangrove 6 tahun terakhir",
+     "n": 9,
+     "jawaban": {
+      "Masih alami": 9
+     }
+    },
+    "tahu_fungsi": {
+     "label": "Mengetahui fungsi mangrove",
+     "n": 9,
+     "jawaban": {
+      "Ya": 8,
+      "Tidak": 1
+     }
+    },
+    "pemanfaatan": {
+     "label": "Memanfaatkan mangrove 2020–2026",
+     "n": 9,
+     "jawaban": {
+      "Tidak pernah": 5,
+      "Jarang": 3,
+      "Kadang-kadang": 1
+     }
+    },
+    "program": {
+     "label": "Program rehabilitasi mangrove",
+     "n": 9,
+     "jawaban": {
+      "Tahu, tapi tidak terlibat": 5,
+      "Tahu dan terlibat": 4
+     }
+    },
+    "pelibatan": {
+     "label": "Masyarakat dilibatkan dalam program",
+     "n": 9,
+     "jawaban": {
+      "Hanya saat pelaksanaan": 6,
+      "Sejak tahap perencanaan awal": 3
+     }
+    },
+    "kesediaan": {
+     "label": "Kesediaan berpartisipasi",
+     "n": 9,
+     "jawaban": {
+      "Sangat bersedia": 4,
+      "Bersedia": 4,
+      "Tidak bersedia": 1
+     }
+    },
+    "peran": {
+     "label": "Peran yang paling bersedia dijalani",
+     "n": 9,
+     "jawaban": {
+      "Pelaksana penanaman/perawatan": 8,
+      "Tidak bersedia berperan": 1
+     }
+    },
+    "dukungan": {
+     "label": "Dukungan agar mau berpartisipasi (boleh > 1)",
+     "n": 9,
+     "jawaban": {
+      "Kompensasi/Insentif finansial": 8,
+      "Pelatihan/Edukasi": 8,
+      "Bibit disediakan": 6,
+      "Dilibatkan dalam pengambilan keputusan": 3,
+      "Kejelasan manfaat jangka panjang": 2
+     }
+    },
+    "pengaruh_ikan": {
+     "label": "Pengaruh mangrove pada kelimpahan ikan/kepiting/udang",
+     "n": 9,
+     "jawaban": {
+      "Berpengaruh": 4,
+      "Sangat Berpengaruh": 3,
+      "Tidak berpengaruh": 2
+     }
+    },
+    "perilaku": {
+     "label": "Perubahan perilaku warga menjaga mangrove",
+     "n": 9,
+     "jawaban": {
+      "Sama saja": 5,
+      "Membaik": 4
+     }
+    },
+    "sektor_laut": {
+     "label": "Bekerja di sektor kelautan/perikanan",
+     "n": 9,
+     "jawaban": {
+      "Tidak": 9
+     }
+    }
+   },
+   "indikator": {
+    "Bersedia berpartisipasi (%)": 88.9,
+    "Pernah terlibat program (%)": 44.4,
+    "Menilai mangrove berkurang (%)": 0.0,
+    "Dilibatkan sejak perencanaan (%)": 33.3
+   }
+  },
+  "KLP": {
+   "n": 12,
+   "pertanyaan": {
+    "kelebatan": {
+     "label": "Kelebatan mangrove dibanding 2020",
+     "n": 12,
+     "jawaban": {
+      "Lebih lebat": 12
+     }
+    },
+    "kondisi": {
+     "label": "Kondisi mangrove 6 tahun terakhir",
+     "n": 12,
+     "jawaban": {
+      "Masih alami": 12
+     }
+    },
+    "tahu_fungsi": {
+     "label": "Mengetahui fungsi mangrove",
+     "n": 12,
+     "jawaban": {
+      "Ya": 12
+     }
+    },
+    "pemanfaatan": {
+     "label": "Memanfaatkan mangrove 2020–2026",
+     "n": 12,
+     "jawaban": {
+      "Tidak pernah": 11,
+      "Sering": 1
+     }
+    },
+    "program": {
+     "label": "Program rehabilitasi mangrove",
+     "n": 12,
+     "jawaban": {
+      "Tahu dan terlibat": 6,
+      "Tahu, tapi tidak terlibat": 5,
+      "Tidak tahu": 1
+     }
+    },
+    "pelibatan": {
+     "label": "Masyarakat dilibatkan dalam program",
+     "n": 11,
+     "jawaban": {
+      "Hanya saat pelaksanaan": 5,
+      "Sejak tahap perencanaan awal": 4,
+      "Tidak dilibatkan": 2
+     }
+    },
+    "kesediaan": {
+     "label": "Kesediaan berpartisipasi",
+     "n": 12,
+     "jawaban": {
+      "Sangat bersedia": 6,
+      "Bersedia": 6
+     }
+    },
+    "peran": {
+     "label": "Peran yang paling bersedia dijalani",
+     "n": 12,
+     "jawaban": {
+      "Pelaksana penanaman/perawatan": 8,
+      "Pengawas/patroli": 4
+     }
+    },
+    "dukungan": {
+     "label": "Dukungan agar mau berpartisipasi (boleh > 1)",
+     "n": 12,
+     "jawaban": {
+      "Kompensasi/Insentif finansial": 11,
+      "Kejelasan manfaat jangka panjang": 8,
+      "Pelatihan/Edukasi": 7,
+      "Dilibatkan dalam pengambilan keputusan": 6,
+      "Bibit disediakan": 6
+     }
+    },
+    "pengaruh_ikan": {
+     "label": "Pengaruh mangrove pada kelimpahan ikan/kepiting/udang",
+     "n": 12,
+     "jawaban": {
+      "Berpengaruh": 7,
+      "Sangat Berpengaruh": 5
+     }
+    },
+    "perilaku": {
+     "label": "Perubahan perilaku warga menjaga mangrove",
+     "n": 12,
+     "jawaban": {
+      "Sama saja": 6,
+      "Membaik": 5,
+      "Memburuk": 1
+     }
+    },
+    "sektor_laut": {
+     "label": "Bekerja di sektor kelautan/perikanan",
+     "n": 12,
+     "jawaban": {
+      "Tidak": 12
+     }
+    }
+   },
+   "indikator": {
+    "Bersedia berpartisipasi (%)": 100.0,
+    "Pernah terlibat program (%)": 50.0,
+    "Menilai mangrove berkurang (%)": 0.0,
+    "Dilibatkan sejak perencanaan (%)": 33.3
+   }
+  },
+  "LCG": {
+   "n": 10,
+   "pertanyaan": {
+    "kelebatan": {
+     "label": "Kelebatan mangrove dibanding 2020",
+     "n": 10,
+     "jawaban": {
+      "Lebih lebat": 2,
+      "Tidak berubah": 1,
+      "Berkurang": 7
+     }
+    },
+    "kondisi": {
+     "label": "Kondisi mangrove 6 tahun terakhir",
+     "n": 10,
+     "jawaban": {
+      "Masih alami": 7,
+      "Mulai rusak": 2,
+      "Sudah sangat rusak": 1
+     }
+    },
+    "tahu_fungsi": {
+     "label": "Mengetahui fungsi mangrove",
+     "n": 10,
+     "jawaban": {
+      "Ya": 9,
+      "Tidak": 1
+     }
+    },
+    "pemanfaatan": {
+     "label": "Memanfaatkan mangrove 2020–2026",
+     "n": 10,
+     "jawaban": {
+      "Tidak pernah": 9,
+      "Kadang-kadang": 1
+     }
+    },
+    "program": {
+     "label": "Program rehabilitasi mangrove",
+     "n": 10,
+     "jawaban": {
+      "Tahu, tapi tidak terlibat": 6,
+      "Tahu dan terlibat": 3,
+      "Tidak tahu": 1
+     }
+    },
+    "pelibatan": {
+     "label": "Masyarakat dilibatkan dalam program",
+     "n": 9,
+     "jawaban": {
+      "Hanya saat pelaksanaan": 6,
+      "Sejak tahap perencanaan awal": 3
+     }
+    },
+    "kesediaan": {
+     "label": "Kesediaan berpartisipasi",
+     "n": 10,
+     "jawaban": {
+      "Sangat bersedia": 4,
+      "Bersedia": 5,
+      "Ragu-ragu": 1
+     }
+    },
+    "peran": {
+     "label": "Peran yang paling bersedia dijalani",
+     "n": 10,
+     "jawaban": {
+      "Pelaksana penanaman/perawatan": 6,
+      "Pengawas/patroli": 4
+     }
+    },
+    "dukungan": {
+     "label": "Dukungan agar mau berpartisipasi (boleh > 1)",
+     "n": 10,
+     "jawaban": {
+      "Bibit disediakan": 8,
+      "Dilibatkan dalam pengambilan keputusan": 7,
+      "Kompensasi/Insentif finansial": 6,
+      "Pelatihan/Edukasi": 6,
+      "Kejelasan manfaat jangka panjang": 4
+     }
+    },
+    "pengaruh_ikan": {
+     "label": "Pengaruh mangrove pada kelimpahan ikan/kepiting/udang",
+     "n": 10,
+     "jawaban": {
+      "Sangat Berpengaruh": 5,
+      "Berpengaruh": 4,
+      "Tidak berpengaruh": 1
+     }
+    },
+    "perilaku": {
+     "label": "Perubahan perilaku warga menjaga mangrove",
+     "n": 10,
+     "jawaban": {
+      "Membaik": 5,
+      "Sama saja": 4,
+      "Memburuk": 1
+     }
+    },
+    "sektor_laut": {
+     "label": "Bekerja di sektor kelautan/perikanan",
+     "n": 10,
+     "jawaban": {
+      "Ya": 5,
+      "Tidak": 5
+     }
+    }
+   },
+   "indikator": {
+    "Bersedia berpartisipasi (%)": 90.0,
+    "Pernah terlibat program (%)": 30.0,
+    "Menilai mangrove berkurang (%)": 70.0,
+    "Dilibatkan sejak perencanaan (%)": 30.0
+   }
+  },
+  "PAR": {
+   "n": 8,
+   "pertanyaan": {
+    "kelebatan": {
+     "label": "Kelebatan mangrove dibanding 2020",
+     "n": 8,
+     "jawaban": {
+      "Lebih lebat": 2,
+      "Berkurang": 6
+     }
+    },
+    "kondisi": {
+     "label": "Kondisi mangrove 6 tahun terakhir",
+     "n": 8,
+     "jawaban": {
+      "Masih alami": 6,
+      "Mulai rusak": 2
+     }
+    },
+    "tahu_fungsi": {
+     "label": "Mengetahui fungsi mangrove",
+     "n": 8,
+     "jawaban": {
+      "Ya": 8
+     }
+    },
+    "pemanfaatan": {
+     "label": "Memanfaatkan mangrove 2020–2026",
+     "n": 8,
+     "jawaban": {
+      "Tidak pernah": 6,
+      "Jarang": 1,
+      "Sering": 1
+     }
+    },
+    "program": {
+     "label": "Program rehabilitasi mangrove",
+     "n": 8,
+     "jawaban": {
+      "Tahu dan terlibat": 8
+     }
+    },
+    "pelibatan": {
+     "label": "Masyarakat dilibatkan dalam program",
+     "n": 8,
+     "jawaban": {
+      "Sejak tahap perencanaan awal": 5,
+      "Hanya saat pelaksanaan": 3
+     }
+    },
+    "kesediaan": {
+     "label": "Kesediaan berpartisipasi",
+     "n": 8,
+     "jawaban": {
+      "Sangat bersedia": 2,
+      "Bersedia": 6
+     }
+    },
+    "peran": {
+     "label": "Peran yang paling bersedia dijalani",
+     "n": 8,
+     "jawaban": {
+      "Pelaksana penanaman/perawatan": 7,
+      "Edukator": 1
+     }
+    },
+    "dukungan": {
+     "label": "Dukungan agar mau berpartisipasi (boleh > 1)",
+     "n": 8,
+     "jawaban": {
+      "Pelatihan/Edukasi": 7,
+      "Kompensasi/Insentif finansial": 6,
+      "Kejelasan manfaat jangka panjang": 6,
+      "Dilibatkan dalam pengambilan keputusan": 5,
+      "Bibit disediakan": 5
+     }
+    },
+    "pengaruh_ikan": {
+     "label": "Pengaruh mangrove pada kelimpahan ikan/kepiting/udang",
+     "n": 8,
+     "jawaban": {
+      "Sangat Berpengaruh": 6,
+      "Berpengaruh": 1,
+      "Tidak tahu": 1
+     }
+    },
+    "perilaku": {
+     "label": "Perubahan perilaku warga menjaga mangrove",
+     "n": 8,
+     "jawaban": {
+      "Membaik": 4,
+      "Sama saja": 3,
+      "Memburuk": 1
+     }
+    },
+    "sektor_laut": {
+     "label": "Bekerja di sektor kelautan/perikanan",
+     "n": 8,
+     "jawaban": {
+      "Tidak": 7,
+      "Ya": 1
+     }
+    }
+   },
+   "indikator": {
+    "Bersedia berpartisipasi (%)": 100.0,
+    "Pernah terlibat program (%)": 100.0,
+    "Menilai mangrove berkurang (%)": 75.0,
+    "Dilibatkan sejak perencanaan (%)": 62.5
+   }
+  },
+  "PGG": {
+   "n": 11,
+   "pertanyaan": {
+    "kelebatan": {
+     "label": "Kelebatan mangrove dibanding 2020",
+     "n": 11,
+     "jawaban": {
+      "Lebih lebat": 8,
+      "Berkurang": 3
+     }
+    },
+    "kondisi": {
+     "label": "Kondisi mangrove 6 tahun terakhir",
+     "n": 11,
+     "jawaban": {
+      "Masih alami": 10,
+      "Mulai rusak": 1
+     }
+    },
+    "tahu_fungsi": {
+     "label": "Mengetahui fungsi mangrove",
+     "n": 11,
+     "jawaban": {
+      "Ya": 10,
+      "Tidak": 1
+     }
+    },
+    "pemanfaatan": {
+     "label": "Memanfaatkan mangrove 2020–2026",
+     "n": 11,
+     "jawaban": {
+      "Tidak pernah": 9,
+      "Jarang": 1,
+      "Kadang-kadang": 1
+     }
+    },
+    "program": {
+     "label": "Program rehabilitasi mangrove",
+     "n": 11,
+     "jawaban": {
+      "Tahu, tapi tidak terlibat": 4,
+      "Tahu dan terlibat": 4,
+      "Tidak tahu": 3
+     }
+    },
+    "pelibatan": {
+     "label": "Masyarakat dilibatkan dalam program",
+     "n": 8,
+     "jawaban": {
+      "Sejak tahap perencanaan awal": 5,
+      "Tidak dilibatkan": 2,
+      "Hanya saat pelaksanaan": 1
+     }
+    },
+    "kesediaan": {
+     "label": "Kesediaan berpartisipasi",
+     "n": 11,
+     "jawaban": {
+      "Sangat bersedia": 4,
+      "Bersedia": 7
+     }
+    },
+    "peran": {
+     "label": "Peran yang paling bersedia dijalani",
+     "n": 11,
+     "jawaban": {
+      "Pelaksana penanaman/perawatan": 7,
+      "Pengawas/patroli": 3,
+      "Edukator": 1
+     }
+    },
+    "dukungan": {
+     "label": "Dukungan agar mau berpartisipasi (boleh > 1)",
+     "n": 11,
+     "jawaban": {
+      "Kompensasi/Insentif finansial": 8,
+      "Pelatihan/Edukasi": 7,
+      "Dilibatkan dalam pengambilan keputusan": 6,
+      "Kejelasan manfaat jangka panjang": 5,
+      "Bibit disediakan": 5
+     }
+    },
+    "pengaruh_ikan": {
+     "label": "Pengaruh mangrove pada kelimpahan ikan/kepiting/udang",
+     "n": 11,
+     "jawaban": {
+      "Berpengaruh": 6,
+      "Tidak berpengaruh": 2,
+      "Sangat Berpengaruh": 2,
+      "Tidak tahu": 1
+     }
+    },
+    "perilaku": {
+     "label": "Perubahan perilaku warga menjaga mangrove",
+     "n": 11,
+     "jawaban": {
+      "Sama saja": 7,
+      "Membaik": 4
+     }
+    },
+    "sektor_laut": {
+     "label": "Bekerja di sektor kelautan/perikanan",
+     "n": 11,
+     "jawaban": {
+      "Tidak": 8,
+      "Ya": 3
+     }
+    }
+   },
+   "indikator": {
+    "Bersedia berpartisipasi (%)": 100.0,
+    "Pernah terlibat program (%)": 36.4,
+    "Menilai mangrove berkurang (%)": 27.3,
+    "Dilibatkan sejak perencanaan (%)": 45.5
+   }
+  },
+  "PRM": {
+   "n": 14,
+   "pertanyaan": {
+    "kelebatan": {
+     "label": "Kelebatan mangrove dibanding 2020",
+     "n": 14,
+     "jawaban": {
+      "Lebih lebat": 13,
+      "Tidak berubah": 1
+     }
+    },
+    "kondisi": {
+     "label": "Kondisi mangrove 6 tahun terakhir",
+     "n": 14,
+     "jawaban": {
+      "Masih alami": 11,
+      "Mulai rusak": 3
+     }
+    },
+    "tahu_fungsi": {
+     "label": "Mengetahui fungsi mangrove",
+     "n": 14,
+     "jawaban": {
+      "Ya": 13,
+      "Tidak": 1
+     }
+    },
+    "pemanfaatan": {
+     "label": "Memanfaatkan mangrove 2020–2026",
+     "n": 14,
+     "jawaban": {
+      "Tidak pernah": 8,
+      "Jarang": 4,
+      "Kadang-kadang": 1,
+      "Sering": 1
+     }
+    },
+    "program": {
+     "label": "Program rehabilitasi mangrove",
+     "n": 14,
+     "jawaban": {
+      "Tahu dan terlibat": 10,
+      "Tidak tahu": 3,
+      "Tahu, tapi tidak terlibat": 1
+     }
+    },
+    "pelibatan": {
+     "label": "Masyarakat dilibatkan dalam program",
+     "n": 11,
+     "jawaban": {
+      "Hanya saat pelaksanaan": 6,
+      "Sejak tahap perencanaan awal": 5
+     }
+    },
+    "kesediaan": {
+     "label": "Kesediaan berpartisipasi",
+     "n": 14,
+     "jawaban": {
+      "Sangat bersedia": 3,
+      "Bersedia": 8,
+      "Tidak bersedia": 3
+     }
+    },
+    "peran": {
+     "label": "Peran yang paling bersedia dijalani",
+     "n": 14,
+     "jawaban": {
+      "Pelaksana penanaman/perawatan": 8,
+      "Edukator": 3,
+      "Tidak bersedia berperan": 2,
+      "Pengawas/patroli": 1
+     }
+    },
+    "dukungan": {
+     "label": "Dukungan agar mau berpartisipasi (boleh > 1)",
+     "n": 14,
+     "jawaban": {
+      "Kompensasi/Insentif finansial": 12,
+      "Pelatihan/Edukasi": 10,
+      "Dilibatkan dalam pengambilan keputusan": 8,
+      "Kejelasan manfaat jangka panjang": 7,
+      "Bibit disediakan": 6
+     }
+    },
+    "pengaruh_ikan": {
+     "label": "Pengaruh mangrove pada kelimpahan ikan/kepiting/udang",
+     "n": 14,
+     "jawaban": {
+      "Sangat Berpengaruh": 6,
+      "Berpengaruh": 4,
+      "Tidak berpengaruh": 3,
+      "Sangat tidak berpengaruh": 1
+     }
+    },
+    "perilaku": {
+     "label": "Perubahan perilaku warga menjaga mangrove",
+     "n": 14,
+     "jawaban": {
+      "Membaik": 7,
+      "Sama saja": 5,
+      "Memburuk": 2
+     }
+    },
+    "sektor_laut": {
+     "label": "Bekerja di sektor kelautan/perikanan",
+     "n": 14,
+     "jawaban": {
+      "Tidak": 13,
+      "Ya": 1
+     }
+    }
+   },
+   "indikator": {
+    "Bersedia berpartisipasi (%)": 78.6,
+    "Pernah terlibat program (%)": 71.4,
+    "Menilai mangrove berkurang (%)": 0.0,
+    "Dilibatkan sejak perencanaan (%)": 35.7
+   }
+  },
+  "SBR": {
+   "n": 7,
+   "pertanyaan": {
+    "kelebatan": {
+     "label": "Kelebatan mangrove dibanding 2020",
+     "n": 7,
+     "jawaban": {
+      "Lebih lebat": 6,
+      "Berkurang": 1
+     }
+    },
+    "kondisi": {
+     "label": "Kondisi mangrove 6 tahun terakhir",
+     "n": 7,
+     "jawaban": {
+      "Masih alami": 6,
+      "Mulai rusak": 1
+     }
+    },
+    "tahu_fungsi": {
+     "label": "Mengetahui fungsi mangrove",
+     "n": 7,
+     "jawaban": {
+      "Ya": 7
+     }
+    },
+    "pemanfaatan": {
+     "label": "Memanfaatkan mangrove 2020–2026",
+     "n": 7,
+     "jawaban": {
+      "Tidak pernah": 3,
+      "Jarang": 3,
+      "Sering": 1
+     }
+    },
+    "program": {
+     "label": "Program rehabilitasi mangrove",
+     "n": 7,
+     "jawaban": {
+      "Tahu dan terlibat": 4,
+      "Tahu, tapi tidak terlibat": 3
+     }
+    },
+    "pelibatan": {
+     "label": "Masyarakat dilibatkan dalam program",
+     "n": 7,
+     "jawaban": {
+      "Hanya saat pelaksanaan": 4,
+      "Sejak tahap perencanaan awal": 3
+     }
+    },
+    "kesediaan": {
+     "label": "Kesediaan berpartisipasi",
+     "n": 7,
+     "jawaban": {
+      "Sangat bersedia": 1,
+      "Bersedia": 4,
+      "Ragu-ragu": 1,
+      "Tidak bersedia": 1
+     }
+    },
+    "peran": {
+     "label": "Peran yang paling bersedia dijalani",
+     "n": 7,
+     "jawaban": {
+      "Pelaksana penanaman/perawatan": 4,
+      "Pengawas/patroli": 2,
+      "Edukator": 1
+     }
+    },
+    "dukungan": {
+     "label": "Dukungan agar mau berpartisipasi (boleh > 1)",
+     "n": 7,
+     "jawaban": {
+      "Kompensasi/Insentif finansial": 5,
+      "Pelatihan/Edukasi": 5,
+      "Bibit disediakan": 5,
+      "Dilibatkan dalam pengambilan keputusan": 4,
+      "Kejelasan manfaat jangka panjang": 4
+     }
+    },
+    "pengaruh_ikan": {
+     "label": "Pengaruh mangrove pada kelimpahan ikan/kepiting/udang",
+     "n": 7,
+     "jawaban": {
+      "Berpengaruh": 3,
+      "Tidak berpengaruh": 2,
+      "Sangat Berpengaruh": 2
+     }
+    },
+    "perilaku": {
+     "label": "Perubahan perilaku warga menjaga mangrove",
+     "n": 7,
+     "jawaban": {
+      "Membaik": 4,
+      "Sama saja": 3
+     }
+    },
+    "sektor_laut": {
+     "label": "Bekerja di sektor kelautan/perikanan",
+     "n": 7,
+     "jawaban": {
+      "Tidak": 4,
+      "Ya": 3
+     }
+    }
+   },
+   "indikator": {
+    "Bersedia berpartisipasi (%)": 71.4,
+    "Pernah terlibat program (%)": 57.1,
+    "Menilai mangrove berkurang (%)": 14.3,
+    "Dilibatkan sejak perencanaan (%)": 42.9
+   }
+  },
+  "TDG": {
+   "n": 15,
+   "pertanyaan": {
+    "kelebatan": {
+     "label": "Kelebatan mangrove dibanding 2020",
+     "n": 15,
+     "jawaban": {
+      "Lebih lebat": 14,
+      "Berkurang": 1
+     }
+    },
+    "kondisi": {
+     "label": "Kondisi mangrove 6 tahun terakhir",
+     "n": 15,
+     "jawaban": {
+      "Masih alami": 15
+     }
+    },
+    "tahu_fungsi": {
+     "label": "Mengetahui fungsi mangrove",
+     "n": 15,
+     "jawaban": {
+      "Ya": 13,
+      "Tidak": 2
+     }
+    },
+    "pemanfaatan": {
+     "label": "Memanfaatkan mangrove 2020–2026",
+     "n": 15,
+     "jawaban": {
+      "Tidak pernah": 10,
+      "Jarang": 1,
+      "Kadang-kadang": 1,
+      "Sering": 3
+     }
+    },
+    "program": {
+     "label": "Program rehabilitasi mangrove",
+     "n": 15,
+     "jawaban": {
+      "Tahu dan terlibat": 10,
+      "Tahu, tapi tidak terlibat": 5
+     }
+    },
+    "pelibatan": {
+     "label": "Masyarakat dilibatkan dalam program",
+     "n": 15,
+     "jawaban": {
+      "Hanya saat pelaksanaan": 11,
+      "Sejak tahap perencanaan awal": 3,
+      "Tidak dilibatkan": 1
+     }
+    },
+    "kesediaan": {
+     "label": "Kesediaan berpartisipasi",
+     "n": 15,
+     "jawaban": {
+      "Sangat bersedia": 3,
+      "Bersedia": 11,
+      "Ragu-ragu": 1
+     }
+    },
+    "peran": {
+     "label": "Peran yang paling bersedia dijalani",
+     "n": 15,
+     "jawaban": {
+      "Pelaksana penanaman/perawatan": 12,
+      "Pengawas/patroli": 3
+     }
+    },
+    "dukungan": {
+     "label": "Dukungan agar mau berpartisipasi (boleh > 1)",
+     "n": 15,
+     "jawaban": {
+      "Kompensasi/Insentif finansial": 10,
+      "Pelatihan/Edukasi": 9,
+      "Bibit disediakan": 9,
+      "Dilibatkan dalam pengambilan keputusan": 7,
+      "Kejelasan manfaat jangka panjang": 7
+     }
+    },
+    "pengaruh_ikan": {
+     "label": "Pengaruh mangrove pada kelimpahan ikan/kepiting/udang",
+     "n": 15,
+     "jawaban": {
+      "Berpengaruh": 11,
+      "Sangat Berpengaruh": 3,
+      "Tidak berpengaruh": 1
+     }
+    },
+    "perilaku": {
+     "label": "Perubahan perilaku warga menjaga mangrove",
+     "n": 15,
+     "jawaban": {
+      "Membaik": 10,
+      "Sama saja": 5
+     }
+    },
+    "sektor_laut": {
+     "label": "Bekerja di sektor kelautan/perikanan",
+     "n": 15,
+     "jawaban": {
+      "Tidak": 12,
+      "Ya": 3
+     }
+    }
+   },
+   "indikator": {
+    "Bersedia berpartisipasi (%)": 93.3,
+    "Pernah terlibat program (%)": 66.7,
+    "Menilai mangrove berkurang (%)": 6.7,
+    "Dilibatkan sejak perencanaan (%)": 20.0
+   }
+  },
+  "UTJ": {
+   "n": 10,
+   "pertanyaan": {
+    "kelebatan": {
+     "label": "Kelebatan mangrove dibanding 2020",
+     "n": 10,
+     "jawaban": {
+      "Lebih lebat": 3,
+      "Tidak berubah": 2,
+      "Berkurang": 5
+     }
+    },
+    "kondisi": {
+     "label": "Kondisi mangrove 6 tahun terakhir",
+     "n": 10,
+     "jawaban": {
+      "Masih alami": 7,
+      "Mulai rusak": 3
+     }
+    },
+    "tahu_fungsi": {
+     "label": "Mengetahui fungsi mangrove",
+     "n": 10,
+     "jawaban": {
+      "Ya": 10
+     }
+    },
+    "pemanfaatan": {
+     "label": "Memanfaatkan mangrove 2020–2026",
+     "n": 10,
+     "jawaban": {
+      "Tidak pernah": 3,
+      "Jarang": 5,
+      "Kadang-kadang": 1,
+      "Sering": 1
+     }
+    },
+    "program": {
+     "label": "Program rehabilitasi mangrove",
+     "n": 10,
+     "jawaban": {
+      "Tahu dan terlibat": 9,
+      "Tahu, tapi tidak terlibat": 1
+     }
+    },
+    "pelibatan": {
+     "label": "Masyarakat dilibatkan dalam program",
+     "n": 10,
+     "jawaban": {
+      "Sejak tahap perencanaan awal": 8,
+      "Hanya saat pelaksanaan": 2
+     }
+    },
+    "kesediaan": {
+     "label": "Kesediaan berpartisipasi",
+     "n": 10,
+     "jawaban": {
+      "Sangat bersedia": 5,
+      "Bersedia": 4,
+      "Ragu-ragu": 1
+     }
+    },
+    "peran": {
+     "label": "Peran yang paling bersedia dijalani",
+     "n": 10,
+     "jawaban": {
+      "Pelaksana penanaman/perawatan": 9,
+      "Pengawas/patroli": 1
+     }
+    },
+    "dukungan": {
+     "label": "Dukungan agar mau berpartisipasi (boleh > 1)",
+     "n": 10,
+     "jawaban": {
+      "Kompensasi/Insentif finansial": 10,
+      "Bibit disediakan": 6,
+      "Pelatihan/Edukasi": 5,
+      "Kejelasan manfaat jangka panjang": 5,
+      "Dilibatkan dalam pengambilan keputusan": 4
+     }
+    },
+    "pengaruh_ikan": {
+     "label": "Pengaruh mangrove pada kelimpahan ikan/kepiting/udang",
+     "n": 10,
+     "jawaban": {
+      "Berpengaruh": 6,
+      "Sangat Berpengaruh": 2,
+      "Tidak berpengaruh": 2
+     }
+    },
+    "perilaku": {
+     "label": "Perubahan perilaku warga menjaga mangrove",
+     "n": 10,
+     "jawaban": {
+      "Membaik": 8,
+      "Memburuk": 1,
+      "Sama saja": 1
+     }
+    },
+    "sektor_laut": {
+     "label": "Bekerja di sektor kelautan/perikanan",
+     "n": 10,
+     "jawaban": {
+      "Tidak": 9,
+      "Ya": 1
+     }
+    }
+   },
+   "indikator": {
+    "Bersedia berpartisipasi (%)": 90.0,
+    "Pernah terlibat program (%)": 90.0,
+    "Menilai mangrove berkurang (%)": 50.0,
+    "Dilibatkan sejak perencanaan (%)": 80.0
+   }
+  }
+ },
+ "dibangun": "2026-11-18 12:26"
 }

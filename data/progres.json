@@ -4,9 +4,9 @@
   "tahapan": [
     {"nama": "Persiapan & desain sampling", "status": "selesai", "tanggal": "Sep 2026"},
     {"nama": "Laporan pendahuluan", "status": "selesai", "tanggal": "5 Okt 2026"},
-    {"nama": "Survei lapangan (vegetasi, kualitas air, sumur, sosek)", "status": "berjalan", "tanggal": "Sep–Nov 2026", "catatan": "Vegetasi 9 dari 10 pulau; Pulau Sebira: kualitas air & sumur sudah masuk, plot vegetasi belum"},
+    {"nama": "Survei lapangan (vegetasi, kualitas air, sumur, sosek)", "status": "berjalan", "tanggal": "Sep–Nov 2026", "catatan": "Kuesioner sosek & FGD 10 pulau (106 responden)"},
     {"nama": "Entri, QA/QC & basis data", "status": "berjalan", "tanggal": "Okt–Nov 2026"},
-    {"nama": "Analisis spasial & kesesuaian pemulihan (v03)", "status": "berjalan", "tanggal": "Okt–Nov 2026", "catatan": "6 pulau dianalisis kesesuaian; PAR, PGG, KLP menunggu batimetri/DTM"},
+    {"nama": "Analisis spasial & kesesuaian pemulihan (v05)", "status": "berjalan", "tanggal": "Okt–Nov 2026", "catatan": "10 pulau; v05: dasar di bawah LLWS = tidak sesuai, Lancang dengan batimetri baru; prioritas dipadukan dengan area FGD"},
     {"nama": "Paparan awal hasil", "status": "selesai", "tanggal": "2 Nov 2026"},
     {"nama": "Laporan antara", "status": "belum", "tanggal": "—"},
     {"nama": "Strategi & rencana aksi pemulihan", "status": "belum", "tanggal": "—"},

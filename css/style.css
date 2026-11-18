@@ -177,3 +177,13 @@ select, .btn {
   .layerbox { width: 200px; }
   .layerbox details:not([open]) { width: auto; }
 }
+
+/* ringkasan kuesioner */
+.qs { margin: 8px 0 10px; }
+.qs .ql { font-size: .8rem; font-weight: 600; color: var(--muted); margin-bottom: 3px; }
+.bar { display: grid; grid-template-columns: 46% 1fr 26px; gap: 6px; align-items: center; font-size: .78rem; line-height: 1.2; margin: 2px 0; }
+.bar .bt { background: #eef1ee; border-radius: 3px; height: 9px; overflow: hidden; }
+.bar .bt span { display: block; height: 100%; border-radius: 3px; }
+.bar .bv { text-align: right; font-variant-numeric: tabular-nums; }
+.kv .sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; margin-right: 4px; }
+.kv td[colspan] { text-align: left; padding-top: 10px; }
