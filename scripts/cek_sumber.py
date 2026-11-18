@@ -45,6 +45,8 @@ PANTAU = (
        AN + "13_Oseanografi_Fisik/MGV-KS_Gelombang4Musim_v*/MGV-KS_Gelombang4Musim_KS_v*.xlsx",
        AN + "13_Oseanografi_Fisik/MGV-KS_Gelombang4Musim_v03/MGV-KS_Gelombang4Musim_*_HHWS_50m_v03.tif"]
     + [DB + "MGV-KS_Batimetri_*_v01.tif"]
+    + ["06_STRATEGI_RENCANA_AKSI/03_Rencana_Aksi/MGV-KS_RencanaAksi_KS_v*.xlsx", "06_STRATEGI_RENCANA_AKSI/03_Rencana_Aksi/MGV-KS_LokasiAksi_KS_v*.gpkg",
+       "06_STRATEGI_RENCANA_AKSI/03_Rencana_Aksi/MGV-KS_PetaTahapRencanaAksi_KS_v*.png", "06_STRATEGI_RENCANA_AKSI/02_Strategi_Pemulihan/MGV-KS_StrategiRencanaAksi_KS_v*.docx"]
     + ["01_DATA_SEKUNDER/12_Break_Water/SHP_Breakwater_Per_Pulau/*/Breakwater_*.shp", "01_DATA_SEKUNDER/12_Break_Water/SHP_Breakwater_Per_Pulau/*/Breakwater_*.dbf",
        "01_DATA_SEKUNDER/11_Jalur_Kapal/01_Per_Pulau/*/Jalur_Kapal_*.shp", "01_DATA_SEKUNDER/11_Jalur_Kapal/01_Per_Pulau/*/Jalur_Kapal_*.dbf"]
     + ["01_DATA_SEKUNDER/05_Oseanografi/Batimetri/batimetri_Lancang.tif", DB + "MGV-KS_TopoBatimetri_LCG_v04.tif"]

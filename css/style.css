@@ -266,3 +266,8 @@ select, .btn {
 .dtable th { white-space: normal; vertical-align: bottom; }
 .dtable.left { font-size: .76rem; }
 .dtable.left th, .dtable.left td { padding: 5px 4px; }
+.lst { padding-left: 18px; margin: 6px 0 10px; font-size: .86rem; }
+.lst li { margin: 4px 0; }
+details.exp { border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; margin: 6px 0; font-size: .86rem; }
+details.exp > summary { cursor: pointer; }
+details.exp .kv td { font-size: .8rem; vertical-align: top; }
