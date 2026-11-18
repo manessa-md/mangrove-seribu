@@ -13,7 +13,7 @@ Situs: https://manessa-md.github.io/mangrove-seribu/
 | Analisis | Luas total S2SR, tren Mann-Kendall, kesesuaian AHP, DSAS, karbon, akurasi peta |
 | Tabel | 14 tabel laporan (bisa diunduh CSV; tabel seri Landsat tidak ditampilkan) |
 
-Lapisan peta: daratan 2025, kontur topo-batimetri, mangrove eksisting (digitasi 2025), Sentinel-2 SR 2,5 m (2018–2026, tanpa 2022), RBI 2022, plot vegetasi, titik kualitas air/groundcheck, sumur, foto hemispherical, transek DSAS, garis pantai tahunan, lokasi prioritas.
+Lapisan peta: daratan 2025, kontur topo-batimetri, mangrove eksisting (digitasi 2025), Sentinel-2 SR 2,5 m (2018–2026, tanpa 2022), RBI 2022, plot vegetasi, titik kualitas air/groundcheck, sumur, foto hemispherical, transek DSAS, garis pantai tahunan, lokasi prioritas, persetujuan masyarakat (FGD).
 
 ## Memperbarui data
 
@@ -25,8 +25,9 @@ Lapisan peta: daratan 2025, kontur topo-batimetri, mangrove eksisting (digitasi 
    ```
    Skrip membaca `MGV-KS_HasilAnalisis_KS_v03.gpkg`, kesesuaian & prioritas v04 (`08_Kesesuaian_Pemulihan/MGV-KS_Kesesuaian_KS_v04.xlsx`, `09_Lokasi_Prioritas/MGV-KS_LokasiPrioritas_KS_v04.gpkg`; elevasi berdatum pasut), raster kelas `MGV-KS_S2SR_2018-2026/<KODE>/*_Kerapatan.tif`, `MGV-KS_DigitasiMangrove2025_*.shp` dan tabel `*_v03.xlsx`, angin & gelombang 4 musim (`13_Oseanografi_Fisik/MGV-KS_Gelombang4Musim_v03/MGV-KS_Gelombang4Musim_KS_v03.xlsx`, 10 pulau) serta kontur batimetri SDB untuk Pari, Panggang, Kelapa (`MGV-KS_Batimetri_<KODE>_v01.tif`), lalu menulis ulang `data/*.geojson` dan `data/statistik.json`. Jika versi naik (v04), ganti nama berkas di bagian atas skrip.
 3. Data primer baru yang belum masuk basis data v03 (titik kualitas air, sumur) dibaca dari `02_DATA_PRIMER/<PULAU>/` sesuai daftar `PRIMER_BARU` di awal skrip. Titik v03 dipertahankan; titik tambahan dari survei digabungkan sebagai data biasa. Groundcheck vegetasi (`05_Groundcheck/MGV-KS_Survei_<KODE>_Groundcheck.shp`) untuk pulau di daftar `veg` (belum ada di v03) ditambahkan ke lapisan foto hemispherical; jumlah plot = kombinasi transek–jarak, LAI/tutupan dihitung dari foto yang sudah diolah (LAI dan keterbukaan 0 = belum diolah). Kosongkan daftar ini setelah basis data v04 terbit.
-4. Untuk panel tahapan, edit langsung `data/progres.json` (status: `selesai` / `berjalan` / `belum`).
-5. Commit & push — GitHub Pages memperbarui situs dalam 1–2 menit.
+4. Area yang disetujui / tidak disetujui masyarakat untuk ditanami mangrove (hasil FGD) dibaca dari `02_DATA_PRIMER/<PULAU>/09_Sosek/Rekomendasi_<KODE>.shp` (kolom `Keterangan`: `Masyarakat S` / `Masyarakat TS`, teks tambahan dalam kurung jadi catatan) oleh `scripts/build_sosek.py` (dipanggil otomatis di akhir `build_data.py`, bisa juga dijalankan sendiri) → `data/persetujuan_masyarakat.geojson` dan `data/sosek.json`. Data responden kuesioner (nama, telepon, lokasi rumah) tidak diterbitkan; ringkasannya tetap dari Tabel 15 `TabelLaporan`.
+5. Untuk panel tahapan, edit langsung `data/progres.json` (status: `selesai` / `berjalan` / `belum`).
+6. Commit & push — GitHub Pages memperbarui situs dalam 1–2 menit.
 
 ## Teknis
 

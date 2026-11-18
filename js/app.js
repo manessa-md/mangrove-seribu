@@ -11,6 +11,7 @@
     fetch("data/statistik.json").then(r => r.json()),
     fetch("data/progres.json").then(r => r.json()),
   ]);
+  const SO = await fetch("data/sosek.json").then(r => r.ok ? r.json() : {}).catch(() => ({}));
   const PULAU = S.pulau;
   const KODE = Object.keys(PULAU);
   $("#tgl-update").textContent = "diperbarui " + P.diperbarui;
@@ -50,6 +51,7 @@
   const LRRc = Object.fromEntries(LRR);
   const KONDISI = { "Baik - sangat padat": "#1a9850", "Baik - sedang": "#91cf60", "Rusak - jarang": "#d73027" };
   const SAL_SUMUR = { "Tawar": "#4575b4", "Payau ringan": "#91bfdb", "Payau": "#fc8d59", "Payau tinggi": "#d73027" };
+  const SETUJU = { "Setuju": "#2b8cbe", "Tidak setuju": "#e7298a", "Belum ada keterangan": "#bdbdbd" };
   const KET_AIR = { "Mangrove": "#1a9850", "Non-mangrove": "#f1c40f", "Laut": "#2c7fb8" };
   const yearColor = (y) => { const t = Math.max(0, Math.min(1, (y - 1990) / 35)); return `hsl(${50 - t * 50 + (1 - t) * 160}, 80%, ${55 - t * 10}%)`; };
   const salColor = v => v == null ? "#999" : v < 0.5 ? "#4575b4" : v < 10 ? "#91bfdb" : v < 25 ? "#fee090" : v < 30 ? "#fc8d59" : "#d73027";
@@ -131,6 +133,11 @@
       popup: p => popupTable(`Lokasi ${p.id_lokasi || ""}`, [["Pulau", PULAU[p.pulau]], ["Prioritas", p.prioritas], ["Luas (ha)", p.luas_ha], ["Skor rerata", p.skor_rerata],
         ["Elevasi median (m MSL)", p.elevasi_median_m], ["Lintang", p.lintang, 6], ["Bujur", p.bujur, 6]]),
       legend: () => `<div class="lt">Prioritas pemulihan</div>` + Object.entries(PRIOR).map(([k, c]) => `<div class="row"><span class="sw" style="background:${c}"></span>${k}</div>`).join("") },
+    { id: "setuju", grp: "Pemulihan", label: "Persetujuan masyarakat (FGD)", file: "persetujuan_masyarakat", on: false, sw: "#2b8cbe",
+      style: f => ({ color: SETUJU[f.properties.status] || "#999", weight: 2, dashArray: "5 3", fillColor: SETUJU[f.properties.status] || "#999", fillOpacity: .3 }),
+      popup: p => popupTable(`Area FGD ${p.id}`, [["Pulau", PULAU[p.pulau]], ["Masyarakat", p.status], ["Catatan", p.catatan], ["Luas (ha)", p.luas_ha]]),
+      legend: () => `<div class="lt">Penanaman mangrove – sikap masyarakat (FGD)</div>` +
+        Object.entries(SETUJU).map(([k, c]) => `<div class="row"><span class="sw" style="background:${c}"></span>${k}</div>`).join("") },
   ];
   let s2Year = S.s2sr_tahun[S.s2sr_tahun.length - 1], airMode = "ket";
   const loaded = {};
@@ -270,6 +277,9 @@
         <tr><td>Prioritas rendah</td><td>${fmt(t13[8])} ha</td></tr></table>
         ${pri.length ? `<p style="font-size:.85rem"><b>Lokasi prioritas tinggi:</b> ${pri.map(p => `<a href="#" data-ll="${p[6]},${p[7]}">${p[0]}</a> (${fmt(p[2])} ha)`).join(", ")}</p>` : ""}`
         : `<div class="note">Analisis kesesuaian belum tersedia untuk pulau ini (menunggu data batimetri/DTM/gelombang).</div>`}
+      ${SO.persetujuan && SO.persetujuan[k] ? `<h3>Persetujuan masyarakat (FGD)</h3><table class="kv">${Object.entries(SO.persetujuan[k])
+        .map(([st, v]) => `<tr><td>${esc(st === "Setuju" ? "Area disetujui ditanami mangrove" : st === "Tidak setuju" ? "Area tidak disetujui" : "Area belum ada keterangan")}</td><td>${fmt(v.luas_ha)} ha (${v.n} poligon)</td></tr>`).join("")}</table>
+        <p><a href="#" id="lnk-setuju" style="font-size:.85rem">Tampilkan area FGD di peta</a></p>` : ""}
       <p><button class="btn" id="btn-layers">Tampilkan lapisan survei di peta</button></p>`;
     if (s) {
       const ser = S.s2sr_tahunan[k], dig = S.luas_digitasi_2025[k];
@@ -291,6 +301,13 @@
     const c = e.target.closest(".chip"); if (c) return selectIsland(c.dataset.k);
     const a = e.target.closest("a[data-ll]"); if (a) { e.preventDefault(); const [la, lo] = a.dataset.ll.split(",").map(Number); map.flyTo([la, lo], 17); ensureOn("prioritas"); }
     if (e.target.id === "btn-layers") { ["plot", "air", "lai", "transek"].forEach(ensureOn); flyIsland(current); }
+    if (e.target.id === "lnk-setuju") {
+      e.preventDefault(); ensureOn("setuju");
+      getGeo("persetujuan_masyarakat").then(gj => {
+        const fs = gj.features.filter(f => f.properties.pulau === current);
+        if (fs.length) map.flyToBounds(L.geoJSON({ type: "FeatureCollection", features: fs }).getBounds(), { padding: [30, 30], duration: .8 });
+      });
+    }
   });
   selectIsland("LCG", false); showTab("progres", false); map.setView([-5.62, 106.58], 10);
 
@@ -382,7 +399,7 @@
     </table>
     <p class="muted" style="font-size:.85rem">Semua lapisan ditampilkan dalam WGS84; sumber asli dalam UTM 48S (EPSG:32748). Geometri disederhanakan (toleransi 0,5–4 m) untuk tampilan web, sehingga luas di peta bisa sedikit berbeda dari tabel.</p>
     <h3>Unduh data</h3>
-    <p style="font-size:.88rem">${["mangrove_eksisting", "plot_vegetasi", "titik_kualitas_air", "sumur_air_tanah", "foto_lai", "transek_garis_pantai", "lokasi_prioritas", `mangrove_s2sr_${S.s2sr_tahun.at(-1)}`]
+    <p style="font-size:.88rem">${["mangrove_eksisting", "plot_vegetasi", "titik_kualitas_air", "sumur_air_tanah", "foto_lai", "transek_garis_pantai", "lokasi_prioritas", "persetujuan_masyarakat", `mangrove_s2sr_${S.s2sr_tahun.at(-1)}`]
       .map(f => `<a href="data/${f}.geojson" download>${f}.geojson</a>`).join(" · ")}</p>
     <p class="muted" style="font-size:.8rem">Data dibangun: ${esc(S.dibangun)}</p>`;
 })();

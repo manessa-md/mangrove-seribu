@@ -47,6 +47,7 @@ PANTAU = (
     + [f"02_DATA_PRIMER/*/06_Sampel_Substrat_WaterQuality/MGV-KS_Survei_*_Substrat_WaterQuality.{e}" for e in SHP]
     + [f"02_DATA_PRIMER/*/07_GroundWaterQuality/MGV-KS_Survei_*_AirTanah.{e}" for e in SHP]
     + [f"02_DATA_PRIMER/*/05_Groundcheck/MGV-KS_Survei_*_Groundcheck.{e}" for e in SHP]
+    + [f"02_DATA_PRIMER/*/09_Sosek/Rekomendasi_*.{e}" for e in SHP]
 )
 
 
@@ -90,7 +91,7 @@ def daftar_stage(files, pulau_tambahan=()):
         m = re.search(r"(MGV-KS_[A-Za-z0-9]+_KS)_v(\d+)\.", rel)
         if m and m.group(1) in vers and int(m.group(2)) != vers[m.group(1)]:
             continue  # hanya versi yang dipakai skrip
-        if rel.startswith("02_DATA_PRIMER/"):
+        if rel.startswith("02_DATA_PRIMER/") and "/09_Sosek/" not in rel:
             k = re.search(r"MGV-KS_Survei_([A-Z]{3})_", rel).group(1)
             if "_AirTanah." in rel and k not in pulau_sumur:
                 continue
@@ -111,7 +112,7 @@ def cek(listing):
                          for m in [re.search(r"(MGV-KS_[A-Za-z0-9]+_KS)_v(\d+)\.", r)]
                          if m and m.group(1) in vers and int(m.group(2)) > vers[m.group(1)]})
     pulau = sorted({re.search(r"MGV-KS_Survei_([A-Z]{3})_", r).group(1)
-                    for r in berubah if r.startswith("02_DATA_PRIMER/")})
+                    for r in berubah if r.startswith("02_DATA_PRIMER/") and "/09_Sosek/" not in r})
     return {
         "manifest_ada": bool(lama),
         "berubah": berubah,
@@ -130,7 +131,12 @@ def main():
     if a.aksi == "cek":
         json.dump(cek(listing), sys.stdout, ensure_ascii=False, indent=1)
     else:
-        files = {r: t for r, t in sorted(listing.items()) if dipantau(r)}
+        files = {r: t for r, t in listing.items() if dipantau(r)}
+        # pertahankan entri lama dari folder yang tidak ikut di-listing kali ini (mis. 05_Groundcheck)
+        prefix = tuple(i.split("=", 1)[0].strip("/\\").replace("\\", "/") + "/" for i in a.listing)
+        lama = json.loads(MANIFEST.read_text(encoding="utf-8")) if MANIFEST.exists() else {}
+        files.update({r: t for r, t in lama.items() if not r.startswith(prefix) and r not in files})
+        files = dict(sorted(files.items()))
         MANIFEST.write_text(json.dumps(files, ensure_ascii=False, indent=0), encoding="utf-8")
         print(f"manifest disimpan: {len(files)} berkas")
 

@@ -1,0 +1,102 @@
+{
+ "persetujuan": {
+  "UTJ": {
+   "Setuju": {
+    "luas_ha": 5.67,
+    "n": 6
+   },
+   "Tidak setuju": {
+    "luas_ha": 2.73,
+    "n": 6
+   }
+  },
+  "PAR": {
+   "Setuju": {
+    "luas_ha": 22.31,
+    "n": 5
+   }
+  },
+  "LCG": {
+   "Setuju": {
+    "luas_ha": 15.12,
+    "n": 4
+   },
+   "Tidak setuju": {
+    "luas_ha": 3.34,
+    "n": 1
+   }
+  },
+  "TDG": {
+   "Setuju": {
+    "luas_ha": 4.07,
+    "n": 6
+   }
+  },
+  "PRM": {
+   "Setuju": {
+    "luas_ha": 10.31,
+    "n": 2
+   }
+  },
+  "PGG": {
+   "Setuju": {
+    "luas_ha": 2.2,
+    "n": 3
+   },
+   "Tidak setuju": {
+    "luas_ha": 0.81,
+    "n": 1
+   }
+  },
+  "KLP": {
+   "Setuju": {
+    "luas_ha": 4.53,
+    "n": 4
+   },
+   "Tidak setuju": {
+    "luas_ha": 1.89,
+    "n": 1
+   }
+  },
+  "KLD": {
+   "Setuju": {
+    "luas_ha": 1.01,
+    "n": 4
+   },
+   "Tidak setuju": {
+    "luas_ha": 0.11,
+    "n": 1
+   }
+  },
+  "HRP": {
+   "Belum ada keterangan": {
+    "luas_ha": 3.85,
+    "n": 1
+   },
+   "Setuju": {
+    "luas_ha": 2.77,
+    "n": 1
+   },
+   "Tidak setuju": {
+    "luas_ha": 2.8,
+    "n": 1
+   }
+  },
+  "SBR": {
+   "Setuju": {
+    "luas_ha": 2.42,
+    "n": 4
+   },
+   "Tidak setuju": {
+    "luas_ha": 0.23,
+    "n": 1
+   }
+  }
+ },
+ "total_ha": {
+  "Belum ada keterangan": 3.85,
+  "Setuju": 70.4,
+  "Tidak setuju": 11.92
+ },
+ "dibangun": "2026-11-18 11:51"
+}

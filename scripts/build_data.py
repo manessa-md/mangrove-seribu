@@ -554,3 +554,7 @@ stats["dibangun"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 (OUT / "statistik.json").write_text(json.dumps(stats, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 print("statistik.json", (OUT / "statistik.json").stat().st_size // 1000, "kB")
 print(stats["pusat"])
+
+# Persetujuan masyarakat (FGD) dari 02_DATA_PRIMER/<PULAU>/09_Sosek/Rekomendasi_<KODE>.shp
+import subprocess
+subprocess.run([sys.executable, str(Path(__file__).with_name("build_sosek.py")), str(SRC)], check=True)
