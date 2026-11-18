@@ -1,5 +1,5 @@
 {
-  "_petunjuk": "Pulau yang data survei kualitas air (air) / sumur (sumur) di 02_DATA_PRIMER lebih baru dari basis data v03. Titik v03 dipertahankan; titik survei yang > 1 m dari titik v03 ditambahkan. \"veg\": pulau yang groundcheck vegetasinya (05_Groundcheck) belum ada di v03.",
+  "_petunjuk": "Pulau yang data survei kualitas air (air) / sumur (sumur) di 02_DATA_PRIMER lebih baru dari basis data v03. Titik v03 dipertahankan; titik survei yang > 1 m dari titik v03 ditambahkan. \"veg\": pulau yang groundcheck vegetasinya (05_Groundcheck) belum ada di v03. \"air_ganti\"/\"sumur_ganti\": pulau yang titik v03-nya diganti seluruhnya oleh survei primer (nilai diperbarui).",
   "air": [
     "PAR",
     "KLD",
@@ -26,5 +26,8 @@
   ],
   "veg": [
     "SBR"
+  ],
+  "air_ganti": [
+    "UTJ"
   ]
 }

@@ -157,7 +157,17 @@ def tambah_primer(old, jenis, key):
             continue
         r = gpd.read_file(f).to_crs(old.crs)
         ref = old[old.kode_pulau == k]
-        if len(ref):
+        ganti = k in PRIMER_BARU.get(f"{jenis}_ganti", [])
+        elev = {}
+        if ganti:
+            # survei primer menggantikan titik v03 pulau ini (nilai diperbarui); elevasi diambil dari titik v03 terdekat ≤ 1 m
+            if len(ref) and "elevasi_m" in ref:
+                for i_, p in r.geometry.items():
+                    dd = ref.distance(p)
+                    if dd.min() <= 1.0:
+                        elev[i_] = ref.loc[dd.idxmin(), "elevasi_m"]
+            old = old[old.kode_pulau != k]
+        elif len(ref):
             d = r.geometry.apply(lambda p: ref.distance(p).min())
             r = r[d >= 1.0]
         kol = {c.lower(): c for c in r.columns}  # nama kolom tidak peka huruf besar/kecil
@@ -170,7 +180,9 @@ def tambah_primer(old, jenis, key):
                    "salinitas_ppt": num(g("Sal", "Salinitas_", "Salin_ppt")),
                    "do_mg_l": num(g("DO_", "DO", "DO_mg_l", "DO_mg")),
                    "tds_ppt": num(g("TDS", "TDS_ppt")), "ec_ms_cm": num(g("EC", "EC_mS_cm", "EC_mS")),
-                   "status_data": "baru – belum QA/QC", "geometry": x.geometry}
+                   "status_data": "survei primer (pengganti v03)" if ganti else "baru – belum QA/QC", "geometry": x.geometry}
+            if ganti and "elevasi_m" in old:
+                rec["elevasi_m"] = elev.get(_)
             if jenis == "air":
                 ket = str(g("Ket") or "").strip()
                 rec["keterangan"] = {"non mangrove": "Non-mangrove", "non-mangrove": "Non-mangrove",
@@ -180,7 +192,7 @@ def tambah_primer(old, jenis, key):
                 rec["kelas_salinitas"] = kelas_sal(rec["salinitas_ppt"])
             rec["catatan_qc"] = qc_flag(rec)
             baru.append(rec)
-        print(f"  {jenis} {k}: +{len(r)} titik baru (v03: {len(ref)})")
+        print(f"  {jenis} {k}: {'diganti' if ganti else '+'}{len(r)} titik survei (v03: {len(ref)})")
     if baru:
         old = pd.concat([old, gpd.GeoDataFrame(baru, crs=old.crs)], ignore_index=True)
     return gpd.GeoDataFrame(old, crs=old.crs)
@@ -419,6 +431,13 @@ for c in ring:
 stats["ringkasan"] = ring
 stats["catatan_mutu"] = [r[0] for r in ws["CATATAN_MUTU_DATA"].iter_rows(min_row=2, values_only=True) if r[0]]
 stats["kelengkapan"] = sheet_rows(AN / "15_Ringkasan_Per_Pulau/MGV-KS_Ringkasan_KS_v03.xlsx", "KELENGKAPAN_DATA")
+# Tabel 7 dihitung ulang dari titik kualitas air yang ditampilkan (setelah buang_salah; nilai kosong/salah tidak ikut)
+def _ms(v):
+    v = pd.to_numeric(v, errors="coerce").dropna()
+    return "–" if not len(v) else f"{v.mean():.2f} ± {v.std():.2f}".replace(".", ",") if len(v) > 1 else f"{v.mean():.2f}".replace(".", ",")
+t7 = stats["tabel"]["7"]
+t7["baris"] = [[PULAU[k], int((AIR.kode_pulau == k).sum()), *[_ms(AIR[AIR.kode_pulau == k][c]) for c in ["salinitas_ppt", "ph", "suhu_c", "do_mg_l", "tds_ppt"]]]
+               for k in PULAU if (AIR.kode_pulau == k).any()]
 # perbarui jumlah titik dengan data primer terbaru
 for b in stats["tabel"]["1"]["baris"]:
     if b[0] in N_AIR:
