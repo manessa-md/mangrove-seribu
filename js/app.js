@@ -91,7 +91,7 @@
       style: f => ({ radius: 6, color: "#fff", weight: 1.5, fillColor: KONDISI[f.properties.kelas_kondisi] || "#888", fillOpacity: 1 }),
       popup: p => popupTable(`Plot ${p.kode_plot}`, [["Tanggal", p.tanggal], ["Jenis dominan", p.jenis_dominan],
         ["Kerapatan batang (ind/ha)", p.kerapatan_batang_ha, 0], ["Pancang (ind/ha)", p.kerapatan_pancang_ha, 0], ["Semai (ind/ha)", p.kerapatan_semai_ha, 0],
-        ["DBH rerata (cm)", p.dbh_rerata_cm], ["Tutupan kanopi (%)", p.tutupan_kanopi_pct], ["LAI (ring 4)", p.LAI_ring4],
+        ["DBH rerata (cm; = keliling/π)", p.dbh_rerata_cm], ["Tutupan kanopi (%)", p.tutupan_kanopi_pct], ["LAI (ring 4)", p.LAI_ring4],
         ["Karbon batas bawah (t C/ha)", p.karbon_min_t_ha], ["CO₂e batas bawah (t/ha)", p.co2e_min_t_ha],
         ["Kelas kondisi", p.kelas_kondisi], ["BA perlu dicek", p.ba_tidak_wajar ? "Ya" : null]]),
       legend: () => `<div class="lt">Plot vegetasi – kondisi</div>` +
@@ -258,7 +258,7 @@
     const keys = ["Jenis dominan", "Kerapatan batang rerata (ind/ha)", "DBH rerata (cm)", "Tutupan kanopi rerata (%)", "LAI rerata",
       "Karbon batas bawah (t C/ha)", "H' Shannon", "% plot rusak-jarang (kerapatan+tutupan)", "Luas mangrove eksisting (ha)",
       "LRR rerata (m/th)", "% transek abrasi", "Hs P90 musim tertinggi (m)", "% bersedia berpartisipasi"];
-    return keys.filter(x => r[x] != null && r[x] !== "-").map(x => `<tr><td>${esc(x)}</td><td>${esc(fmt(r[x]))}</td></tr>`).join("");
+    return keys.filter(x => r[x] != null && r[x] !== "-").map(x => `<tr><td>${esc(x === "DBH rerata (cm)" ? "DBH rerata (cm; = keliling batang/π)" : x)}</td><td>${esc(fmt(r[x]))}</td></tr>`).join("");
   }
   const bar = (obj, n, warna = "#3f9c5a") => Object.entries(obj).map(([a, b]) =>
     `<div class="bar"><span class="bl">${esc(a)}</span><span class="bt"><span style="width:${Math.round(100 * b / Math.max(n, 1))}%;background:${warna}"></span></span><span class="bv">${b}</span></div>`).join("");
