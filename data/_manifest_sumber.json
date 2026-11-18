@@ -1,4 +1,5 @@
 {
+"01_DATA_SEKUNDER/05_Oseanografi/Batimetri/batimetri_Lancang.tif": 1795003018477,
 "02_DATA_PRIMER/HRP_Harapan/06_Sampel_Substrat_WaterQuality/MGV-KS_Survei_HRP_Substrat_WaterQuality.cpg": 1794807699874,
 "02_DATA_PRIMER/HRP_Harapan/06_Sampel_Substrat_WaterQuality/MGV-KS_Survei_HRP_Substrat_WaterQuality.dbf": 1794807699874,
 "02_DATA_PRIMER/HRP_Harapan/06_Sampel_Substrat_WaterQuality/MGV-KS_Survei_HRP_Substrat_WaterQuality.prj": 1794807697652,
@@ -363,6 +364,7 @@
 "03_DATABASE_MANGROVE/05_Basis_Data_Spasial/MGV-KS_S2SR_2018-2026/UTJ_Untung_Jawa/MGV-KS_S2SR_UTJ_2025_meta.json": 1793714474628,
 "03_DATABASE_MANGROVE/05_Basis_Data_Spasial/MGV-KS_S2SR_2018-2026/UTJ_Untung_Jawa/MGV-KS_S2SR_UTJ_2026_Kerapatan.tif": 1793714475220,
 "03_DATABASE_MANGROVE/05_Basis_Data_Spasial/MGV-KS_S2SR_2018-2026/UTJ_Untung_Jawa/MGV-KS_S2SR_UTJ_2026_meta.json": 1793714482723,
+"03_DATABASE_MANGROVE/05_Basis_Data_Spasial/MGV-KS_TopoBatimetri_LCG_v04.tif": 1794195955825,
 "04_PENGOLAHAN_ANALISIS/08_Kesesuaian_Pemulihan/MGV-KS_Kesesuaian_KS_v02.xlsx": 1793640936766,
 "04_PENGOLAHAN_ANALISIS/08_Kesesuaian_Pemulihan/MGV-KS_Kesesuaian_KS_v03.xlsx": 1793687751232,
 "04_PENGOLAHAN_ANALISIS/08_Kesesuaian_Pemulihan/MGV-KS_Kesesuaian_KS_v04.xlsx": 1794370874627,
