@@ -77,9 +77,11 @@ small, .muted { color: var(--muted); }
 .timeline .meta { font-size: .82rem; color: var(--muted); }
 
 /* completeness matrix */
-.matrix { width: 100%; border-collapse: collapse; font-size: .8rem; }
-.matrix th, .matrix td { padding: 4px 3px; text-align: center; border-bottom: 1px solid var(--line); }
-.matrix th { font-weight: 600; color: var(--muted); }
+.matrix { width: 100%; border-collapse: collapse; font-size: .76rem; table-layout: auto; }
+.matrix th, .matrix td { padding: 4px 2px; text-align: center; border-bottom: 1px solid var(--line); }
+.matrix th { font-weight: 600; color: var(--muted); font-size: .7rem; }
+.matrix td:first-child { font-size: .74rem; line-height: 1.15; }
+.matrix .cell { width: 12px; height: 12px; }
 .matrix td:first-child, .matrix th:first-child { text-align: left; }
 .matrix tr.clickable { cursor: pointer; }
 .matrix tr.clickable:hover { background: #f1f5f2; }

@@ -206,9 +206,11 @@
   const R = S.ringkasan;
   const sum = key => KODE.reduce((a, k) => a + (+R[k]?.[key] || 0), 0);
   const surveyed = KODE.filter(k => (+R[k]?.["Plot vegetasi"] || 0) > 0).length;
-  const kel = S.kelengkapan;
   const fields = [["plot_vegetasi", "Veg"], ["kualitas_air", "Air"], ["air_tanah", "Sumur"], ["garis_pantai", "Pantai"],
-                  ["gelombang", "Gel."], ["batimetri", "Bati."], ["dtm", "DTM"]];
+                  ["gelombang", "Gel."], ["batimetri", "Bati."], ["dtm", "DTM"], ["sosek", "Sosek"], ["fgd", "FGD"]];
+  // sosek = jumlah responden kuesioner (Tabel 15/ringkasan); FGD = peta area setuju/tidak setuju (09_Sosek)
+  const kel = S.kelengkapan.map(r => { const k = r[Object.keys(r)[0]] || r[""] || r[null];
+    return { ...r, sosek: +R[k]?.["Responden sosek"] || 0, fgd: SO.persetujuan && SO.persetujuan[k] ? 1 : 0 }; });
   $("#tab-progres").innerHTML = `
     <h2>Perkembangan kegiatan</h2>
     <p class="muted">Ringkasan data yang sudah terkumpul dan dianalisis (basis data v03).</p>
@@ -224,11 +226,11 @@
     <ul class="timeline">${P.tahapan.map(t => `<li class="${t.status}"><span class="dot"></span>
       <div class="nm">${esc(t.nama)}</div><div class="meta">${esc(t.tanggal)} · ${t.status}${t.catatan ? " — " + esc(t.catatan) : ""}</div></li>`).join("")}</ul>
     <h3>Kelengkapan data per pulau</h3>
-    <table class="matrix"><thead><tr><th>Pulau</th>${fields.map(f => `<th>${f[1]}</th>`).join("")}<th>Sesuai.</th></tr></thead>
+    <table class="matrix"><thead><tr><th>Pulau</th>${fields.map(f => `<th>${f[1]}</th>`).join("")}<th>Ses.</th></tr></thead>
     <tbody>${kel.map(r => { const k = r[Object.keys(r)[0]] || r[""] || r[null]; return `<tr class="clickable" data-k="${k}"><td>${PULAU[k] || k}</td>${fields.map(([f]) =>
-      `<td>${(f === "plot_vegetasi" || f === "kualitas_air" || f === "air_tanah") && r[f] ? `<span class="num">${r[f]}</span>` : `<span class="cell ${r[f] ? "y" : "n"}"></span>`}</td>`).join("")}
+      `<td>${(f === "plot_vegetasi" || f === "kualitas_air" || f === "air_tanah" || f === "sosek") && r[f] ? `<span class="num">${r[f]}</span>` : `<span class="cell ${r[f] ? "y" : "n"}"></span>`}</td>`).join("")}
       <td><span class="cell ${r.lengkap ? "y" : "n"}"></span></td></tr>`; }).join("")}</tbody></table>
-    <p class="muted" style="font-size:.8rem">Angka = jumlah plot/titik/sumur. “Sesuai.” = data cukup untuk analisis kesesuaian pemulihan (perlu batimetri/DTM dan gelombang). Klik baris untuk melihat pulau.</p>
+    <p class="muted" style="font-size:.8rem">Angka = jumlah plot/titik/sumur/responden sosek. “FGD” = peta area yang disetujui/tidak disetujui masyarakat untuk ditanami mangrove. “Ses.” = data cukup untuk analisis kesesuaian pemulihan (perlu batimetri/DTM dan gelombang). Klik baris untuk melihat pulau.</p>
     <h3>Catatan mutu data</h3>
     ${S.catatan_mutu.map(c => `<div class="note">${esc(c)}</div>`).join("")}
   `;
