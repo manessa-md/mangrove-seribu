@@ -245,8 +245,6 @@
       `<td>${(f === "plot_vegetasi" || f === "kualitas_air" || f === "air_tanah" || f === "sosek") && r[f] ? `<span class="num">${r[f]}</span>` : `<span class="cell ${r[f] ? "y" : "n"}"></span>`}</td>`).join("")}
       <td><span class="cell ${r.lengkap ? "y" : "n"}"></span></td></tr>`; }).join("")}</tbody></table>
     <p class="muted" style="font-size:.8rem">Angka = jumlah plot/titik/sumur/responden sosek. “FGD” = peta area yang disetujui/tidak disetujui masyarakat untuk ditanami mangrove. “Ses.” = data cukup untuk analisis kesesuaian pemulihan (perlu batimetri/DTM dan gelombang). Klik baris untuk melihat pulau.</p>
-    <h3>Catatan mutu data</h3>
-    ${S.catatan_mutu.map(c => `<div class="note">${esc(c)}</div>`).join("")}
   `;
   $("#tab-progres").addEventListener("click", e => {
     const tr = e.target.closest("tr[data-k]"); if (tr) return selectIsland(tr.dataset.k);
@@ -361,7 +359,7 @@
     <div class="chartbox"><canvas id="ch-lrr"></canvas></div>
     <h3>Stok karbon batas bawah (t C/ha)</h3>
     <div class="chartbox"><canvas id="ch-karbon"></canvas></div>
-    <div class="note">Batas bawah = individu terukur saja. ${esc(S.catatan_mutu.find(c => c.includes("BA >")) || "")}</div>
+    <div class="note">Batas bawah = individu terukur saja.</div>
     <h3>Akurasi peta sebaran (semua pulau)</h3>
     <table class="kv">${t10.filter(r => r[1] === "Semua pulau").map(r => `<tr><td>${r[0]}</td><td>OA ${fmt(r[3])} % · κ ${fmt(r[4])}</td></tr>`).join("")}</table>
     <p class="muted" style="font-size:.8rem">Diuji terhadap ${fmt(t10.find(r => r[1] === "Semua pulau")?.[2], 0)} titik groundcheck lapangan.</p>`;
