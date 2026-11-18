@@ -442,16 +442,56 @@
 
   /* ---------------- Analisis ---------------- */
   const t13 = S.tabel["13"].baris, t11 = S.tabel["11"].baris, t6 = S.tabel["6"].baris, t10 = S.tabel["10"].baris;
+  const AP = AN.pulau || {}, sumHa = o => Object.values(o || {}).reduce((x, y) => x + (+y || 0), 0);
+  const lrrOf = k => (t11.find(r => r[0] === PULAU[k]) || [])[4];
+  const NM_KRIT = { gelombang: "gelombang", substrat: "substrat", jarak_mangrove: "jarak mangrove", garis_pantai: "LRR", salinitas: "salinitas", elevasi: "elevasi" };
+  const peringatan = [];
+  KODE.forEach(k => {
+    const m = (AP[k] || {}).masukan; if (!m) return;
+    const n0 = peringatan.length;
+    if (m.tanpa_kriteria.length) peringatan.push(`<b>${PULAU[k]}</b>: AHP hanya ${m.jumlah_kriteria} kriteria (tanpa ${m.tanpa_kriteria.map(c => NM_KRIT[c] || c).join(", ")}); bobot dinormalisasi ulang.`);
+    if (m.r_bati_lapangan != null && m.r_bati_lapangan < 0.3) peringatan.push(`<b>${PULAU[k]}</b>: batimetri berkorelasi lemah dengan kedalaman lapangan (r = ${fmt(m.r_bati_lapangan)}), kelas elevasi kurang andal.`);
+    if (m.rmse_m > 0.5) peringatan.push(`<b>${PULAU[k]}</b>: galat elevasi setelah koreksi besar (RMSE ${fmt(m.rmse_m)} m).`);
+    if (m.tanpa_data_ha > 30) peringatan.push(`<b>${PULAU[k]}</b>: ${fmt(m.tanpa_data_ha)} ha zona kajian tanpa data elevasi (tidak terklasifikasi).`);
+    if (m.mangrove_sel === 0) peringatan.push(`<b>${PULAU[k]}</b>: mangrove eksisting belum didigitasi, kriteria jarak ke mangrove bernilai minimum.`);
+    else if (m.mangrove_S1S2_pct != null && m.mangrove_S1S2_pct < 70) peringatan.push(`<b>${PULAU[k]}</b>: hanya ${fmt(m.mangrove_S1S2_pct, 0)} % sel mangrove eksisting jatuh di elevasi S1/S2 (validasi lemah).`);
+    const pm = sumHa((AP[k] || {}).prioritas_masyarakat_ha), pa = sumHa((AP[k] || {}).prioritas_ahp_ha);
+    if (SO.persetujuan && SO.persetujuan[k] && pa > 1 && pm < 0.1 * pa) peringatan.push(`<b>${PULAU[k]}</b>: area prioritas yang disetujui masyarakat sangat kecil (${fmt(pm)} dari ${fmt(pa)} ha AHP).`);
+    if (peringatan.length > n0) { const it = peringatan.splice(n0).map(t => t.replace(/^<b>[^<]+<\/b>: /, "").replace(/\.$/, "")); peringatan.push(`<b>${PULAU[k]}</b>: ${it.join("; ")}.`); }
+  });
   $("#tab-analisis").innerHTML = `
-    <h2>Hasil analisis (v03)</h2>
+    <h2>Hasil analisis terbaru</h2>
+    <p class="cap">Kesesuaian &amp; prioritas ${esc(AN.versi || S.kesesuaian.versi)} · gelombang 4 musim v03 · luas mangrove Sentinel-2 SR ${S.s2sr_tahun[0]}–${S.s2sr_tahun.at(-1)} · garis pantai DSAS 1990–2025.</p>
+    <h3>Ringkasan per pulau</h3>
+    <div class="dtable-wrap"><table class="dtable"><thead><tr><th>Pulau</th><th>Sesuai S1–S3 = prioritas AHP (ha)</th><th>Disetujui FGD (ha)</th><th>Mangrove 2025 (ha)</th><th>Hs maks (m)</th></tr></thead>
+    <tbody>${KODE.map(k => { const a = AP[k] || {}, ks = a.kesesuaian_ha || {}, g = (GL.pulau || {})[k];
+      return `<tr><td>${PULAU[k]}</td><td>${fmt((ks.S1 || 0) + (ks.S2 || 0) + (ks.S3 || 0))}</td>
+        <td>${SO.persetujuan && SO.persetujuan[k] ? fmt(sumHa(a.prioritas_masyarakat_ha)) : "<span class=muted>–</span>"}</td>
+        <td>${fmt(S.luas_digitasi_2025[k])}</td><td>${g ? fmt(g.ekstrem.Hs_maks) : "–"}</td></tr>`; }).join("")}
+      <tr><td><b>Total</b></td><td><b>${fmt(AN.total?.sesuai_ha)}</b></td><td><b>${fmt(AN.total?.prioritas_masyarakat_ha)}</b></td>
+        <td><b>${fmt(KODE.reduce((x, k) => x + (S.luas_digitasi_2025[k] || 0), 0))}</b></td><td></td></tr></tbody></table></div>
+    <p class="cap">Seluruh area S1–S3 masuk prioritas AHP (tinggi/sedang/rendah). "Disetujui FGD" = bagian prioritas yang berada di area setuju ditanami menurut FGD; Hs maks = tinggi gelombang ekstrem pesisir 4 musim (HHWS).</p>
+    <h3>Kesesuaian lahan pemulihan (ha)</h3>
+    <div class="chartbox" style="height:280px"><canvas id="ch-sesuai"></canvas></div>
+    <h3>Prioritas pemulihan: AHP vs disetujui masyarakat (ha)</h3>
+    <div class="chartbox" style="height:340px"><canvas id="ch-prior"></canvas></div>
+    <p class="cap">Batang pudar = prioritas AHP; batang penuh = bagian yang juga disetujui masyarakat dalam FGD.</p>
+    <h3>Data masukan kesesuaian tiap pulau</h3>
+    <div class="dtable-wrap"><table class="dtable left"><thead><tr><th>Pulau</th><th>Elevasi</th><th>Titik · RMSE</th><th>Krit.</th><th>Valid.*</th></tr></thead>
+    <tbody>${KODE.map(k => { const m = (AP[k] || {}).masukan; if (!m) return "";
+      const src = [/DTM/.test(m.sumber_elevasi) && "DTM", /batimetri/.test(m.sumber_elevasi) && "bati", /IDW/.test(m.sumber_elevasi) && "IDW"].filter(Boolean).join("+");
+      return `<tr><td>${PULAU[k]}</td><td style="white-space:nowrap">${esc(m.topobati || "–")}<br><small class="muted">${src}</small></td>
+        <td style="white-space:nowrap">n ${m.n_titik_kalibrasi} · ${fmt(m.rmse_m, 2)} m${m.r_bati_lapangan != null ? `<br><small class="muted">r ${fmt(m.r_bati_lapangan)}</small>` : ""}</td>
+        <td>${m.jumlah_kriteria}${m.tanpa_kriteria.length ? `<br><small class="muted">tanpa ${m.tanpa_kriteria.map(c => ({ gelombang: "gel." })[c] || NM_KRIT[c] || c).join(", ")}</small>` : ""}</td>
+        <td>${m.mangrove_S1S2_pct == null ? "<span class=muted>–</span>" : fmt(m.mangrove_S1S2_pct, 0) + " %"}</td></tr>`; }).join("")}</tbody></table></div>
+    <p class="cap">Elevasi: versi topo-batimetri · sumber (DTM = DTM LiDAR daratan, bati = batimetri terkoreksi pasut, IDW = interpolasi elevasi dasar lapangan di bawah tajuk). RMSE = galat elevasi setelah koreksi datum; r = korelasi batimetri vs kedalaman lapangan (hanya batimetri baru). Krit. = jumlah kriteria AHP (gel. = gelombang). *Valid. = % sel mangrove eksisting yang jatuh di elevasi S1/S2.</p>
+    ${peringatan.length ? `<div class="note"><b>Catatan evaluasi</b><ul style="margin:6px 0 0;padding-left:18px">${peringatan.map(t => `<li>${t}</li>`).join("")}</ul></div>` : ""}
+    <p class="muted" style="font-size:.8rem">Kesesuaian ${esc(S.kesesuaian.versi)}: elevasi terhadap zona pasut (MSL lokal; S1 = MLW–MHW, S2 = LLWS–MLW / MHW–HHWS, S3 = batas bawah–LLWS / HHWS–HAT + 0,2; batas bawah mengikuti dasar tempat mangrove eksisting tumbuh, dasar di bawah LLWS paling tinggi S3), batimetri dikoreksi dengan kedalaman terukur di lapangan (c = koreksi datum). AHP 6 kriteria: ${S.kesesuaian.bobot.map(b => `${esc(({ elevasi: "elevasi", gelombang: "gelombang Hs", substrat: "substrat", jarak_mangrove: "jarak ke mangrove", garis_pantai: "LRR", salinitas: "salinitas" })[b.kode] || b.kriteria)} ${fmt(b.bobot * 100, 1)} %`).join(", ")} (CR = ${fmt(S.kesesuaian.cr, 3)}). Grid 10 m; 300 m ke laut, 30 m ke darat.</p>
     <h3>Luas mangrove total Kepulauan Seribu</h3>
     <div class="chartbox"><canvas id="ch-total"></canvas></div>
     <p class="muted" style="font-size:.8rem">Sentinel-2 super-resolusi 2,5 m, dipotong AOI tiap pulau (daratan + 150 m ∪ mangrove acuan + 30 m ∪ plot + 30 m). Tahun 2022 tidak tersedia. ${S.s2sr_total.some(r => r.n_pulau < 10) ? `Jumlah pulau terhitung: ${S.s2sr_total.at(-1).n_pulau} dari 10.` : ""}</p>
     <h3>Perubahan luas mangrove per pulau (S2SR ${S.s2sr_tahun[0]}–${S.s2sr_tahun.at(-1)})</h3>
     <div class="chartbox" style="height:240px"><canvas id="ch-tren"></canvas></div>
-    <h3>Kesesuaian lahan pemulihan (ha)</h3>
-    <div class="chartbox"><canvas id="ch-sesuai"></canvas></div>
-    <p class="muted" style="font-size:.8rem">Kesesuaian ${S.kesesuaian.versi}: elevasi terhadap zona pasut (MSL lokal; S1 = MLW–MHW, S2 = LLWS–MLW / MHW–HHWS, S3 = batas bawah–LLWS / HHWS–HAT + 0,2; batas bawah mengikuti dasar tempat mangrove eksisting tumbuh, dasar di bawah LLWS paling tinggi S3), batimetri dikoreksi dengan kedalaman terukur di lapangan. AHP 6 kriteria: ${S.kesesuaian.bobot.map(b => `${esc(({ elevasi: "elevasi", gelombang: "gelombang Hs", substrat: "substrat", jarak_mangrove: "jarak ke mangrove", garis_pantai: "LRR", salinitas: "salinitas" })[b.kode] || b.kriteria)} ${fmt(b.bobot * 100, 1)} %`).join(", ")} (CR = ${fmt(S.kesesuaian.cr, 3)}). Grid 10 m; 300 m ke laut, 30 m ke darat.</p>
     <h3>Perubahan garis pantai 1990–2025</h3>
     <div class="chartbox"><canvas id="ch-lrr"></canvas></div>
     <h3>Stok karbon batas bawah (t C/ha)</h3>
@@ -478,10 +518,16 @@
       tooltip: { callbacks: { afterLabel: c => { const t = tren[c.dataIndex]; return `${t.tahun_awal}: ${fmt(t.luas_awal_ha)} ha → ${t.tahun_akhir}: ${fmt(t.luas_akhir_ha)} ha\nTren: ${t.tren} (τ ${t.tau}, p ${t.p})`; } } } },
       scales: { x: { title: { display: true, text: "ha (hijau = naik nyata, merah = turun nyata)" } } } } });
 
-  const sc = [["S1", "#1a9850"], ["S2", "#91cf60"], ["S3", "#fee08b"], ["N", "#d9d9d9"]];
-  chart("ch-sesuai", { type: "bar", data: { labels: t13.map(r => r[0]), datasets: sc.map(([l, c], i) => ({ label: l, data: t13.map(r => r[i + 1]), backgroundColor: c })) },
+  const sc = [["S1", KES.S1], ["S2", KES.S2], ["S3", KES.S3]];
+  chart("ch-sesuai", { type: "bar", data: { labels: KODE.map(nm), datasets: sc.map(([l, c]) => ({ label: l, data: KODE.map(k => ((AP[k] || {}).kesesuaian_ha || {})[l] || 0), backgroundColor: c })) },
     options: { indexAxis: "y", maintainAspectRatio: false, scales: { x: { stacked: true, title: { display: true, text: "ha" } }, y: { stacked: true } },
       plugins: { legend: { position: "bottom", labels: { boxWidth: 10 } } } } });
+
+  chart("ch-prior", { type: "bar", data: { labels: KODE.map(nm), datasets: ["Tinggi", "Sedang", "Rendah"].flatMap(c => [
+      { label: `${c} – AHP`, data: KODE.map(k => ((AP[k] || {}).prioritas_ahp_ha || {})[c] || 0), backgroundColor: PRIOR[c] + "55", stack: "ahp" },
+      { label: `${c} – + FGD`, data: KODE.map(k => ((AP[k] || {}).prioritas_masyarakat_ha || {})[c] || 0), backgroundColor: PRIOR[c], stack: "fgd" }]) },
+    options: { indexAxis: "y", maintainAspectRatio: false, scales: { x: { stacked: true, title: { display: true, text: "ha" } }, y: { stacked: true } },
+      plugins: { legend: { position: "bottom", labels: { boxWidth: 10, font: { size: 10 } } } } } });
 
   chart("ch-lrr", { type: "bar", data: { labels: t11.map(r => r[0]), datasets: [
       { label: "LRR rerata (m/th)", data: t11.map(r => r[4]), backgroundColor: t11.map(r => r[4] < 0 ? "#ef8a62" : "#67a9cf"), yAxisID: "y" },

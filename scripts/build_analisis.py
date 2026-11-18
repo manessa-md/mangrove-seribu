@@ -109,6 +109,33 @@ def main():
             ks = kes[kes.pulau == k]
             d["setuju_tidak_sesuai_ha"] = round(float((sf.union_all().area - sf.union_all().intersection(ks.union_all()).area) / 1e4), 2) if len(ks) else round(float(sf.area.sum() / 1e4), 2)
         an["pulau"][k] = d
+    # (3b) data masukan yang dipakai tiap pulau (dibaca dari buku kerja kesesuaian versi terbaru)
+    X = AN / f"08_Kesesuaian_Pemulihan/MGV-KS_Kesesuaian_KS_{V}.xlsx"
+    lk2 = pd.read_excel(X, sheet_name="LUAS_KELAS").set_index("pulau")
+    dt = pd.read_excel(X, sheet_name="DATUM_BATIMETRI").set_index("pulau")
+    vm = pd.read_excel(X, sheet_name="VALIDASI_MANGROVE_EKSISTING").set_index("pulau")
+    num = lambda v, d=3: None if pd.isna(v) else round(float(v), d)
+    for k in PULAU:
+        if k not in lk2.index:
+            continue
+        r = lk2.loc[k]; m = {}
+        krit = [c.strip() for c in str(r.kriteria_dipakai).split(",")]
+        m["stasiun_pasut"] = r.stasiun_pasut
+        m["jumlah_kriteria"] = len(krit)
+        m["tanpa_kriteria"] = [c for c in ["elevasi", "gelombang", "substrat", "jarak_mangrove", "garis_pantai", "salinitas"] if c not in krit]
+        m["sumber_elevasi"] = r.sumber_elevasi
+        m["cakupan_elevasi_pct"] = num(r["cakupan_elevasi_zona_%"], 1)
+        m["tanpa_data_ha"] = num(r["Tanpa data (zona tak terklasifikasi)"], 2)
+        if k in dt.index:
+            d = dt.loc[k]
+            m["topobati"] = re.search(r"_(v\d+)\.tif$", str(d.berkas_keluaran)).group(1) if re.search(r"_(v\d+)\.tif$", str(d.berkas_keluaran)) else None
+            m["n_titik_kalibrasi"] = int(d.n_titik_kalibrasi); m["koreksi_c_m"] = num(d.koreksi_datum_c_m)
+            m["rmse_m"] = num(d.RMSE_setelah_koreksi_m); m["r_bati_lapangan"] = num(d.get("r_bati_lapangan"), 2)
+        if k in vm.index:
+            v = vm.loc[k]
+            m["mangrove_sel"] = int(v.sel_mangrove_eksisting_10m)
+            m["mangrove_S1S2_pct"] = None if pd.isna(v.iloc[3]) else round(float(v.iloc[3]) + float(v.iloc[4]), 1)
+        an["pulau"][k]["masukan"] = m
     an["total"] = {
         "sesuai_ha": round(float(lk[["S1", "S2", "S3"]].sum().sum()), 2),
         "prioritas_ahp_ha": round(float(lk[["Prioritas Tinggi", "Prioritas Sedang", "Prioritas Rendah"]].sum().sum()), 2),

@@ -260,3 +260,9 @@ select, .btn {
   #tab-pulau .chip { flex: none; }
   .pulau-head h2 { font-size: 1.1rem; margin: 6px 0 4px; }
 }
+
+.dtable.left td, .dtable.left th { text-align: left; white-space: normal; }
+.dtable.left td:first-child { white-space: nowrap; }
+.dtable th { white-space: normal; vertical-align: bottom; }
+.dtable.left { font-size: .76rem; }
+.dtable.left th, .dtable.left td { padding: 5px 4px; }

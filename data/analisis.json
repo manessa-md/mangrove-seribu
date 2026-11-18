@@ -18,7 +18,22 @@
     "Sedang": 0.17,
     "Rendah": 0.06
    },
-   "setuju_tidak_sesuai_ha": 3.59
+   "setuju_tidak_sesuai_ha": 3.59,
+   "masukan": {
+    "stasiun_pasut": "UTJ",
+    "jumlah_kriteria": 6,
+    "tanpa_kriteria": [],
+    "sumber_elevasi": "DTM LiDAR + batimetri terkoreksi pasut + IDW elevasi dasar lapangan",
+    "cakupan_elevasi_pct": 89.6,
+    "tanpa_data_ha": 3.48,
+    "topobati": "v04",
+    "n_titik_kalibrasi": 18,
+    "koreksi_c_m": 0.396,
+    "rmse_m": 0.371,
+    "r_bati_lapangan": null,
+    "mangrove_sel": 341,
+    "mangrove_S1S2_pct": 93.8
+   }
   },
   "PAR": {
    "kesesuaian_ha": {
@@ -37,7 +52,24 @@
     "Sedang": 0.28,
     "Rendah": 1.08
    },
-   "setuju_tidak_sesuai_ha": 20.9
+   "setuju_tidak_sesuai_ha": 20.9,
+   "masukan": {
+    "stasiun_pasut": "LCG",
+    "jumlah_kriteria": 5,
+    "tanpa_kriteria": [
+     "gelombang"
+    ],
+    "sumber_elevasi": "batimetri terkoreksi pasut + IDW elevasi dasar lapangan",
+    "cakupan_elevasi_pct": 83.1,
+    "tanpa_data_ha": 83.57,
+    "topobati": "v04",
+    "n_titik_kalibrasi": 35,
+    "koreksi_c_m": 0.697,
+    "rmse_m": 0.123,
+    "r_bati_lapangan": null,
+    "mangrove_sel": 219,
+    "mangrove_S1S2_pct": 91.7
+   }
   },
   "LCG": {
    "kesesuaian_ha": {
@@ -56,7 +88,22 @@
     "Sedang": 2.42,
     "Rendah": 0.03
    },
-   "setuju_tidak_sesuai_ha": 10.22
+   "setuju_tidak_sesuai_ha": 10.22,
+   "masukan": {
+    "stasiun_pasut": "LCG",
+    "jumlah_kriteria": 6,
+    "tanpa_kriteria": [],
+    "sumber_elevasi": "DTM LiDAR + batimetri terkoreksi pasut + IDW elevasi dasar lapangan",
+    "cakupan_elevasi_pct": 86.9,
+    "tanpa_data_ha": 10.03,
+    "topobati": "v05",
+    "n_titik_kalibrasi": 87,
+    "koreksi_c_m": 0.151,
+    "rmse_m": 0.383,
+    "r_bati_lapangan": 0.26,
+    "mangrove_sel": 828,
+    "mangrove_S1S2_pct": 99.9
+   }
   },
   "TDG": {
    "kesesuaian_ha": {
@@ -75,7 +122,22 @@
     "Sedang": 0.04,
     "Rendah": 0.0
    },
-   "setuju_tidak_sesuai_ha": 3.8
+   "setuju_tidak_sesuai_ha": 3.8,
+   "masukan": {
+    "stasiun_pasut": "TDG",
+    "jumlah_kriteria": 6,
+    "tanpa_kriteria": [],
+    "sumber_elevasi": "DTM LiDAR + batimetri terkoreksi pasut + IDW elevasi dasar lapangan",
+    "cakupan_elevasi_pct": 77.8,
+    "tanpa_data_ha": 37.5,
+    "topobati": "v05",
+    "n_titik_kalibrasi": 183,
+    "koreksi_c_m": 0.085,
+    "rmse_m": 0.265,
+    "r_bati_lapangan": null,
+    "mangrove_sel": 5,
+    "mangrove_S1S2_pct": 80.0
+   }
   },
   "PRM": {
    "kesesuaian_ha": {
@@ -94,7 +156,22 @@
     "Sedang": 1.13,
     "Rendah": 3.59
    },
-   "setuju_tidak_sesuai_ha": 4.92
+   "setuju_tidak_sesuai_ha": 4.92,
+   "masukan": {
+    "stasiun_pasut": "PRM",
+    "jumlah_kriteria": 6,
+    "tanpa_kriteria": [],
+    "sumber_elevasi": "DTM LiDAR + batimetri terkoreksi pasut + IDW elevasi dasar lapangan",
+    "cakupan_elevasi_pct": 70.0,
+    "tanpa_data_ha": 36.74,
+    "topobati": "v04",
+    "n_titik_kalibrasi": 70,
+    "koreksi_c_m": 0.023,
+    "rmse_m": 0.259,
+    "r_bati_lapangan": null,
+    "mangrove_sel": 177,
+    "mangrove_S1S2_pct": 88.7
+   }
   },
   "PGG": {
    "kesesuaian_ha": {
@@ -113,7 +190,24 @@
     "Sedang": 0.07,
     "Rendah": 0.0
    },
-   "setuju_tidak_sesuai_ha": 2.0
+   "setuju_tidak_sesuai_ha": 2.0,
+   "masukan": {
+    "stasiun_pasut": "PRM",
+    "jumlah_kriteria": 5,
+    "tanpa_kriteria": [
+     "gelombang"
+    ],
+    "sumber_elevasi": "batimetri terkoreksi pasut",
+    "cakupan_elevasi_pct": 74.8,
+    "tanpa_data_ha": 12.13,
+    "topobati": "v05",
+    "n_titik_kalibrasi": 26,
+    "koreksi_c_m": -0.001,
+    "rmse_m": 0.372,
+    "r_bati_lapangan": 0.07,
+    "mangrove_sel": 0,
+    "mangrove_S1S2_pct": null
+   }
   },
   "KLP": {
    "kesesuaian_ha": {
@@ -132,7 +226,24 @@
     "Sedang": 0.47,
     "Rendah": 1.63
    },
-   "setuju_tidak_sesuai_ha": 2.14
+   "setuju_tidak_sesuai_ha": 2.14,
+   "masukan": {
+    "stasiun_pasut": "PRM",
+    "jumlah_kriteria": 5,
+    "tanpa_kriteria": [
+     "gelombang"
+    ],
+    "sumber_elevasi": "batimetri terkoreksi pasut + IDW elevasi dasar lapangan",
+    "cakupan_elevasi_pct": 76.3,
+    "tanpa_data_ha": 17.19,
+    "topobati": "v05",
+    "n_titik_kalibrasi": 19,
+    "koreksi_c_m": -0.039,
+    "rmse_m": 0.166,
+    "r_bati_lapangan": 0.76,
+    "mangrove_sel": 127,
+    "mangrove_S1S2_pct": 55.9
+   }
   },
   "KLD": {
    "kesesuaian_ha": {
@@ -151,7 +262,22 @@
     "Sedang": 0.77,
     "Rendah": 0.0
    },
-   "setuju_tidak_sesuai_ha": 0.23
+   "setuju_tidak_sesuai_ha": 0.23,
+   "masukan": {
+    "stasiun_pasut": "PRM",
+    "jumlah_kriteria": 6,
+    "tanpa_kriteria": [],
+    "sumber_elevasi": "DTM LiDAR + batimetri terkoreksi pasut + IDW elevasi dasar lapangan",
+    "cakupan_elevasi_pct": 57.4,
+    "tanpa_data_ha": 14.87,
+    "topobati": "v04",
+    "n_titik_kalibrasi": 62,
+    "koreksi_c_m": 0.754,
+    "rmse_m": 0.367,
+    "r_bati_lapangan": null,
+    "mangrove_sel": 57,
+    "mangrove_S1S2_pct": 100.0
+   }
   },
   "HRP": {
    "kesesuaian_ha": {
@@ -170,7 +296,22 @@
     "Sedang": 0.03,
     "Rendah": 0.0
    },
-   "setuju_tidak_sesuai_ha": 2.48
+   "setuju_tidak_sesuai_ha": 2.48,
+   "masukan": {
+    "stasiun_pasut": "PRM",
+    "jumlah_kriteria": 6,
+    "tanpa_kriteria": [],
+    "sumber_elevasi": "DTM LiDAR + batimetri terkoreksi pasut + IDW elevasi dasar lapangan",
+    "cakupan_elevasi_pct": 87.2,
+    "tanpa_data_ha": 13.14,
+    "topobati": "v04",
+    "n_titik_kalibrasi": 50,
+    "koreksi_c_m": 0.647,
+    "rmse_m": 0.38,
+    "r_bati_lapangan": null,
+    "mangrove_sel": 365,
+    "mangrove_S1S2_pct": 90.2
+   }
   },
   "SBR": {
    "kesesuaian_ha": {
@@ -189,10 +330,25 @@
     "Sedang": 0.45,
     "Rendah": 0.1
    },
-   "setuju_tidak_sesuai_ha": 1.81
+   "setuju_tidak_sesuai_ha": 1.81,
+   "masukan": {
+    "stasiun_pasut": "SBR",
+    "jumlah_kriteria": 6,
+    "tanpa_kriteria": [],
+    "sumber_elevasi": "DTM LiDAR + batimetri terkoreksi pasut + IDW elevasi dasar lapangan",
+    "cakupan_elevasi_pct": 56.8,
+    "tanpa_data_ha": 13.04,
+    "topobati": "v04",
+    "n_titik_kalibrasi": 48,
+    "koreksi_c_m": 0.095,
+    "rmse_m": 0.703,
+    "r_bati_lapangan": null,
+    "mangrove_sel": 67,
+    "mangrove_S1S2_pct": 92.5
+   }
   }
  },
- "dibangun": "2026-11-18 13:25",
+ "dibangun": "2026-11-18 14:02",
  "total": {
   "sesuai_ha": 138.21,
   "prioritas_ahp_ha": 138.21,
