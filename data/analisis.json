@@ -24,20 +24,20 @@
    "kesesuaian_ha": {
     "S1": 3.19,
     "S2": 22.19,
-    "S3": 0.0,
-    "N": 118.65
+    "S3": 2.45,
+    "N": 110.6
    },
    "prioritas_ahp_ha": {
     "Tinggi": 0.9,
     "Sedang": 9.32,
-    "Rendah": 15.16
+    "Rendah": 17.61
    },
    "prioritas_masyarakat_ha": {
     "Tinggi": 0.0,
     "Sedang": 0.28,
-    "Rendah": 0.95
+    "Rendah": 1.08
    },
-   "setuju_tidak_sesuai_ha": 21.02
+   "setuju_tidak_sesuai_ha": 20.9
   },
   "LCG": {
    "kesesuaian_ha": {
@@ -81,58 +81,58 @@
    "kesesuaian_ha": {
     "S1": 3.7,
     "S2": 1.75,
-    "S3": 0.02,
-    "N": 89.13
+    "S3": 22.27,
+    "N": 58.59
    },
    "prioritas_ahp_ha": {
     "Tinggi": 0.0,
     "Sedang": 4.45,
-    "Rendah": 1.02
+    "Rendah": 23.27
    },
    "prioritas_masyarakat_ha": {
     "Tinggi": 0.0,
     "Sedang": 1.13,
-    "Rendah": 0.0
+    "Rendah": 3.59
    },
-   "setuju_tidak_sesuai_ha": 8.76
+   "setuju_tidak_sesuai_ha": 4.92
   },
   "PGG": {
    "kesesuaian_ha": {
     "S1": 0.0,
-    "S2": 0.05,
-    "S3": 0.01,
-    "N": 85.36
+    "S2": 3.1,
+    "S3": 0.0,
+    "N": 95.88
    },
    "prioritas_ahp_ha": {
-    "Tinggi": 0.02,
-    "Sedang": 0.03,
-    "Rendah": 0.01
+    "Tinggi": 0.35,
+    "Sedang": 0.48,
+    "Rendah": 2.27
    },
    "prioritas_masyarakat_ha": {
-    "Tinggi": 0.0,
-    "Sedang": 0.0,
+    "Tinggi": 0.08,
+    "Sedang": 0.07,
     "Rendah": 0.0
    },
-   "setuju_tidak_sesuai_ha": 2.17
+   "setuju_tidak_sesuai_ha": 2.0
   },
   "KLP": {
    "kesesuaian_ha": {
-    "S1": 0.44,
-    "S2": 0.04,
-    "S3": 0.0,
-    "N": 107.23
+    "S1": 1.11,
+    "S2": 0.86,
+    "S3": 10.77,
+    "N": 113.22
    },
    "prioritas_ahp_ha": {
     "Tinggi": 0.0,
-    "Sedang": 0.48,
-    "Rendah": 0.0
+    "Sedang": 1.72,
+    "Rendah": 11.02
    },
    "prioritas_masyarakat_ha": {
     "Tinggi": 0.0,
-    "Sedang": 0.14,
-    "Rendah": 0.0
+    "Sedang": 0.47,
+    "Rendah": 1.63
    },
-   "setuju_tidak_sesuai_ha": 4.14
+   "setuju_tidak_sesuai_ha": 2.14
   },
   "KLD": {
    "kesesuaian_ha": {
@@ -157,20 +157,20 @@
    "kesesuaian_ha": {
     "S1": 5.12,
     "S2": 2.42,
-    "S3": 0.0,
-    "N": 64.55
+    "S3": 19.0,
+    "N": 42.35
    },
    "prioritas_ahp_ha": {
     "Tinggi": 0.0,
     "Sedang": 5.84,
-    "Rendah": 1.7
+    "Rendah": 20.7
    },
    "prioritas_masyarakat_ha": {
     "Tinggi": 0.0,
     "Sedang": 0.03,
     "Rendah": 0.0
    },
-   "setuju_tidak_sesuai_ha": 2.55
+   "setuju_tidak_sesuai_ha": 2.48
   },
   "SBR": {
    "kesesuaian_ha": {
@@ -192,10 +192,10 @@
    "setuju_tidak_sesuai_ha": 1.81
   }
  },
- "dibangun": "2026-11-18 12:24",
+ "dibangun": "2026-11-18 13:06",
  "total": {
-  "sesuai_ha": 81.89,
-  "prioritas_ahp_ha": 81.89,
-  "prioritas_masyarakat_ha": 10.01
+  "sesuai_ha": 140.89,
+  "prioritas_ahp_ha": 140.89,
+  "prioritas_masyarakat_ha": 15.84
  }
 }

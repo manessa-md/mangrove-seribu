@@ -124,7 +124,8 @@ def main():
                      r.sumber_elevasi] for k, r in lk.iterrows()]
     t13["catatan"] = [f"Sumber: Analisis kesesuaian multikriteria MGV-KS 2026 {V} (grid 10 m; 300 m ke laut, 30 m ke darat)",
                       "Catatan: S1 sangat sesuai, S2 sesuai, S3 sesuai bersyarat, N tidak sesuai. Elevasi terhadap MSL pasut lokal; "
-                      "S1 = MLW–MHW, S2 = LLWS–MLW atau MHW–HHWS, S3 = HHWS–(HAT + 0,2); dasar di bawah LLWS = N."]
+                      "S1 = MLW–MHW, S2 = LLWS–MLW atau MHW–HHWS, S3 = batas bawah–LLWS atau HHWS–(HAT + 0,2); batas bawah per pulau = min(LLWS, P05 elevasi "
+                      "mangrove eksisting), tidak lebih dalam dari LAT − 0,2; dasar di bawah LLWS paling tinggi S3."]
     pt = prio[prio.prioritas == "Tinggi"].sort_values("id_lokasi")
     st["tabel"]["14"]["baris"] = [[r.id_lokasi, PULAU[r.pulau], round(float(r.luas_ha), 2), round(float(r.skor_rerata), 4), round(float(r.x_utm), 1),
                                    round(float(r.y_utm), 1), round(float(r.lintang), 4), round(float(r.bujur), 4)] for _, r in pt.iterrows()]

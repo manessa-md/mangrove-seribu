@@ -75,6 +75,39 @@ def kontur(kode, f, ref):
     return feats, geser
 
 
+# Pulau yang batimetrinya diganti (Batimetri_<Pulau>_v02.tif) → kontur dari topo-batimetri v05 (sudah terkoreksi pasut)
+TOPO_V05 = ["PGG", "KLP"]
+
+
+def kontur_topo(kode, f, B=4):
+    """Kontur 1 m (−10…−1 m) dari sel batimetri (band 2 = 2) topo-batimetri v05; rerata blok B×B agar tidak bergerigi."""
+    import rasterio, contourpy, warnings
+    from shapely.geometry import LineString, mapping
+    from shapely.ops import transform as stransform
+    from pyproj import Transformer
+    with rasterio.open(f) as r:
+        e, src, T, crs = r.read(1), r.read(2), r.transform, r.crs
+        c = r.tags().get("koreksi_datum_c_m", "")
+    e = np.where(src == 2, e, np.nan)
+    h, w = (e.shape[0] // B) * B, (e.shape[1] // B) * B
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        eb = np.nanmean(e[:h, :w].reshape(h // B, B, w // B, B), axis=(1, 3))
+    cg = contourpy.contour_generator(z=np.ma.masked_invalid(eb), line_type="SeparateCode")
+    to84 = Transformer.from_crs(crs, 4326, always_xy=True).transform
+    lab = f"batimetri v02 2,5 m terkoreksi pasut (c = {float(c):+.2f} m; topo-batimetri v05)".replace(".", ",", 1) if c else "batimetri v02 (topo-batimetri v05)"
+    feats = []
+    for lv in range(-10, 0):
+        for seg in cg.lines(lv)[0]:
+            if len(seg) < 4:
+                continue
+            ln = LineString(np.c_[T.c + (seg[:, 0] * B + B / 2) * T.a, T.f + (seg[:, 1] * B + B / 2) * T.e]).simplify(4)
+            if ln.length >= 100:
+                feats.append({"type": "Feature", "properties": {"pulau": kode, "elevasi_m": float(lv), "interval_sumber": lab},
+                              "geometry": mapping(stransform(to84, ln))})
+    return feats
+
+
 def main():
     fk = OUT / "kontur_batimetri.geojson"
     fs = OUT / "statistik.json"
@@ -106,6 +139,14 @@ def main():
                     f"(median selisih terhadap TopoBatimetri {kode} v04). Kontur bersifat indikatif sampai versi olahan v01 tersedia."))
         st["catatan_mutu"] = [c for c in st["catatan_mutu"]
                               if not (c.startswith("Batimetri") and (nama in c or kode in c))] + [catat]
+    for kode in TOPO_V05:
+        f = DB / f"MGV-KS_TopoBatimetri_{kode}_v05.tif"
+        if not f.exists():
+            continue
+        feats = kontur_topo(kode, f)
+        if feats:
+            kb["features"] = [x for x in kb["features"] if x["properties"]["pulau"] != kode or float(x["properties"]["elevasi_m"]) >= 0] + feats
+            print(f"  kontur batimetri v05 {kode}: {len(feats)} garis")
     txt = json.dumps(kb, ensure_ascii=False, separators=(",", ":"))
     txt = re.sub(r"(-?\d+\.\d{5})\d+", r"\1", txt)
     fk.write_text(txt, encoding="utf-8")

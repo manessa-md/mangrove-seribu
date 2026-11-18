@@ -356,7 +356,7 @@
     <div class="chartbox" style="height:240px"><canvas id="ch-tren"></canvas></div>
     <h3>Kesesuaian lahan pemulihan (ha)</h3>
     <div class="chartbox"><canvas id="ch-sesuai"></canvas></div>
-    <p class="muted" style="font-size:.8rem">Kesesuaian ${S.kesesuaian.versi}: elevasi terhadap zona pasut (MSL lokal; S1 = MLW–MHW, S2 = LLWS–MLW / MHW–HHWS, S3 = HHWS–HAT + 0,2; dasar di bawah LLWS = N), batimetri dikoreksi dengan kedalaman terukur di lapangan. AHP 6 kriteria: ${S.kesesuaian.bobot.map(b => `${esc(({ elevasi: "elevasi", gelombang: "gelombang Hs", substrat: "substrat", jarak_mangrove: "jarak ke mangrove", garis_pantai: "LRR", salinitas: "salinitas" })[b.kode] || b.kriteria)} ${fmt(b.bobot * 100, 1)} %`).join(", ")} (CR = ${fmt(S.kesesuaian.cr, 3)}). Grid 10 m; 300 m ke laut, 30 m ke darat.</p>
+    <p class="muted" style="font-size:.8rem">Kesesuaian ${S.kesesuaian.versi}: elevasi terhadap zona pasut (MSL lokal; S1 = MLW–MHW, S2 = LLWS–MLW / MHW–HHWS, S3 = batas bawah–LLWS / HHWS–HAT + 0,2; batas bawah mengikuti dasar tempat mangrove eksisting tumbuh, dasar di bawah LLWS paling tinggi S3), batimetri dikoreksi dengan kedalaman terukur di lapangan. AHP 6 kriteria: ${S.kesesuaian.bobot.map(b => `${esc(({ elevasi: "elevasi", gelombang: "gelombang Hs", substrat: "substrat", jarak_mangrove: "jarak ke mangrove", garis_pantai: "LRR", salinitas: "salinitas" })[b.kode] || b.kriteria)} ${fmt(b.bobot * 100, 1)} %`).join(", ")} (CR = ${fmt(S.kesesuaian.cr, 3)}). Grid 10 m; 300 m ke laut, 30 m ke darat.</p>
     <h3>Perubahan garis pantai 1990–2025</h3>
     <div class="chartbox"><canvas id="ch-lrr"></canvas></div>
     <h3>Stok karbon batas bawah (t C/ha)</h3>
