@@ -1,120 +1,130 @@
 {
- "versi": "v05",
+ "versi": "v06",
  "pulau": {
   "UTJ": {
    "kesesuaian_ha": {
-    "S1": 3.74,
-    "S2": 3.93,
-    "S3": 0.05,
-    "N": 100.59
+    "S1": 4.54,
+    "S2": 2.03,
+    "S3": 0.0,
+    "N": 92.61
    },
    "prioritas_ahp_ha": {
-    "Tinggi": 3.5,
-    "Sedang": 3.16,
-    "Rendah": 1.06
+    "Tinggi": 3.16,
+    "Sedang": 3.03,
+    "Rendah": 0.38
    },
    "prioritas_masyarakat_ha": {
-    "Tinggi": 1.5,
-    "Sedang": 0.17,
-    "Rendah": 0.06
+    "Tinggi": 1.42,
+    "Sedang": 0.33,
+    "Rendah": 0.0
    },
-   "setuju_tidak_sesuai_ha": 3.59,
+   "setuju_tidak_sesuai_ha": 3.67,
    "masukan": {
     "stasiun_pasut": "UTJ",
     "jumlah_kriteria": 6,
     "tanpa_kriteria": [],
     "sumber_elevasi": "DTM LiDAR + batimetri terkoreksi pasut + IDW elevasi dasar lapangan",
     "cakupan_elevasi_pct": 89.6,
-    "tanpa_data_ha": 3.48,
+    "tanpa_data_ha": 3.41,
     "topobati": "v04",
     "n_titik_kalibrasi": 18,
     "koreksi_c_m": 0.396,
     "rmse_m": 0.371,
     "r_bati_lapangan": null,
     "mangrove_sel": 341,
-    "mangrove_S1S2_pct": 93.8
+    "mangrove_S1S2_pct": 93.8,
+    "struktur_ha": 3.52,
+    "jalur_ha": 5.84,
+    "terlindung_ha": 41.85,
+    "sesuai_terlindung_ha": 2.79
    }
   },
   "PAR": {
    "kesesuaian_ha": {
-    "S1": 3.19,
-    "S2": 22.19,
+    "S1": 6.36,
+    "S2": 19.02,
     "S3": 2.45,
-    "N": 110.6
+    "N": 109.65
    },
    "prioritas_ahp_ha": {
     "Tinggi": 0.9,
-    "Sedang": 9.32,
-    "Rendah": 17.61
+    "Sedang": 11.53,
+    "Rendah": 15.4
    },
    "prioritas_masyarakat_ha": {
     "Tinggi": 0.0,
-    "Sedang": 0.28,
-    "Rendah": 1.08
+    "Sedang": 0.32,
+    "Rendah": 1.02
    },
    "setuju_tidak_sesuai_ha": 20.9,
    "masukan": {
     "stasiun_pasut": "LCG",
-    "jumlah_kriteria": 5,
-    "tanpa_kriteria": [
-     "gelombang"
-    ],
+    "jumlah_kriteria": 6,
+    "tanpa_kriteria": [],
     "sumber_elevasi": "batimetri terkoreksi pasut + IDW elevasi dasar lapangan",
     "cakupan_elevasi_pct": 83.1,
-    "tanpa_data_ha": 83.57,
+    "tanpa_data_ha": 81.9,
     "topobati": "v04",
     "n_titik_kalibrasi": 35,
     "koreksi_c_m": 0.697,
     "rmse_m": 0.123,
     "r_bati_lapangan": null,
     "mangrove_sel": 219,
-    "mangrove_S1S2_pct": 91.7
+    "mangrove_S1S2_pct": 91.7,
+    "struktur_ha": 0.53,
+    "jalur_ha": 2.09,
+    "terlindung_ha": 7.66,
+    "sesuai_terlindung_ha": 0.57
    }
   },
   "LCG": {
    "kesesuaian_ha": {
-    "S1": 8.83,
-    "S2": 3.98,
-    "S3": 0.28,
-    "N": 96.12
+    "S1": 6.99,
+    "S2": 5.2,
+    "S3": 0.11,
+    "N": 88.58
    },
    "prioritas_ahp_ha": {
-    "Tinggi": 4.67,
-    "Sedang": 7.65,
-    "Rendah": 0.77
+    "Tinggi": 4.58,
+    "Sedang": 6.64,
+    "Rendah": 1.08
    },
    "prioritas_masyarakat_ha": {
     "Tinggi": 1.92,
-    "Sedang": 2.42,
-    "Rendah": 0.03
+    "Sedang": 2.38,
+    "Rendah": 0.0
    },
-   "setuju_tidak_sesuai_ha": 10.22,
+   "setuju_tidak_sesuai_ha": 10.25,
    "masukan": {
     "stasiun_pasut": "LCG",
     "jumlah_kriteria": 6,
     "tanpa_kriteria": [],
     "sumber_elevasi": "DTM LiDAR + batimetri terkoreksi pasut + IDW elevasi dasar lapangan",
     "cakupan_elevasi_pct": 86.9,
-    "tanpa_data_ha": 10.03,
+    "tanpa_data_ha": 9.5,
     "topobati": "v05",
     "n_titik_kalibrasi": 87,
     "koreksi_c_m": 0.151,
     "rmse_m": 0.383,
     "r_bati_lapangan": 0.26,
     "mangrove_sel": 828,
-    "mangrove_S1S2_pct": 99.9
+    "mangrove_S1S2_pct": 99.9,
+    "struktur_ha": 3.67,
+    "jalur_ha": 5.76,
+    "terlindung_ha": 28.86,
+    "sesuai_terlindung_ha": 1.8
    }
   },
   "TDG": {
    "kesesuaian_ha": {
-    "S1": 2.29,
-    "S2": 5.32,
-    "S3": 0.16,
-    "N": 394.46
+    "S1": 1.54,
+    "S2": 5.72,
+    "S3": 0.13,
+    "N": 385.13
    },
    "prioritas_ahp_ha": {
-    "Tinggi": 1.49,
-    "Sedang": 4.48,
+    "Tinggi": 1.4,
+    "Sedang": 4.19,
     "Rendah": 1.8
    },
    "prioritas_masyarakat_ha": {
@@ -129,140 +139,152 @@
     "tanpa_kriteria": [],
     "sumber_elevasi": "DTM LiDAR + batimetri terkoreksi pasut + IDW elevasi dasar lapangan",
     "cakupan_elevasi_pct": 77.8,
-    "tanpa_data_ha": 37.5,
+    "tanpa_data_ha": 36.73,
     "topobati": "v05",
     "n_titik_kalibrasi": 183,
     "koreksi_c_m": 0.085,
     "rmse_m": 0.265,
     "r_bati_lapangan": null,
     "mangrove_sel": 5,
-    "mangrove_S1S2_pct": 80.0
+    "mangrove_S1S2_pct": 80.0,
+    "struktur_ha": 7.98,
+    "jalur_ha": 2.67,
+    "terlindung_ha": 77.41,
+    "sesuai_terlindung_ha": 1.66
    }
   },
   "PRM": {
    "kesesuaian_ha": {
-    "S1": 3.7,
-    "S2": 1.75,
-    "S3": 22.27,
-    "N": 58.59
+    "S1": 1.18,
+    "S2": 3.55,
+    "S3": 21.72,
+    "N": 56.59
    },
    "prioritas_ahp_ha": {
     "Tinggi": 0.0,
-    "Sedang": 4.45,
-    "Rendah": 23.27
+    "Sedang": 2.63,
+    "Rendah": 23.82
    },
    "prioritas_masyarakat_ha": {
     "Tinggi": 0.0,
-    "Sedang": 1.13,
-    "Rendah": 3.59
+    "Sedang": 0.35,
+    "Rendah": 4.39
    },
-   "setuju_tidak_sesuai_ha": 4.92,
+   "setuju_tidak_sesuai_ha": 5.03,
    "masukan": {
     "stasiun_pasut": "PRM",
     "jumlah_kriteria": 6,
     "tanpa_kriteria": [],
     "sumber_elevasi": "DTM LiDAR + batimetri terkoreksi pasut + IDW elevasi dasar lapangan",
     "cakupan_elevasi_pct": 70.0,
-    "tanpa_data_ha": 36.74,
+    "tanpa_data_ha": 34.11,
     "topobati": "v04",
     "n_titik_kalibrasi": 70,
     "koreksi_c_m": 0.023,
     "rmse_m": 0.259,
     "r_bati_lapangan": null,
     "mangrove_sel": 177,
-    "mangrove_S1S2_pct": 88.7
+    "mangrove_S1S2_pct": 88.7,
+    "struktur_ha": 3.61,
+    "jalur_ha": 2.88,
+    "terlindung_ha": 30.64,
+    "sesuai_terlindung_ha": 6.15
    }
   },
   "PGG": {
    "kesesuaian_ha": {
-    "S1": 0.0,
-    "S2": 3.1,
-    "S3": 0.0,
-    "N": 95.88
+    "S1": 0.01,
+    "S2": 2.75,
+    "S3": 0.28,
+    "N": 90.22
    },
    "prioritas_ahp_ha": {
-    "Tinggi": 0.35,
-    "Sedang": 0.48,
-    "Rendah": 2.27
+    "Tinggi": 0.04,
+    "Sedang": 0.47,
+    "Rendah": 2.53
    },
    "prioritas_masyarakat_ha": {
-    "Tinggi": 0.08,
+    "Tinggi": 0.0,
     "Sedang": 0.07,
-    "Rendah": 0.0
+    "Rendah": 0.05
    },
-   "setuju_tidak_sesuai_ha": 2.0,
+   "setuju_tidak_sesuai_ha": 2.02,
    "masukan": {
     "stasiun_pasut": "PRM",
-    "jumlah_kriteria": 5,
-    "tanpa_kriteria": [
-     "gelombang"
-    ],
+    "jumlah_kriteria": 6,
+    "tanpa_kriteria": [],
     "sumber_elevasi": "batimetri terkoreksi pasut",
     "cakupan_elevasi_pct": 74.8,
-    "tanpa_data_ha": 12.13,
+    "tanpa_data_ha": 11.22,
     "topobati": "v05",
     "n_titik_kalibrasi": 26,
     "koreksi_c_m": -0.001,
     "rmse_m": 0.372,
     "r_bati_lapangan": 0.07,
     "mangrove_sel": 0,
-    "mangrove_S1S2_pct": null
+    "mangrove_S1S2_pct": null,
+    "struktur_ha": 1.18,
+    "jalur_ha": 5.58,
+    "terlindung_ha": 14.5,
+    "sesuai_terlindung_ha": 0.47
    }
   },
   "KLP": {
    "kesesuaian_ha": {
-    "S1": 1.11,
-    "S2": 0.86,
-    "S3": 10.77,
-    "N": 113.22
+    "S1": 1.14,
+    "S2": 0.8,
+    "S3": 10.68,
+    "N": 101.75
    },
    "prioritas_ahp_ha": {
     "Tinggi": 0.0,
-    "Sedang": 1.72,
+    "Sedang": 1.6,
     "Rendah": 11.02
    },
    "prioritas_masyarakat_ha": {
     "Tinggi": 0.0,
-    "Sedang": 0.47,
-    "Rendah": 1.63
+    "Sedang": 0.34,
+    "Rendah": 1.78
    },
-   "setuju_tidak_sesuai_ha": 2.14,
+   "setuju_tidak_sesuai_ha": 2.17,
    "masukan": {
     "stasiun_pasut": "PRM",
-    "jumlah_kriteria": 5,
-    "tanpa_kriteria": [
-     "gelombang"
-    ],
+    "jumlah_kriteria": 6,
+    "tanpa_kriteria": [],
     "sumber_elevasi": "batimetri terkoreksi pasut + IDW elevasi dasar lapangan",
     "cakupan_elevasi_pct": 76.3,
-    "tanpa_data_ha": 17.19,
+    "tanpa_data_ha": 16.99,
     "topobati": "v05",
     "n_titik_kalibrasi": 19,
     "koreksi_c_m": -0.039,
     "rmse_m": 0.166,
     "r_bati_lapangan": 0.76,
     "mangrove_sel": 127,
-    "mangrove_S1S2_pct": 55.9
+    "mangrove_S1S2_pct": 55.9,
+    "struktur_ha": 1.7,
+    "jalur_ha": 10.15,
+    "terlindung_ha": 16.12,
+    "sesuai_terlindung_ha": 1.17
    }
   },
   "KLD": {
    "kesesuaian_ha": {
-    "S1": 6.14,
-    "S2": 1.12,
-    "S3": 0.0,
-    "N": 49.82
+    "S1": 5.22,
+    "S2": 1.36,
+    "S3": 0.01,
+    "N": 49.34
    },
    "prioritas_ahp_ha": {
-    "Tinggi": 0.87,
-    "Sedang": 6.19,
-    "Rendah": 0.2
+    "Tinggi": 0.82,
+    "Sedang": 5.39,
+    "Rendah": 0.38
    },
    "prioritas_masyarakat_ha": {
     "Tinggi": 0.0,
-    "Sedang": 0.77,
+    "Sedang": 0.68,
     "Rendah": 0.0
    },
-   "setuju_tidak_sesuai_ha": 0.23,
+   "setuju_tidak_sesuai_ha": 0.3,
    "masukan": {
     "stasiun_pasut": "PRM",
     "jumlah_kriteria": 6,
@@ -276,20 +298,24 @@
     "rmse_m": 0.367,
     "r_bati_lapangan": null,
     "mangrove_sel": 57,
-    "mangrove_S1S2_pct": 100.0
+    "mangrove_S1S2_pct": 100.0,
+    "struktur_ha": 1.33,
+    "jalur_ha": 0.0,
+    "terlindung_ha": 12.54,
+    "sesuai_terlindung_ha": 2.89
    }
   },
   "HRP": {
    "kesesuaian_ha": {
-    "S1": 5.12,
-    "S2": 2.42,
-    "S3": 19.0,
-    "N": 42.35
+    "S1": 2.45,
+    "S2": 4.32,
+    "S3": 17.29,
+    "N": 38.68
    },
    "prioritas_ahp_ha": {
     "Tinggi": 0.0,
-    "Sedang": 5.84,
-    "Rendah": 20.7
+    "Sedang": 3.96,
+    "Rendah": 20.1
    },
    "prioritas_masyarakat_ha": {
     "Tinggi": 0.0,
@@ -303,55 +329,68 @@
     "tanpa_kriteria": [],
     "sumber_elevasi": "DTM LiDAR + batimetri terkoreksi pasut + IDW elevasi dasar lapangan",
     "cakupan_elevasi_pct": 87.2,
-    "tanpa_data_ha": 13.14,
+    "tanpa_data_ha": 10.31,
     "topobati": "v04",
     "n_titik_kalibrasi": 50,
     "koreksi_c_m": 0.647,
     "rmse_m": 0.38,
     "r_bati_lapangan": null,
     "mangrove_sel": 365,
-    "mangrove_S1S2_pct": 90.2
+    "mangrove_S1S2_pct": 90.2,
+    "struktur_ha": 1.22,
+    "jalur_ha": 7.91,
+    "terlindung_ha": 16.52,
+    "sesuai_terlindung_ha": 4.85
    }
   },
   "SBR": {
    "kesesuaian_ha": {
-    "S1": 2.8,
-    "S2": 1.64,
-    "S3": 0.0,
-    "N": 67.74
+    "S1": 2.06,
+    "S2": 1.78,
+    "S3": 0.02,
+    "N": 64.46
    },
    "prioritas_ahp_ha": {
-    "Tinggi": 0.17,
-    "Sedang": 3.0,
-    "Rendah": 1.27
+    "Tinggi": 0.15,
+    "Sedang": 2.46,
+    "Rendah": 1.25
    },
    "prioritas_masyarakat_ha": {
     "Tinggi": 0.01,
-    "Sedang": 0.45,
+    "Sedang": 0.39,
     "Rendah": 0.1
    },
-   "setuju_tidak_sesuai_ha": 1.81,
+   "setuju_tidak_sesuai_ha": 1.89,
    "masukan": {
     "stasiun_pasut": "SBR",
     "jumlah_kriteria": 6,
     "tanpa_kriteria": [],
     "sumber_elevasi": "DTM LiDAR + batimetri terkoreksi pasut + IDW elevasi dasar lapangan",
     "cakupan_elevasi_pct": 56.8,
-    "tanpa_data_ha": 13.04,
+    "tanpa_data_ha": 12.42,
     "topobati": "v04",
     "n_titik_kalibrasi": 48,
     "koreksi_c_m": 0.095,
     "rmse_m": 0.703,
     "r_bati_lapangan": null,
     "mangrove_sel": 67,
-    "mangrove_S1S2_pct": 92.5
+    "mangrove_S1S2_pct": 92.5,
+    "struktur_ha": 1.84,
+    "jalur_ha": 2.74,
+    "terlindung_ha": 18.87,
+    "sesuai_terlindung_ha": 1.91
    }
   }
  },
- "dibangun": "2026-11-18 14:02",
+ "dibangun": "2026-11-18 14:12",
+ "metode": {
+  "Gelombang (v06)": "Model gelombang 4 musim MGV-KS v03 (HHWS, 50 m) untuk 10 pulau; Hs = maksimum 4 musim setelah peredaman breakwater. Ambang skor dikalibrasi dari Hs di 1965 sel mangrove eksisting (P50 = 0.55 m, P90 = 0.78 m): 4 ≤ 0.55; 3 ≤ 0.78; 2 ≤ 1.03; 1 > 1.03 m. Ambang lama (WAVE v01) 0,30/0,50/0,75 m tidak dipakai lagi.",
+  "Breakwater (v06)": "Struktur dari 01_DATA_SEKUNDER/12_Break_Water. Sel yang garis 150 m ke arah datang gelombang (band arah tiap musim) memotong struktur mendapat Hs × Kt: breakwater lepas pantai 0,5; breakwater laut dangkal 0,6; jetty/pemecah ombak 0,8; tanggul/seawall pantai tidak dihitung meredam. Sel ≤ 5 m dari struktur = kelas 7 'Struktur pantai' (bukan lokasi tanam).",
+  "Jalur kapal (v06)": "Jalur & alur kapal dari 01_DATA_SEKUNDER/11_Jalur_Kapal; sel ≤ 25 m dari garis jalur = kelas 8 'Jalur kapal' (tidak ditanami, keluar dari prioritas)."
+ },
  "total": {
-  "sesuai_ha": 138.21,
-  "prioritas_ahp_ha": 138.21,
-  "prioritas_masyarakat_ha": 15.84
+  "sesuai_ha": 130.71,
+  "prioritas_ahp_ha": 130.71,
+  "prioritas_masyarakat_ha": 15.61
  }
 }

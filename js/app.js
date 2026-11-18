@@ -320,10 +320,12 @@
       <table class="kv"><tr><td colspan="2"><b>1. Kesesuaian lahan (AHP ${esc(AN.versi)})</b></td></tr>
         ${["S1", "S2", "S3"].map(c => `<tr><td><span class="sw" style="background:${KES[c]}"></span> ${KES_NM[c]}</td><td>${fmt(ks[c])} ha</td></tr>`).join("")}
         <tr><td>N tidak sesuai</td><td>${fmt(ks.N)} ha</td></tr>
+        ${a.masukan && a.masukan.struktur_ha != null ? `<tr><td>Dikeluarkan: struktur pantai / jalur kapal</td><td>${fmt(a.masukan.struktur_ha)} / ${fmt(a.masukan.jalur_ha)} ha</td></tr>
+        <tr><td>Zona terlindung breakwater</td><td>${fmt(a.masukan.terlindung_ha)} ha <small class="muted">(${fmt(a.masukan.sesuai_terlindung_ha)} ha sesuai)</small></td></tr>` : ""}
         <tr><td colspan="2"><b>2. Prioritas pemulihan (sesuai + disetujui masyarakat)</b></td></tr>
         ${["Tinggi", "Sedang", "Rendah"].map(c => `<tr><td><span class="sw" style="background:${PRIOR[c]}"></span> Prioritas ${c.toLowerCase()}</td><td>${fmt(pm[c])} ha <small class="muted">dari ${fmt(pa[c])} ha AHP</small></td></tr>`).join("")}
         <tr><td>Total prioritas</td><td>${fmt(tot(pm))} ha</td></tr></table>
-      ${fg ? (a.setuju_tidak_sesuai_ha > 0.05 ? `<p class="muted" style="font-size:.8rem">${fmt(a.setuju_tidak_sesuai_ha)} ha area yang disetujui masyarakat tidak termasuk kelas S1–S3 (mangrove eksisting, daratan, atau elevasi di luar zona pasut).</p>` : "")
+      ${fg ? (a.setuju_tidak_sesuai_ha > 0.05 ? `<p class="muted" style="font-size:.8rem">${fmt(a.setuju_tidak_sesuai_ha)} ha area yang disetujui masyarakat tidak termasuk kelas S1–S3 (mangrove eksisting, daratan, elevasi di luar zona pasut, struktur pantai, atau jalur kapal).</p>` : "")
         : `<div class="note">Belum ada peta FGD untuk pulau ini, sehingga prioritas belum dapat dipadukan dengan keinginan masyarakat.</div>`}
       ${fg ? `<p class="muted" style="font-size:.82rem">Area FGD: ${Object.entries(fg).map(([st, v]) => `${esc(st.toLowerCase())} ${fmt(v.luas_ha)} ha`).join(" · ")} — <a href="#" id="lnk-setuju">tampilkan di peta</a></p>` : ""}`;
   }
@@ -485,8 +487,13 @@
         <td>${m.jumlah_kriteria}${m.tanpa_kriteria.length ? `<br><small class="muted">tanpa ${m.tanpa_kriteria.map(c => ({ gelombang: "gel." })[c] || NM_KRIT[c] || c).join(", ")}</small>` : ""}</td>
         <td>${m.mangrove_S1S2_pct == null ? "<span class=muted>–</span>" : fmt(m.mangrove_S1S2_pct, 0) + " %"}</td></tr>`; }).join("")}</tbody></table></div>
     <p class="cap">Elevasi: versi topo-batimetri · sumber (DTM = DTM LiDAR daratan, bati = batimetri terkoreksi pasut, IDW = interpolasi elevasi dasar lapangan di bawah tajuk). RMSE = galat elevasi setelah koreksi datum; r = korelasi batimetri vs kedalaman lapangan (hanya batimetri baru). Krit. = jumlah kriteria AHP (gel. = gelombang). *Valid. = % sel mangrove eksisting yang jatuh di elevasi S1/S2.</p>
+    ${KODE.some(k => ((AP[k] || {}).masukan || {}).struktur_ha != null) ? `<h3>Gelombang, breakwater &amp; jalur kapal dalam analisis</h3>
+    <div class="dtable-wrap"><table class="dtable"><thead><tr><th>Pulau</th><th>Hs maks (m)</th><th>Terlindung BW (ha)</th><th>Sesuai di situ (ha)</th><th>Struktur + jalur (ha)</th></tr></thead>
+    <tbody>${KODE.map(k => { const m = (AP[k] || {}).masukan || {}, g = (GL.pulau || {})[k];
+      return `<tr><td>${PULAU[k]}</td><td>${g ? fmt(g.ekstrem.Hs_maks) : "–"}</td><td>${fmt(m.terlindung_ha)}</td><td>${fmt(m.sesuai_terlindung_ha)}</td><td>${fmt((m.struktur_ha || 0) + (m.jalur_ha || 0))}</td></tr>`; }).join("")}</tbody></table></div>
+    <ul class="cap" style="padding-left:16px">${Object.values(AN.metode || {}).map(t => `<li>${esc(t)}</li>`).join("")}</ul>` : ""}
     ${peringatan.length ? `<div class="note"><b>Catatan evaluasi</b><ul style="margin:6px 0 0;padding-left:18px">${peringatan.map(t => `<li>${t}</li>`).join("")}</ul></div>` : ""}
-    <p class="muted" style="font-size:.8rem">Kesesuaian ${esc(S.kesesuaian.versi)}: elevasi terhadap zona pasut (MSL lokal; S1 = MLW–MHW, S2 = LLWS–MLW / MHW–HHWS, S3 = batas bawah–LLWS / HHWS–HAT + 0,2; batas bawah mengikuti dasar tempat mangrove eksisting tumbuh, dasar di bawah LLWS paling tinggi S3), batimetri dikoreksi dengan kedalaman terukur di lapangan (c = koreksi datum). AHP 6 kriteria: ${S.kesesuaian.bobot.map(b => `${esc(({ elevasi: "elevasi", gelombang: "gelombang Hs", substrat: "substrat", jarak_mangrove: "jarak ke mangrove", garis_pantai: "LRR", salinitas: "salinitas" })[b.kode] || b.kriteria)} ${fmt(b.bobot * 100, 1)} %`).join(", ")} (CR = ${fmt(S.kesesuaian.cr, 3)}). Grid 10 m; 300 m ke laut, 30 m ke darat.</p>
+    <p class="muted" style="font-size:.8rem">Kesesuaian ${esc(S.kesesuaian.versi)}: elevasi terhadap zona pasut (MSL lokal; S1 = MLW–MHW, S2 = LLWS–MLW / MHW–HHWS, S3 = batas bawah–LLWS / HHWS–HAT + 0,2; batas bawah mengikuti dasar tempat mangrove eksisting tumbuh, dasar di bawah LLWS paling tinggi S3), batimetri dikoreksi dengan kedalaman terukur di lapangan (c = koreksi datum). AHP 6 kriteria untuk semua pulau: ${S.kesesuaian.bobot.map(b => `${esc(({ elevasi: "elevasi", gelombang: "gelombang Hs", substrat: "substrat", jarak_mangrove: "jarak ke mangrove", garis_pantai: "LRR", salinitas: "salinitas" })[b.kode] || b.kriteria)} ${fmt(b.bobot * 100, 1)} %`).join(", ")} (CR = ${fmt(S.kesesuaian.cr, 3)}). Grid 10 m; 300 m ke laut, 30 m ke darat.</p>
     <h3>Luas mangrove total Kepulauan Seribu</h3>
     <div class="chartbox"><canvas id="ch-total"></canvas></div>
     <p class="muted" style="font-size:.8rem">Sentinel-2 super-resolusi 2,5 m, dipotong AOI tiap pulau (daratan + 150 m ∪ mangrove acuan + 30 m ∪ plot + 30 m). Tahun 2022 tidak tersedia. ${S.s2sr_total.some(r => r.n_pulau < 10) ? `Jumlah pulau terhitung: ${S.s2sr_total.at(-1).n_pulau} dari 10.` : ""}</p>

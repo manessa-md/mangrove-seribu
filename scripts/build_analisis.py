@@ -114,6 +114,10 @@ def main():
     lk2 = pd.read_excel(X, sheet_name="LUAS_KELAS").set_index("pulau")
     dt = pd.read_excel(X, sheet_name="DATUM_BATIMETRI").set_index("pulau")
     vm = pd.read_excel(X, sheet_name="VALIDASI_MANGROVE_EKSISTING").set_index("pulau")
+    xs = pd.ExcelFile(X).sheet_names
+    gs = pd.read_excel(X, sheet_name="GELOMBANG_STRUKTUR_JALUR").set_index("pulau") if "GELOMBANG_STRUKTUR_JALUR" in xs else None
+    met = pd.read_excel(X, sheet_name=next(n for n in xs if n.startswith("METODE")))
+    an["metode"] = {r.butir: r.uraian for r in met.itertuples() if str(r.butir).endswith(f"({V})")}
     num = lambda v, d=3: None if pd.isna(v) else round(float(v), d)
     for k in PULAU:
         if k not in lk2.index:
@@ -135,6 +139,10 @@ def main():
             v = vm.loc[k]
             m["mangrove_sel"] = int(v.sel_mangrove_eksisting_10m)
             m["mangrove_S1S2_pct"] = None if pd.isna(v.iloc[3]) else round(float(v.iloc[3]) + float(v.iloc[4]), 1)
+        if gs is not None and k in gs.index:
+            g = gs.loc[k]
+            m["struktur_ha"] = num(g["struktur pantai (ha)"], 2); m["jalur_ha"] = num(g["jalur kapal ≤ 25 m (ha)"], 2)
+            m["terlindung_ha"] = num(g["zona terlindung breakwater (ha)"], 2); m["sesuai_terlindung_ha"] = num(g["sesuai S1–S3 di zona terlindung (ha)"], 2)
         an["pulau"][k]["masukan"] = m
     an["total"] = {
         "sesuai_ha": round(float(lk[["S1", "S2", "S3"]].sum().sum()), 2),
@@ -153,6 +161,8 @@ def main():
                       "Catatan: S1 sangat sesuai, S2 sesuai, S3 sesuai bersyarat, N tidak sesuai. Elevasi terhadap MSL pasut lokal; "
                       "S1 = MLW–MHW, S2 = LLWS–MLW atau MHW–HHWS, S3 = batas bawah–LLWS atau HHWS–(HAT + 0,2); batas bawah per pulau = min(LLWS, P05 elevasi "
                       "mangrove eksisting), tidak lebih dalam dari LAT − 0,2; dasar di bawah LLWS paling tinggi S3."]
+    if gs is not None:
+        t13["catatan"].append("v06: gelombang dari model 4 musim v03 (Hs maks, HHWS, diredam breakwater); sel ≤ 25 m dari jalur kapal dan ≤ 5 m dari struktur pantai dikeluarkan dari kesesuaian.")
     pt = prio[prio.prioritas == "Tinggi"].sort_values("id_lokasi")
     st["tabel"]["14"]["baris"] = [[r.id_lokasi, PULAU[r.pulau], round(float(r.luas_ha), 2), round(float(r.skor_rerata), 4), round(float(r.x_utm), 1),
                                    round(float(r.y_utm), 1), round(float(r.lintang), 4), round(float(r.bujur), 4)] for _, r in pt.iterrows()]
@@ -168,6 +178,9 @@ def main():
             g["Elevasi dari"] = r.sumber_elevasi
             g["Jumlah lokasi prioritas tinggi"] = int((pt.pulau == k).sum())
     st["kesesuaian"]["versi"] = V
+    bb = pd.read_excel(X, sheet_name="BOBOT_AHP")
+    st["kesesuaian"]["bobot"] = [{"kode": r.iloc[0], "kriteria": r.kriteria, "bobot": round(float(r.bobot), 3)} for _, r in bb.iterrows()]
+    st["kesesuaian"]["cr"] = round(float(bb.CR.iloc[0]), 3)
     fs.write_text(json.dumps(st, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
 

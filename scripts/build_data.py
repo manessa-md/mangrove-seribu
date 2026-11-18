@@ -4,7 +4,7 @@ Pakai:  python scripts/build_data.py <folder_Mangrove>
 Sumber utama: 03_DATABASE_MANGROVE/05_Basis_Data_Spasial (*.gpkg) dan
 04_PENGOLAHAN_ANALISIS (*.xlsx, versi v03).
 """
-import json, sys, math, datetime
+import json, sys, math, datetime, re
 from pathlib import Path
 import geopandas as gpd
 import pandas as pd
@@ -17,8 +17,10 @@ DB = SRC / "03_DATABASE_MANGROVE/05_Basis_Data_Spasial"
 AN = SRC / "04_PENGOLAHAN_ANALISIS"
 GPKG = DB / "MGV-KS_HasilAnalisis_KS_v03.gpkg"
 # Kesesuaian & prioritas v04 (elevasi berdatum pasut/MSL) menggantikan lapisan/tabel v03 di GPKG & TabelLaporan
-KESESUAIAN = AN / "08_Kesesuaian_Pemulihan/MGV-KS_Kesesuaian_KS_v05.xlsx"
-PRIORITAS = AN / "09_Lokasi_Prioritas/MGV-KS_LokasiPrioritas_KS_v05.gpkg"
+# versi kesesuaian = versi tertinggi MGV-KS_Kesesuaian_KS_vNN.xlsx (sama dengan build_analisis.py)
+_VK = max(int(re.search(r"_v(\d+)\.xlsx$", f.name).group(1)) for f in (AN / "08_Kesesuaian_Pemulihan").glob("MGV-KS_Kesesuaian_KS_v*.xlsx"))
+KESESUAIAN = AN / f"08_Kesesuaian_Pemulihan/MGV-KS_Kesesuaian_KS_v{_VK:02d}.xlsx"
+PRIORITAS = AN / f"09_Lokasi_Prioritas/MGV-KS_LokasiPrioritas_KS_v{_VK:02d}.gpkg"
 S2DIR = DB / "MGV-KS_S2SR_2018-2026"   # raster kelas kerapatan per pulau-tahun (sudah dipotong AOI)
 DIGIT = DB                              # MGV-KS_DigitasiMangrove2025_<KODE>.shp
 KELAS = {1: "jarang", 2: "sedang", 3: "lebat"}
