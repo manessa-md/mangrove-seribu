@@ -56,6 +56,7 @@
   const KONDISI = { "Baik - sangat padat": "#1a9850", "Baik - sedang": "#91cf60", "Rusak - jarang": "#d73027" };
   const SAL_SUMUR = { "Tawar": "#4575b4", "Payau ringan": "#91bfdb", "Payau": "#fc8d59", "Payau tinggi": "#d73027" };
   const MUSIM_NM = { DJF: "Musim Barat (Des–Feb)", MAM: "Peralihan I (Mar–Mei)", JJA: "Musim Timur (Jun–Agu)", SON: "Peralihan II (Sep–Nov)" };
+  const MUSIM_PENDEK = { DJF: "Barat (DJF)", MAM: "Peralihan I (MAM)", JJA: "Timur (JJA)", SON: "Peralihan II (SON)" };
   const HS_KLS = [[0.15, "#c6dbef", "< 0,15"], [0.3, "#6baed6", "0,15–0,3"], [0.5, "#2171b5", "0,3–0,5"], [0.75, "#f16913", "0,5–0,75"], [99, "#a50f15", "≥ 0,75"]];
   const hsColor = v => (HS_KLS.find(([b]) => v < b) || HS_KLS.at(-1))[1];
   const SETUJU = { "Setuju": "#2b8cbe", "Tidak setuju": "#e7298a", "Belum ada keterangan": "#bdbdbd" };
@@ -196,9 +197,12 @@
     LAYERS.forEach(d => { if (loaded[d.id] && d.point) loaded[d.id].bringToFront?.(); });
     renderLegend();
   }
+  let legendOpen = window.innerWidth >= 860;
   function renderLegend() {
-    $("#legend").innerHTML = LAYERS.filter(d => loaded[d.id] && d.legend).map(d => d.legend()).join("");
+    const isi = LAYERS.filter(d => loaded[d.id] && d.legend).map(d => `<div class="lg">${d.legend()}</div>`).join("");
+    $("#legend").innerHTML = isi ? `<button class="lg-head" id="lg-toggle">Legenda <span>${legendOpen ? "▾" : "▸"}</span></button>${legendOpen ? `<div class="lg-body">${isi}</div>` : ""}` : "";
   }
+  $("#legend").addEventListener("click", e => { if (e.target.closest("#lg-toggle")) { legendOpen = !legendOpen; renderLegend(); } });
 
   function renderLayerBox() {
     const grps = [...new Set(LAYERS.map(d => d.grp))];
@@ -206,8 +210,8 @@
       <div class="grp"><div class="gt">Peta dasar</div>
         <select id="basemap">${Object.keys(bases).map(b => `<option>${b}</option>`).join("")}</select>
         <label><input type="checkbox" id="lbl" checked> Nama pulau</label></div>
-      ${grps.map(g => `<div class="grp"><div class="gt">${g}</div>${LAYERS.filter(d => d.grp === g).map(d =>
-        `<label><input type="checkbox" data-id="${d.id}" ${d.on ? "checked" : ""}><span class="sw" style="background:${d.sw}"></span>${d.label}</label>${d.extra ? d.extra() : ""}`).join("")}</div>`).join("")}
+      ${grps.map(g => { const ls = LAYERS.filter(d => d.grp === g); return `<details class="grp" ${ls.some(d => d.on) ? "open" : ""}><summary class="gt">${g}</summary>${ls.map(d =>
+        `<label><input type="checkbox" data-id="${d.id}" ${d.on ? "checked" : ""}><span class="sw" style="background:${d.sw}"></span>${d.label}</label>${d.extra ? d.extra() : ""}`).join("")}</details>`; }).join("")}
     </details>`;
     $("#layerbox").addEventListener("change", e => {
       const t = e.target;
@@ -219,7 +223,7 @@
       if (t.id === "air-mode") { airMode = t.value; const d = LAYERS.find(x => x.id === "air"); setChecked("air"); toggle(d, true); return; }
       if (t.dataset.id) toggle(LAYERS.find(d => d.id === t.dataset.id), t.checked);
     });
-    if (window.innerWidth < 860) $("#layerbox details").open = false;
+    if (window.innerWidth < 860) $("#layerbox > details").open = false;
   }
   function setChecked(id, v = true) { const c = $(`#layerbox input[data-id="${id}"]`); if (c) c.checked = v; }
   function ensureOn(id) { if (!loaded[id]) { setChecked(id); return toggle(LAYERS.find(d => d.id === id), true); } }
@@ -234,7 +238,10 @@
     if (open) $("#panel").classList.add("open");
   }
   document.querySelectorAll(".tabs button").forEach(b => b.addEventListener("click", () => showTab(b.dataset.tab)));
-  $("#panel-toggle").addEventListener("click", () => $("#panel").classList.toggle("open"));
+  $("#panel-toggle").addEventListener("click", () => {
+    const o = $("#panel").classList.toggle("open");
+    $("#panel-toggle").textContent = o ? "✕" : "☰";
+  });
 
   /* ---------------- Progres ---------------- */
   const R = S.ringkasan;
@@ -303,9 +310,9 @@
     if (!g) return "";
     const e = g.ekstrem;
     return `<h3>Angin &amp; gelombang</h3>
-      <div class="kpis"><div class="kpi"><div class="v">${fmt(e.Hs_maks)} m</div><div class="l">tinggi gelombang ekstrem (Hs maks pesisir, ${esc(e.nama)}, dari ${esc(e.gelombang_dari_ma)})</div></div></div>
-      <table class="kv wave"><tr><td><b>Musim</b></td><td><b>Angin dari</b></td><td><b>Gelombang dari</b></td><td><b>Hs P90 / maks (m)</b></td></tr>
-      ${g.musim.map(r => `<tr><td>${esc(r.nama)}</td><td>${esc(r.angin_dari_ma)} ${fmt(r.angin_dari, 0)}° · ${fmt(r.U10_ms, 1)} m/s</td>
+      <div class="kpis one"><div class="kpi"><div class="v">${fmt(e.Hs_maks)} m</div><div class="l">tinggi gelombang ekstrem (Hs maks pesisir, ${esc(e.nama)}, dari ${esc(e.gelombang_dari_ma)})</div></div></div>
+      <table class="kv wave"><thead><tr><th>Musim</th><th>Angin dari</th><th>Gelombang dari</th><th>Hs P90 / maks (m)</th></tr></thead>
+      ${g.musim.map(r => `<tr><td>${esc(MUSIM_PENDEK[r.musim] || r.nama)}</td><td>${esc(r.angin_dari_ma)} ${fmt(r.angin_dari, 0)}° · ${fmt(r.U10_ms, 1)} m/s</td>
         <td>${esc(r.gelombang_dari_ma)} ${fmt(r.gelombang_dari, 0)}°</td><td>${fmt(r.Hs_p90)} / ${fmt(r.Hs_maks)}</td></tr>`).join("")}</table>
       <p class="muted" style="font-size:.78rem">Model gelombang 4 musim MGV-KS v03 pada muka air pasang tertinggi (HHWS); Hs = tinggi gelombang signifikan di perairan dekat pantai (≤ 300 m). Angin = rata-rata Sentinel-1 + ERA5. <a href="#" id="lnk-gel">Tampilkan di peta</a></p>`;
   }
@@ -319,13 +326,13 @@
       ${["kelebatan", "kondisi", "program", "pelibatan", "kesediaan", "peran", "dukungan", "pengaruh_ikan", "perilaku", "pemanfaatan", "sektor_laut"].map(blok).join("")}
       <p class="muted" style="font-size:.78rem">Ringkasan kuesioner survei sosial ekonomi-kelembagaan MGV-KS 2026; data pribadi responden tidak ditampilkan.</p>`;
   }
+  const SUBTAB = [["ringkasan", "Ringkasan"], ["vegetasi", "Vegetasi"], ["gelombang", "Gelombang"], ["pemulihan", "Pemulihan"], ["sosek", "Sosek"]];
+  let subTab = "ringkasan";
   function selectIsland(k, open = true) {
     current = k; showTab("pulau", open);
     const r = R[k] || {}, s = s2t[k];
-    $("#tab-pulau").innerHTML = `
-      <div class="chips">${KODE.map(c => `<button class="chip ${c === k ? "active" : ""}" data-k="${c}">${PULAU[c]}</button>`).join("")}</div>
-      <h2>Pulau ${PULAU[k]} <small class="muted">(${k})</small></h2>
-      <div class="kpis">
+    const sec = {
+      ringkasan: `<div class="kpis">
         <div class="kpi"><div class="v">${fmt(+r["Plot vegetasi"] || 0, 0)}</div><div class="l">plot vegetasi</div></div>
         <div class="kpi"><div class="v">${fmt(+r["Titik kualitas air"] || 0, 0)}</div><div class="l">titik kualitas air</div></div>
         <div class="kpi"><div class="v">${fmt(r["Luas mangrove eksisting (ha)"])}</div><div class="l">ha mangrove eksisting</div></div>
@@ -334,17 +341,31 @@
       ${(+r["Plot vegetasi"] || 0) === 0 ? `<div class="note">Survei lapangan di pulau ini belum dilakukan.</div>` : ""}
       <h3>Luas mangrove Sentinel-2 SR ${S.s2sr_tahun[0]}–${S.s2sr_tahun.at(-1)}</h3>
       ${s ? `<div class="chartbox"><canvas id="ch-pulau"></canvas></div>
-      <p class="muted" style="font-size:.8rem">Batang: luas per kelas kerapatan (S2 super-resolusi 2,5 m, dipotong AOI pulau). Garis putus: digitasi 2025.</p>
+      <p class="cap">Batang: luas per kelas kerapatan (S2 super-resolusi 2,5 m, dipotong AOI pulau). Garis putus: digitasi 2025.</p>
       <table class="kv"><tr><td>Luas ${s.tahun_awal} → ${s.tahun_akhir}</td><td>${fmt(s.luas_awal_ha)} → ${fmt(s.luas_akhir_ha)} ha</td></tr>
         <tr><td>Laju regresi</td><td>${fmt(s.laju_ha_th, 3)} ha/th</td></tr>
         <tr><td>Tren Mann-Kendall</td><td>${s.tren} (τ ${fmt(s.tau)}, p ${fmt(s.p, 3)})</td></tr></table>`
-        : `<div class="note">Data Sentinel-2 SR untuk pulau ini belum tersedia.</div>`}
-      <h3>Indikator</h3>
-      <table class="kv">${rowsFor(k)}</table>
-      ${panelGelombang(k)}
-      ${panelAnalisis(k)}
-      ${panelSosek(k)}
-      <p><button class="btn" id="btn-layers">Tampilkan lapisan survei di peta</button></p>`;
+        : `<div class="note">Data Sentinel-2 SR untuk pulau ini belum tersedia.</div>`}`,
+      vegetasi: `<h3>Indikator vegetasi &amp; pesisir</h3><table class="kv">${rowsFor(k)}</table>
+        <p><button class="btn" id="btn-layers">Tampilkan lapisan survei di peta</button></p>`,
+      gelombang: panelGelombang(k) || `<div class="note">Data angin &amp; gelombang belum tersedia.</div>`,
+      pemulihan: panelAnalisis(k),
+      sosek: panelSosek(k),
+    };
+    if (!sec[subTab]) subTab = "ringkasan";
+    $("#tab-pulau").innerHTML = `
+      <div class="pulau-head">
+        <div class="chips">${KODE.map(c => `<button class="chip ${c === k ? "active" : ""}" data-k="${c}">${PULAU[c]}</button>`).join("")}</div>
+        <h2>Pulau ${PULAU[k]} <small class="muted">(${k})</small></h2>
+        <div class="subtabs">${SUBTAB.map(([id, nm]) => `<button class="${id === subTab ? "active" : ""}" data-sub="${id}">${nm}</button>`).join("")}</div>
+      </div>
+      ${Object.entries(sec).map(([id, h]) => `<div class="subsec ${id === subTab ? "active" : ""}" data-sub="${id}">${h}</div>`).join("")}`;
+    gambarS2(k);
+    flyIsland(k);
+  }
+  function gambarS2(k) {
+    const s = s2t[k];
+    if (subTab !== "ringkasan" || !document.getElementById("ch-pulau")) return;
     if (s) {
       const ser = S.s2sr_tahunan[k], dig = S.luas_digitasi_2025[k];
       const ds = ["lebat", "sedang", "jarang"].map((c, i) => ({ type: "bar", label: c, stack: "s", backgroundColor: KELAS_S2[c],
@@ -354,7 +375,6 @@
         options: { maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, title: { display: true, text: "ha" } } },
           plugins: { legend: { position: "bottom", labels: { boxWidth: 10 } } } } });
     }
-    flyIsland(k);
   }
   function flyIsland(k) {
     const ll = S.pusat[k]; if (!ll) return;
@@ -363,6 +383,16 @@
   }
   $("#tab-pulau").addEventListener("click", e => {
     const c = e.target.closest(".chip"); if (c) return selectIsland(c.dataset.k);
+    const sb = e.target.closest(".subtabs button");
+    if (sb) {
+      subTab = sb.dataset.sub;
+      document.querySelectorAll("#tab-pulau .subtabs button").forEach(b => b.classList.toggle("active", b === sb));
+      document.querySelectorAll("#tab-pulau .subsec").forEach(d => d.classList.toggle("active", d.dataset.sub === subTab));
+      $("#panel").scrollTop = 0; gambarS2(current);
+      if (subTab === "gelombang") { ensureOn("gelombang"); ensureOn("angin"); }
+      if (subTab === "pemulihan") { ensureOn("kesesuaian"); ensureOn("prioritas"); }
+      return;
+    }
     const a = e.target.closest("a[data-ll]"); if (a) { e.preventDefault(); const [la, lo] = a.dataset.ll.split(",").map(Number); map.flyTo([la, lo], 17); ensureOn("prioritas"); }
     if (e.target.id === "btn-layers") { ["plot", "air", "lai", "transek"].forEach(ensureOn); flyIsland(current); }
     if (e.target.id === "lnk-gel") { e.preventDefault(); ensureOn("gelombang"); ensureOn("angin"); flyIsland(current); }
