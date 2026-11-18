@@ -187,6 +187,7 @@
   let s2Year = S.s2sr_tahun[S.s2sr_tahun.length - 1], airMode = "ket", musim = "DJF";
   function arahMA(d) { return d == null ? "–" : ["U", "TL", "T", "TG", "S", "BD", "B", "BL"][Math.floor(((d % 360) + 22.5) / 45) % 8]; }
   const loaded = {};
+  let urut = [];   // id lapisan sesuai urutan dinyalakan
   const cache = {};
 
   async function getGeo(file) {
@@ -205,14 +206,18 @@
   }
   async function toggle(def, on) {
     if (loaded[def.id]) { map.removeLayer(loaded[def.id]); delete loaded[def.id]; }
-    if (on) { loaded[def.id] = await buildLayer(def); loaded[def.id].addTo(map); }
+    urut = urut.filter(id => id !== def.id);
+    if (on) { loaded[def.id] = await buildLayer(def); loaded[def.id].addTo(map); urut.push(def.id); }
     // jaga urutan: poligon di bawah, titik di atas
     LAYERS.forEach(d => { if (loaded[d.id] && d.point) loaded[d.id].bringToFront?.(); });
     renderLegend();
   }
   let legendOpen = window.innerWidth >= 860;
   function renderLegend() {
-    const isi = LAYERS.filter(d => loaded[d.id] && d.legend).map(d => `<div class="lg">${d.legend()}</div>`).join("");
+    // urutan legenda = urutan tumpukan di peta: lapisan paling atas tampil paling atas
+    // (titik selalu di atas poligon/garis; di dalam tiap jenis, yang terakhir dinyalakan di atas)
+    const aktif = urut.map(id => LAYERS.find(d => d.id === id)).filter(d => d && loaded[d.id] && d.legend).reverse();
+    const isi = [...aktif.filter(d => d.point), ...aktif.filter(d => !d.point)].map(d => `<div class="lg">${d.legend()}</div>`).join("");
     $("#legend").innerHTML = isi ? `<button class="lg-head" id="lg-toggle">Legenda <span>${legendOpen ? "▾" : "▸"}</span></button>${legendOpen ? `<div class="lg-body">${isi}</div>` : ""}` : "";
   }
   $("#legend").addEventListener("click", e => { if (e.target.closest("#lg-toggle")) { legendOpen = !legendOpen; renderLegend(); } });
