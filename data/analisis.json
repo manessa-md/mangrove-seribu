@@ -319,10 +319,10 @@
    },
    "prioritas_masyarakat_ha": {
     "Tinggi": 0.0,
-    "Sedang": 0.03,
-    "Rendah": 0.0
+    "Sedang": 0.08,
+    "Rendah": 0.16
    },
-   "setuju_tidak_sesuai_ha": 2.48,
+   "setuju_tidak_sesuai_ha": 5.42,
    "masukan": {
     "stasiun_pasut": "PRM",
     "jumlah_kriteria": 6,
@@ -382,7 +382,7 @@
    }
   }
  },
- "dibangun": "2026-11-18 14:12",
+ "dibangun": "2026-11-23 10:38",
  "metode": {
   "Gelombang (v06)": "Model gelombang 4 musim MGV-KS v03 (HHWS, 50 m) untuk 10 pulau; Hs = maksimum 4 musim setelah peredaman breakwater. Ambang skor dikalibrasi dari Hs di 1965 sel mangrove eksisting (P50 = 0.55 m, P90 = 0.78 m): 4 ≤ 0.55; 3 ≤ 0.78; 2 ≤ 1.03; 1 > 1.03 m. Ambang lama (WAVE v01) 0,30/0,50/0,75 m tidak dipakai lagi.",
   "Breakwater (v06)": "Struktur dari 01_DATA_SEKUNDER/12_Break_Water. Sel yang garis 150 m ke arah datang gelombang (band arah tiap musim) memotong struktur mendapat Hs × Kt: breakwater lepas pantai 0,5; breakwater laut dangkal 0,6; jetty/pemecah ombak 0,8; tanggul/seawall pantai tidak dihitung meredam. Sel ≤ 5 m dari struktur = kelas 7 'Struktur pantai' (bukan lokasi tanam).",
@@ -391,6 +391,6 @@
  "total": {
   "sesuai_ha": 130.71,
   "prioritas_ahp_ha": 130.71,
-  "prioritas_masyarakat_ha": 15.61
+  "prioritas_masyarakat_ha": 15.82
  }
 }

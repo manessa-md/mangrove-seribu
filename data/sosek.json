@@ -69,17 +69,13 @@
    }
   },
   "HRP": {
-   "Belum ada keterangan": {
-    "luas_ha": 3.85,
-    "n": 1
-   },
    "Setuju": {
-    "luas_ha": 2.77,
-    "n": 1
+    "luas_ha": 6.3,
+    "n": 2
    },
    "Tidak setuju": {
-    "luas_ha": 2.8,
-    "n": 1
+    "luas_ha": 3.12,
+    "n": 2
    }
   },
   "SBR": {
@@ -94,9 +90,8 @@
   }
  },
  "total_ha": {
-  "Belum ada keterangan": 3.85,
-  "Setuju": 70.4,
-  "Tidak setuju": 11.92
+  "Setuju": 73.94,
+  "Tidak setuju": 12.23
  },
  "survei": {
   "HRP": {
@@ -1237,5 +1232,5 @@
    }
   }
  },
- "dibangun": "2026-11-18 12:26"
+ "dibangun": "2026-11-23 10:38"
 }

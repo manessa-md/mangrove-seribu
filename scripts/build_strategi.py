@@ -100,8 +100,9 @@ def main():
         g["bibit"] = j["Kebutuhan bibit (batang)"].values
         g["biaya_rp"] = j["Total biaya pembangunan (Rp)"].values
         g["apo_m"] = j["Panjang APO (m)"].values
+        lrr = [c for c in ("LRR_min_m_th", "LRR_min_150m") if c in g.columns]  # v02: LRR_min_150m -> LRR_min_m_th
         g = g[["id_lokasi", "pulau", "prioritas", "luas_ha", "zona", "teknik", "status", "tahap", "tahun", "elevasi_median_m",
-               "LRR_min_150m", "bibit", "apo_m", "biaya_rp", "geometry"]].to_crs(4326)
+               *lrr[:1], "bibit", "apo_m", "biaya_rp", "geometry"]].to_crs(4326)
         feats = []
         for _, r in g.iterrows():
             p = {k: bersih(v) for k, v in r.items() if k != "geometry"}
