@@ -1,6 +1,6 @@
 {
  "versi": "v04",
- "dibangun": "2026-11-24 12:55",
+ "dibangun": "2026-11-24 13:05",
  "dasar_data": "Dasar data: kesesuaian v06, prioritas v07, lalu rancangan operasional v08: hanya lokasi dalam sabuk pantai (≤ 60 m dari daratan 2025, yaitu P75 jarak mangrove eksisting ke daratan, atau ≤ 30 m dari mangrove eksisting), setelah dikurangi kendala sosial-ruang v09 (lihat sheet KENDALA), dikelompokkan ke blok kerja ≥ 0,10 ha, dan dijadwalkan dengan batas kapasitas per pulau.",
  "teknik": {
   "kolom": [
@@ -1141,6 +1141,207 @@
     "Pemantauan plot permanen dan citra, evaluasi tengah dan akhir, pemutakhiran WebGIS"
    ]
   ]
+ },
+ "penetapan_lokasi": {
+  "penyaringan": {
+   "judul": "Penyaringan operasional: sabuk pantai, blok kerja, dan kapasitas",
+   "teks": [],
+   "butir": [
+    "Sabuk pantai: lokasi tanam dibatasi ≤ 60 m dari daratan 2025 atau ≤ 30 m dari mangrove eksisting. Angka 60 m adalah persentil ke-75 jarak sel mangrove eksisting ke daratan di sepuluh pulau (median 40 m), sehingga penanaman diarahkan ke ruang tempat mangrove terbukti dapat tumbuh di Kepulauan Seribu.",
+    "Kendala sosial-ruang: area di dalam sabuk yang ditolak warga, pantai pasir wisata, dan alur kapal dikeluarkan sebelum blok kerja dibentuk (rincian pada subbab berikutnya).",
+    "Usulan FGD (Lancang dan Panggang): poligon FGD berstatus Setuju dalam jarak ≤ 100 m dari mangrove eksisting ditambahkan ke sabuk pantai, termasuk sel yang kelas kesesuaiannya N atau tanpa kelas. Di kedua pulau ini lokasi prioritas di tepi mangrove eksisting tertahan oleh batas sabuk, padahal warga menyetujui dan mangrove terbukti tumbuh di sana. Lokasi ini dijadwalkan setelah Prioritas Rendah dan wajib diverifikasi elevasi serta substratnya sebelum tanam. Di Panggang batimetri tidak andal (kemiringan regresi terhadap elevasi lapangan 0,06), sehingga sel di bawah LLWS diperlakukan sebagai zona LLWS sampai MLW (rumpun berjarak); di Lancang sel di bawah LLWS menjadi Bersyarat.",
+    "Blok kerja: poligon yang berjarak ≤ 15 m digabung menjadi satu blok kerja agar dapat dikerjakan dalam satu paket lapangan; blok dengan luas total < 0,10 ha dibuang karena tidak efisien secara logistik (13 poligon, 0,92 ha).",
+    "Kapasitas: luas tanam per pulau dibatasi 1,0 ha pada 2027 (kebun bibit baru dibangun) dan 2,0 ha per tahun pada 2028 sampai 2031, setara ±13.500 bibit termasuk penyulaman yang dapat ditangani satu kelompok pengelola. Blok diisi berurutan dari Prioritas Tinggi, Sedang, lalu Rendah; lokasi yang tidak tertampung menjadi cadangan setelah 2031."
+   ]
+  },
+  "kendala": {
+   "judul": "Kendala sosial-ruang",
+   "teks": [
+    "Tiga lapis kendala dikeluarkan dari sabuk pantai. Setiap lapis dipetakan sebagai poligon dan diterapkan pada sel raster 10 m yang tersentuh poligon, sehingga tidak ada blok kerja yang beririsan dengan area kendala.",
+    "Urutan atribusi bila tumpang tindih: K1, K3, K2. Luas dihitung pada sel kelas Tinggi sampai Rekayasa sebelum penghalusan dan pembentukan blok.",
+    "Kendala mengeluarkan 8,79 ha atau 14,8% sabuk pantai. Pantai pasir wisata merupakan kendala terbesar, terutama di Pramuka, Untung Jawa, Pari, dan Tidung. Penolakan warga berpengaruh paling besar di Harapan. Alur kapal hampir tidak berpengaruh karena trayek yang terpetakan melintas di perairan dalam dan hanya menyentuh dermaga utama; jalur perahu nelayan, tambatan, dan dermaga kecil belum terpetakan sehingga perlu dikonfirmasi pada FGD penetapan lokasi.",
+    "Kolom Di dalam sabuk pantai dan Setelah kendala adalah luas raster setelah penghalusan; selisih dengan rencana kerja berasal dari blok kecil < 0,10 ha yang dibuang dan pembagian kelas Rekayasa menjadi pilot dan bersyarat.",
+    "Dengan penyaringan ini, rencana kerja turun dari potensi 124,95 ha menjadi 39,26 ha blok tanam dan pilot di 48 blok kerja, ditambah 6,36 ha perluasan guludan bersyarat. Potensi di luar sabuk pantai tidak dihapus dari basis data; potensi ini dicatat sebagai ruang yang dapat ditinjau kembali pada evaluasi 2031 apabila hasil pilot dan pemantauan menunjukkan mangrove mampu tumbuh lebih jauh dari tepi pulau.",
+    "Sumber: LokasiAksi_KS_v04 (luas poligon setelah penyaringan sabuk, kendala, dan blok; semua status), DSAS_GarisPantai_KS_v03, KriteriaSosek_KS_v03. Sebira belum disurvei sosial-ekonomi. Kolom prioritas tidak memuat Usulan FGD di Lancang (2,76 ha) dan Panggang (1,18 ha)."
+   ],
+   "butir": [
+    "K1 Penolakan warga. Poligon berstatus \"Tidak setuju\" hasil FGD dengan peta rekomendasi awal (persetujuan_masyarakat.geojson), umumnya empang dan lahan milik di Untung Jawa, sisi timur Harapan dekat homestay, pesisir barat Lancang, dan sebagian Kelapa. Poligon \"Setuju\" tidak dipakai sebagai penyaring maupun urutan jadwal.",
+    "K2 Pantai pasir wisata. Segmen pantai berpasir dipetakan dari citra resolusi tinggi (S2DR3 1 m untuk Pari, Pramuka, Kelapa Dua, Harapan; Google Earth untuk Sebira sisi timur dan selatan, Tidung, Untung Jawa) ditambah poligon pasir laut RBI, lalu diperluas 30 m ke arah laut sebagai ruang rekreasi pantai. Kendala ini tidak diterapkan di Lancang, Panggang, dan Kelapa karena ketiga pulau tersebut tidak memiliki lokasi wisata pantai, serta di sisi barat Sebira yang bukan pantai berpasir. Penanaman di depan pantai berpasir dihindari karena mengubah fungsi wisata dan tidak sesuai dengan substrat.",
+    "K3 Alur kapal dan dermaga. Jalur kapal reguler, perintis, antarpulau, dan alur masuk dermaga per pulau dengan lebar ±25 m dari garis tengah, ditambah dermaga RBI dengan penyangga 25 m."
+   ]
+  },
+  "corong": {
+   "kolom": [
+    "Kelas",
+    "Prioritas v07 (raster)",
+    "Di dalam sabuk pantai",
+    "Setelah kendala",
+    "Rencana kerja 2027–2031",
+    "Bersyarat"
+   ],
+   "baris": [
+    [
+     "Tinggi",
+     "24,39",
+     "18,46",
+     "15,21",
+     "13,66",
+     "–"
+    ],
+    [
+     "Sedang",
+     "28,70",
+     "19,51",
+     "18,58",
+     "16,73",
+     "–"
+    ],
+    [
+     "Rendah",
+     "25,14",
+     "6,54",
+     "4,83",
+     "4,10",
+     "–"
+    ],
+    [
+     "Rekayasa",
+     "52,48",
+     "9,58",
+     "7,88",
+     "1,16 pilot",
+     "6,03"
+    ],
+    [
+     "Usulan FGD (LCG, PGG)",
+     "–",
+     "–",
+     "3,94",
+     "3,61",
+     "0,33"
+    ],
+    [
+     "Total",
+     "130,71",
+     "54,09",
+     "50,44",
+     "39,26",
+     "6,36"
+    ]
+   ]
+  },
+  "kendala_pulau": {
+   "kolom": [
+    "Pulau",
+    "Sabuk berprioritas",
+    "K1 Ditolak warga",
+    "K3 Alur kapal",
+    "K2 Pantai pasir",
+    "Sabuk bersih",
+    "% dikeluarkan"
+   ],
+   "baris": [
+    [
+     "Untung Jawa",
+     "6,32",
+     "0,23",
+     "0,00",
+     "1,57",
+     "4,52",
+     "28,5%"
+    ],
+    [
+     "Pari",
+     "11,41",
+     "0,00",
+     "0,00",
+     "1,24",
+     "10,17",
+     "10,9%"
+    ],
+    [
+     "Lancang",
+     "9,41",
+     "0,02",
+     "0,03",
+     "0,00",
+     "9,36",
+     "0,5%"
+    ],
+    [
+     "Tidung",
+     "6,02",
+     "0,00",
+     "0,02",
+     "1,06",
+     "4,94",
+     "17,9%"
+    ],
+    [
+     "Pramuka",
+     "8,13",
+     "0,00",
+     "0,01",
+     "1,98",
+     "6,14",
+     "24,5%"
+    ],
+    [
+     "Panggang",
+     "1,86",
+     "0,13",
+     "0,00",
+     "0,00",
+     "1,73",
+     "7%"
+    ],
+    [
+     "Kelapa",
+     "4,45",
+     "0,05",
+     "0,00",
+     "0,00",
+     "4,40",
+     "1,1%"
+    ],
+    [
+     "Kelapa Dua",
+     "4,09",
+     "0,14",
+     "0,01",
+     "0,75",
+     "3,19",
+     "22%"
+    ],
+    [
+     "Harapan",
+     "5,36",
+     "0,85",
+     "0,02",
+     "0,32",
+     "4,17",
+     "22,2%"
+    ],
+    [
+     "Sebira",
+     "2,18",
+     "0,13",
+     "0,10",
+     "0,13",
+     "1,82",
+     "16,5%"
+    ],
+    [
+     "Total",
+     "59,23",
+     "1,55",
+     "0,19",
+     "7,05",
+     "50,44",
+     "14,8%"
+    ]
+   ]
+  }
  },
  "peta": "data/peta_rencana_aksi.png"
 }

@@ -89,6 +89,12 @@ def main():
         st["keterbatasan"] = sek.get("10.10")
         st["tipologi"] = next((v for k, v in tab.items() if k.startswith("Tipologi|")), None)
         st["peran"] = next((v for k, v in tab.items() if k.startswith("Pihak|")), None)
+        # v04+: penetapan lokasi = potensi prioritas -> sabuk pantai -> kendala sosial-ruang -> blok kerja (dicari menurut judul, bukan nomor)
+        cari = lambda awal: next((v for v in sek.values() if v["judul"].lower().startswith(awal)), None)
+        pen = {"penyaringan": cari("penyaringan operasional"), "kendala": cari("kendala sosial"),
+               "corong": next((v for k, v in tab.items() if k.startswith("Kelas|Prioritas")), None),
+               "kendala_pulau": next((v for k, v in tab.items() if k.startswith("Pulau|Sabuk")), None)}
+        st["penetapan_lokasi"] = pen if pen["penyaringan"] or pen["corong"] else None
 
     # lokasi rencana aksi
     fg = terbaru("03_Rencana_Aksi", "MGV-KS_LokasiAksi_KS_v*.gpkg")

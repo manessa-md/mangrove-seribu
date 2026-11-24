@@ -574,12 +574,27 @@
     const tbl = (t, cols) => `<div class="dtable-wrap"><table class="dtable left"><thead><tr>${cols.map(i => `<th>${esc(t.kolom[i])}</th>`).join("")}</tr></thead>
       <tbody>${t.baris.map(r => `<tr>${cols.map(i => `<td>${esc(fmt(r[i]))}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
     const ak = ST.arah_kebijakan || { butir: [], teks: [] };
+    // tahun tanam yang benar-benar terisi (v04: sampai 2031)
+    const thn = [2027, 2028, 2029, 2030, 2031, 2032].filter(y => KODE.some(k => ((ST.rekap_pulau[k] || {})[`Luas tanam ${y} (ha)`] || 0) > 0));
+    const PL = ST.penetapan_lokasi;
+    const butirKode = t => { const m = t.match(/^((?:K\d )?[^.:]+)[.:]\s*(.*)$/); return m ? `<li><b>${esc(m[1])}.</b> ${esc(m[2].charAt(0).toUpperCase() + m[2].slice(1))}</li>` : `<li>${esc(t)}</li>`; };
+    const tblTeks = (t, judulKiri) => `<div class="dtable-wrap"><table class="dtable left"><thead><tr>${t.kolom.map(c => `<th>${esc(c)}</th>`).join("")}</tr></thead>
+      <tbody>${t.baris.map(r => `<tr${/^Total/.test(r[0]) ? ' style="font-weight:600"' : ""}>${r.map(v => `<td>${esc(v)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+    const cad = rt["Cadangan pasca-2031 (ha)"];
+    const htmlPL = !PL ? "" : `
+      <h3>Penetapan lokasi: dari potensi ke rencana kerja</h3>
+      ${PL.corong ? `${tblTeks(PL.corong)}<p class="cap">Luas (ha) per kelas prioritas: potensi raster prioritas → di dalam sabuk pantai → setelah kendala sosial-ruang → rencana kerja ${thn[0]}–${thn.at(-1)}.${cad > 0 ? ` Cadangan pasca-${thn.at(-1)}: ${fmt(cad)} ha.` : ""}</p>` : ""}
+      ${PL.penyaringan ? `<div class="qs"><div class="ql">${esc(PL.penyaringan.judul)}</div><ul class="lst">${PL.penyaringan.butir.map(butirKode).join("")}</ul></div>` : ""}
+      ${PL.kendala ? `<div class="qs"><div class="ql">${esc(PL.kendala.judul)}</div>
+        <p style="font-size:.88rem">${esc(PL.kendala.teks[0] || "")}</p><ul class="lst">${PL.kendala.butir.map(butirKode).join("")}</ul>
+        ${PL.kendala.teks.slice(1).filter(t => !/^(Kolom|Urutan|Sumber)/.test(t)).map(t => `<p style="font-size:.88rem">${esc(t)}</p>`).join("")}</div>` : ""}
+      ${PL.kendala_pulau ? `<details class="exp"><summary>Luas dikeluarkan kendala per pulau (ha)</summary>${tblTeks(PL.kendala_pulau)}</details>` : ""}`;
     const tows = ST.tows.baris, grpT = { SO: "Kekuatan–Peluang (SO)", ST: "Kekuatan–Ancaman (ST)", WO: "Kelemahan–Peluang (WO)", WT: "Kelemahan–Ancaman (WT)" };
     $("#tab-strategi").innerHTML = `
       <h2>Strategi &amp; rencana aksi pemulihan</h2>
       <p class="cap">Versi ${esc(ST.versi)} · ${esc(ST.dasar_data)}</p>
       <div class="kpis">
-        <div class="kpi"><div class="v">${fmt(rt["Total dasar+pilot (ha)"])} ha</div><div class="l">luas tanam 2027–2030 (dasar + pilot)</div></div>
+        <div class="kpi"><div class="v">${fmt(rt["Total dasar+pilot (ha)"])} ha</div><div class="l">luas tanam ${thn[0]}–${thn.at(-1)} (dasar + pilot)</div></div>
         <div class="kpi"><div class="v">${fmt(rt["Bibit dasar+pilot (batang)"], 0)}</div><div class="l">bibit (batang, belum termasuk sulaman)</div></div>
         <div class="kpi"><div class="v">${fmtRp(totDasar[6])}</div><div class="l">anggaran dasar 2027–2031 (termasuk kontinjensi)</div></div>
         <div class="kpi"><div class="v">${fmt(rt["Bersyarat (ha)"])} ha</div><div class="l">perluasan guludan bersyarat (${fmtRp(totBers[6])})</div></div>
@@ -599,6 +614,7 @@
       ${Object.entries(grpT).map(([g, nm]) => { const r = tows.filter(x => x[1] === g); return r.length ? `<div class="qs"><div class="ql">${nm}</div><ul class="lst">${r.map(x => `<li><b>${esc(x[0])}</b> ${esc(x[2])} <small class="muted">(${esc(x[4])})</small></li>`).join("")}</ul></div>` : ""; }).join("")}
       ${ST.tipologi ? `<h3>Tipologi pulau</h3>${ST.tipologi.baris.map(r => `<div class="qs"><div class="ql">${esc(r[0])} — ${esc(r[1])}</div>
         <p style="font-size:.84rem;margin:2px 0">${esc(r[3])}</p><p class="cap" style="margin:0">${esc(r[2])}</p></div>`).join("")}` : ""}
+      ${htmlPL}
       <h3>Tahapan pelaksanaan</h3>
       ${ST.tahapan ? `<ul class="lst">${ST.tahapan.butir.map(t => { const [a, ...b] = t.split(": "); return `<li><b>${esc(a)}:</b> ${esc(b.join(": "))}</li>`; }).join("")}</ul>` : ""}
       <div class="chartbox" style="height:300px"><canvas id="ch-tanam"></canvas></div>
@@ -618,9 +634,8 @@
       ${ST.peta ? `<h3>Peta tahap rencana aksi</h3><a href="${ST.peta}" target="_blank"><img src="${ST.peta}" alt="Peta tahap rencana aksi" style="width:100%;border:1px solid var(--line);border-radius:6px"></a>` : ""}
       ${ST.keterbatasan ? `<h3>Keterbatasan</h3><ul class="lst">${ST.keterbatasan.butir.map(t => `<li>${esc(t)}</li>`).join("")}</ul>` : ""}`;
     $("#tab-strategi").addEventListener("click", e => { if (e.target.id === "btn-rencana") { ensureOn("rencana"); map.setView([-5.62, 106.58], 10); } });
-    const thn = [2027, 2028, 2029, 2030];
     chart("ch-tanam", { type: "bar", data: { labels: KODE.map(k => PULAU[k]), datasets: thn.map((y, i) => ({ label: String(y), data: KODE.map(k => (ST.rekap_pulau[k] || {})[`Luas tanam ${y} (ha)`] || 0),
-        backgroundColor: ["#b2182b", "#ef8a62", "#f4a582", "#f6c85f"][i] })) },
+        backgroundColor: ["#b2182b", "#ef8a62", "#f4a582", "#f6c85f", "#8fbf6a", "#4d9a8a"][i] })) },
       options: { indexAxis: "y", maintainAspectRatio: false, scales: { x: { stacked: true, title: { display: true, text: "ha" } }, y: { stacked: true } }, plugins: { legend: { position: "bottom", labels: { boxWidth: 10 } } } } });
     const KEL = [["Penanaman & rangka rumpun", /^(Penanaman|Rangka)/, "#1f5f4a"], ["APO bambu & guludan", /^(APO|Guludan)/, "#c8662b"],
       ["Penyulaman & pemeliharaan", /^(Penyulaman|Pemeliharaan 3)/, "#5aa77f"], ["Kebun bibit", /^Kebun bibit/, "#93c9a5"],
