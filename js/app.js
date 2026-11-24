@@ -218,10 +218,17 @@
     if (def.point) opt.pointToLayer = (f, ll) => L.circleMarker(ll, { ...def.style(f), renderer: canvas });
     return L.geoJSON(gj, opt);
   }
+  const giliran = {};   // nomor panggilan terakhir per lapisan: hasil pemuatan yang sudah usang dibuang
   async function toggle(def, on) {
+    const n = giliran[def.id] = (giliran[def.id] || 0) + 1;
     if (loaded[def.id]) { map.removeLayer(loaded[def.id]); delete loaded[def.id]; }
     urut = urut.filter(id => id !== def.id);
-    if (on) { loaded[def.id] = await buildLayer(def); loaded[def.id].addTo(map); urut.push(def.id); }
+    if (on) {
+      const lyr = await buildLayer(def);
+      if (n !== giliran[def.id]) return;   // ada panggilan lebih baru (mis. ganti musim cepat) – jangan ditumpuk
+      if (loaded[def.id]) map.removeLayer(loaded[def.id]);
+      loaded[def.id] = lyr; lyr.addTo(map); urut.push(def.id);
+    }
     // jaga urutan: poligon di bawah, lalu infrastruktur & gelombang/angin, titik paling atas
     [...ATAS].reverse().forEach(id => loaded[id]?.bringToFront?.());
     LAYERS.forEach(d => { if (loaded[d.id] && d.point) loaded[d.id].bringToFront?.(); });
@@ -253,8 +260,9 @@
       if (t.id === "basemap") { Object.values(bases).forEach(b => map.removeLayer(b)); bases[t.value].addTo(map); return; }
       if (t.id === "lbl") { t.checked ? labels.addTo(map) : map.removeLayer(labels); return; }
       if (t.id === "s2-year") { s2Year = +t.value; const d = LAYERS.find(x => x.id === "s2sr"); setChecked("s2sr"); toggle(d, true); return; }
-      if (t.id === "musim-sel") { musim = t.value; ["gelombang", "angin"].forEach(id => { if (loaded[id]) toggle(LAYERS.find(x => x.id === id), true); });
-        if (!loaded.gelombang && !loaded.angin) { setChecked("gelombang"); toggle(LAYERS.find(x => x.id === "gelombang"), true); } return; }
+      if (t.id === "musim-sel") { musim = t.value; const aktif = ["gelombang", "angin"].filter(id => loaded[id] || $(`#layerbox input[data-id="${id}"]`)?.checked);
+        if (!aktif.length) { setChecked("gelombang"); aktif.push("gelombang"); }
+        aktif.forEach(id => toggle(LAYERS.find(x => x.id === id), true)); return; }
       if (t.id === "air-mode") { airMode = t.value; const d = LAYERS.find(x => x.id === "air"); setChecked("air"); toggle(d, true); return; }
       if (t.dataset.id) toggle(LAYERS.find(d => d.id === t.dataset.id), t.checked);
     });
