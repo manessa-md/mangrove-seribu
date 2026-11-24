@@ -289,7 +289,9 @@ write_geo(L("transek_garis_pantai"), "transek_garis_pantai",
           keep=["pulau", "id_transek", "n_tahun", "NSM_m", "EPR_m_th", "LRR_m_th", "LRR_R2", "kelas_LRR"])
 gp = L("garis_pantai_tahunan")
 write_geo(gp, "garis_pantai_tahunan", simplify_m=3)
-prio = gpd.read_file(PRIORITAS, layer="lokasi_prioritas")
+sys.path.insert(0, str(Path(__file__).parent))
+from build_analisis import prioritas_terbaru  # versi tertinggi & nama layer lokasi_prioritas[_vNN]
+prio = prioritas_terbaru(AN)[1]
 write_geo(prio, "lokasi_prioritas", simplify_m=1,
           keep=["id_lokasi", "pulau", "prioritas", "luas_ha", "skor_rerata", "elevasi_median_m", "lintang", "bujur"])
 kb = L("kontur_batimetri_gabungan")
@@ -400,7 +402,7 @@ t13["catatan"] = ["Sumber: Analisis kesesuaian multikriteria MGV-KS 2026 v04 (gr
                   "S1 = MLW–MHW, S2 = LLWS–MLW atau MHW–HHWS, S3 = (LAT − 0,2)–LLWS atau HHWS–(HAT + 0,2)."]
 t14 = stats["tabel"]["14"]
 pt = prio[prio.prioritas == "Tinggi"].sort_values("id_lokasi")
-t14["baris"] = [[clean(v) for v in [r.id_lokasi, PULAU[r.pulau], r.luas_ha, round(r.skor_rerata, 4), r.x_utm, r.y_utm,
+t14["baris"] = [[clean(v) for v in [r.id_lokasi, PULAU[r.pulau], r.luas_ha, round(r.skor_rerata, 4) if "skor_rerata" in pt.columns else r.elevasi_median_m, r.x_utm, r.y_utm,
                                      round(r.lintang, 4), round(r.bujur, 4)]] for _, r in pt.iterrows()]
 t14["catatan"] = ["Sumber: Analisis kesesuaian & prioritas MGV-KS 2026 v04",
                   "Catatan: Koordinat titik tengah poligon; WGS 1984 UTM Zona 48S dan geografis."]

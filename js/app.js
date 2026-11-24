@@ -14,8 +14,10 @@
   const SO = await fetch("data/sosek.json", { cache: "no-cache" }).then(r => r.ok ? r.json() : {}).catch(() => ({}));
   const AN = await fetch("data/analisis.json", { cache: "no-cache" }).then(r => r.ok ? r.json() : {}).catch(() => ({}));
   const IF = await fetch("data/infrastruktur.json", { cache: "no-cache" }).then(r => r.ok ? r.json() : {}).catch(() => ({}));
+  const KP = ["Tinggi", "Sedang", "Rendah"];   // kelas prioritas; diisi ulang dari analisis.json (v08: + Rekayasa)
   const ST = await fetch("data/strategi.json", { cache: "no-cache" }).then(r => r.ok ? r.json() : {}).catch(() => ({}));
   const GL = await fetch("data/gelombang.json", { cache: "no-cache" }).then(r => r.ok ? r.json() : {}).catch(() => ({}));
+  if (AN.kelas_prioritas) KP.splice(0, KP.length, ...AN.kelas_prioritas);
   const PULAU = S.pulau;
   const KODE = Object.keys(PULAU);
   $("#tgl-update").textContent = "diperbarui " + P.diperbarui;
@@ -48,7 +50,7 @@
   }
 
   /* ---- palet ---- */
-  const PRIOR = { Tinggi: "#c0392b", Sedang: "#e68a2e", Rendah: "#f2d16b" };
+  const PRIOR = { Tinggi: "#c0392b", Sedang: "#e68a2e", Rendah: "#f2d16b", Rekayasa: "#8e6c8a" };   // Rekayasa = S3 di bawah LLWS, perlu guludan
   const KES = { S1: "#1a9850", S2: "#91cf60", S3: "#d9ef8b" };
   const KES_NM = { S1: "S1 sangat sesuai", S2: "S2 sesuai", S3: "S3 sesuai bersyarat" };
   const KELAS_S2 = { lebat: "#0b5d3b", sedang: "#3f9c5a", jarang: "#a5d36e" };
@@ -157,12 +159,13 @@
       style: f => ({ color: "#3b0d0d", weight: 1.2, fillColor: PRIOR[f.properties.prioritas], fillOpacity: .8 }),
       popup: p => popupTable(`Prioritas ${p.id}`, [["Pulau", PULAU[p.pulau]], ["Prioritas", p.prioritas], ["Luas (ha)", p.luas_ha], ["Skor AHP rerata", p.skor_rerata],
         ["Lokasi AHP", p.id_lokasi], ["Area FGD", p.id_fgd], ["Lintang", p.lintang, 6], ["Bujur", p.bujur, 6]]),
-      legend: () => `<div class="lt">Prioritas pemulihan (AHP ∩ FGD setuju)</div>` + Object.entries(PRIOR).map(([k, c]) => `<div class="row"><span class="sw" style="background:${c}"></span>${k}</div>`).join("") },
+      legend: () => `<div class="lt">Prioritas pemulihan (AHP ∩ FGD setuju)</div>` + Object.entries(PRIOR).filter(([k]) => KP.includes(k)).map(([k, c]) => `<div class="row"><span class="sw" style="background:${c}"></span>${k}</div>`).join("") },
     { id: "prioritas_ahp", grp: "Analisis pemulihan", label: "Prioritas AHP (belum mempertimbangkan masyarakat)", file: "lokasi_prioritas", on: false, sw: "#e68a2e",
       style: f => ({ color: PRIOR[f.properties.prioritas], weight: 1.5, dashArray: "3 3", fill: false }),
       popup: p => popupTable(`Lokasi ${p.id_lokasi || ""}`, [["Pulau", PULAU[p.pulau]], ["Prioritas AHP", p.prioritas], ["Luas (ha)", p.luas_ha], ["Skor rerata", p.skor_rerata],
-        ["Elevasi median (m MSL)", p.elevasi_median_m]]),
-      legend: () => `<div class="lt">Prioritas AHP (garis putus)</div>` + Object.entries(PRIOR).map(([k, c]) => `<div class="row"><span class="sw l" style="background:${c}"></span>${k}</div>`).join("") },
+        ["Elevasi median (m MSL)", p.elevasi_median_m], ["LRR terendah (m/th)", p.LRR_min_m_th], ["Jarak ke permukiman (m)", p.jarak_permukiman_min_m, 0],
+        ["Sel S1 / S2 / S3 (%)", p.pct_S1 == null ? null : [p.pct_S1, p.pct_S2, p.pct_S3].map(v => fmt(v, 0)).join(" / ")]]),
+      legend: () => `<div class="lt">Prioritas AHP ${esc(AN.versi_prioritas || "")} (garis putus)</div>` + Object.entries(PRIOR).filter(([k]) => KP.includes(k)).map(([k, c]) => `<div class="row"><span class="sw l" style="background:${c}"></span>${k}</div>`).join("") },
     { id: "setuju", grp: "Analisis pemulihan", label: "Persetujuan masyarakat (FGD)", file: "persetujuan_masyarakat", on: false, sw: "#2b8cbe",
       style: f => ({ color: SETUJU[f.properties.status] || "#999", weight: 2, dashArray: "5 3", fillColor: SETUJU[f.properties.status] || "#999", fillOpacity: .3 }),
       popup: p => popupTable(`Area FGD ${p.id}`, [["Pulau", PULAU[p.pulau]], ["Masyarakat", p.status], ["Catatan", p.catatan], ["Luas (ha)", p.luas_ha]]),
@@ -345,7 +348,7 @@
         ${a.masukan && a.masukan.struktur_ha != null ? `<tr><td>Dikeluarkan: struktur pantai / jalur kapal</td><td>${fmt(a.masukan.struktur_ha)} / ${fmt(a.masukan.jalur_ha)} ha</td></tr>
         <tr><td>Zona terlindung breakwater</td><td>${fmt(a.masukan.terlindung_ha)} ha <small class="muted">(${fmt(a.masukan.sesuai_terlindung_ha)} ha sesuai)</small></td></tr>` : ""}
         <tr><td colspan="2"><b>2. Prioritas pemulihan (sesuai + disetujui masyarakat)</b></td></tr>
-        ${["Tinggi", "Sedang", "Rendah"].map(c => `<tr><td><span class="sw" style="background:${PRIOR[c]}"></span> Prioritas ${c.toLowerCase()}</td><td>${fmt(pm[c])} ha <small class="muted">dari ${fmt(pa[c])} ha AHP</small></td></tr>`).join("")}
+        ${KP.map(c => `<tr><td><span class="sw" style="background:${PRIOR[c]}"></span> ${c === "Rekayasa" ? "Rekayasa (guludan)" : "Prioritas " + c.toLowerCase()}</td><td>${fmt(pm[c])} ha <small class="muted">dari ${fmt(pa[c])} ha AHP</small></td></tr>`).join("")}
         <tr><td>Total prioritas</td><td>${fmt(tot(pm))} ha</td></tr></table>
       ${fg ? (a.setuju_tidak_sesuai_ha > 0.05 ? `<p class="muted" style="font-size:.8rem">${fmt(a.setuju_tidak_sesuai_ha)} ha area yang disetujui masyarakat tidak termasuk kelas S1–S3 (mangrove eksisting, daratan, elevasi di luar zona pasut, struktur pantai, atau jalur kapal).</p>` : "")
         : `<div class="note">Belum ada peta FGD untuk pulau ini, sehingga prioritas belum dapat dipadukan dengan keinginan masyarakat.</div>`}
@@ -485,7 +488,7 @@
   const NM_KRIT = { gelombang: "gelombang", substrat: "substrat", jarak_mangrove: "jarak mangrove", garis_pantai: "LRR", salinitas: "salinitas", elevasi: "elevasi" };
   $("#tab-analisis").innerHTML = `
     <h2>Hasil analisis terbaru</h2>
-    <p class="cap">Kesesuaian &amp; prioritas ${esc(AN.versi || S.kesesuaian.versi)} · gelombang 4 musim v03 · luas mangrove Sentinel-2 SR ${S.s2sr_tahun[0]}–${S.s2sr_tahun.at(-1)} · garis pantai DSAS 1990–2025.</p>
+    <p class="cap">Kesesuaian ${esc(AN.versi || S.kesesuaian.versi)} &amp; lokasi prioritas ${esc(AN.versi_prioritas || AN.versi || "")} · gelombang 4 musim v03 · luas mangrove Sentinel-2 SR ${S.s2sr_tahun[0]}–${S.s2sr_tahun.at(-1)} · garis pantai DSAS 1990–2025.</p>
     <h3>Ringkasan per pulau</h3>
     <div class="dtable-wrap"><table class="dtable"><thead><tr><th>Pulau</th><th>Sesuai S1–S3 = prioritas AHP (ha)</th><th>Disetujui FGD (ha)</th><th>Mangrove 2025 (ha)</th><th>Hs maks (m)</th></tr></thead>
     <tbody>${KODE.map(k => { const a = AP[k] || {}, ks = a.kesesuaian_ha || {}, g = (GL.pulau || {})[k];
@@ -551,7 +554,7 @@
     options: { indexAxis: "y", maintainAspectRatio: false, scales: { x: { stacked: true, title: { display: true, text: "ha" } }, y: { stacked: true } },
       plugins: { legend: { position: "bottom", labels: { boxWidth: 10 } } } } });
 
-  chart("ch-prior", { type: "bar", data: { labels: KODE.map(nm), datasets: ["Tinggi", "Sedang", "Rendah"].flatMap(c => [
+  chart("ch-prior", { type: "bar", data: { labels: KODE.map(nm), datasets: KP.flatMap(c => [
       { label: `${c} – AHP`, data: KODE.map(k => ((AP[k] || {}).prioritas_ahp_ha || {})[c] || 0), backgroundColor: PRIOR[c] + "55", stack: "ahp" },
       { label: `${c} – + FGD`, data: KODE.map(k => ((AP[k] || {}).prioritas_masyarakat_ha || {})[c] || 0), backgroundColor: PRIOR[c], stack: "fgd" }]) },
     options: { indexAxis: "y", maintainAspectRatio: false, scales: { x: { stacked: true, title: { display: true, text: "ha" } }, y: { stacked: true } },

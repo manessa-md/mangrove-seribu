@@ -34,6 +34,25 @@ def versi_terbaru():
     return f"v{max(v):02d}"
 
 
+KELAS_P = ["Tinggi", "Sedang", "Rendah", "Rekayasa"]   # Rekayasa (v07+): S3 di bawah LLWS, perlu guludan
+
+
+def prioritas_terbaru(an_dir=None):
+    """Poligon prioritas versi tertinggi (09_Lokasi_Prioritas/MGV-KS_LokasiPrioritas_KS_vNN.gpkg).
+    Versi prioritas berjalan sendiri (v08 dibangun dari kesesuaian v07). Nama layer: lokasi_prioritas[_vNN]."""
+    import pyogrio
+    d = Path(an_dir or AN) / "09_Lokasi_Prioritas"
+    v, f = max((int(m.group(1)), f) for f in d.glob("MGV-KS_LokasiPrioritas_KS_v*.gpkg") if (m := re.search(r"_v(\d+)\.gpkg$", f.name)))
+    lyr = next(n for n, _ in pyogrio.list_layers(f) if str(n).startswith("lokasi_prioritas"))
+    g = gpd.read_file(f, layer=lyr).to_crs(UTM)
+    c = g.representative_point()
+    if "x_utm" not in g.columns:
+        g["x_utm"], g["y_utm"] = c.x.round(1), c.y.round(1)
+    if "lintang" not in g.columns:
+        ll = c.to_crs(4326); g["lintang"], g["bujur"] = ll.y.round(6), ll.x.round(6)
+    return f"v{v:02d}", g
+
+
 def tulis(gdf, name, precision=6):
     gdf = gdf[~gdf.geometry.is_empty & gdf.geometry.notna()].to_crs(4326)
     feats = []
@@ -67,9 +86,12 @@ def main():
     tulis(kes, "kesesuaian_ahp")
 
     # (2) prioritas AHP & prioritas ∩ setuju masyarakat
-    prio = gpd.read_file(AN / f"09_Lokasi_Prioritas/MGV-KS_LokasiPrioritas_KS_{V}.gpkg", layer="lokasi_prioritas").to_crs(UTM)
-    tulis(prio[["id_lokasi", "pulau", "prioritas", "luas_ha", "skor_rerata", "elevasi_median_m", "lintang", "bujur", "geometry"]]
-          .assign(geometry=lambda d: d.geometry.simplify(1, preserve_topology=True)), "lokasi_prioritas")
+    PV, prio = prioritas_terbaru()
+    print("prioritas versi", PV, "|", prio.groupby("prioritas").luas_ha.sum().round(2).to_dict())
+    kol = [c for c in ["id_lokasi", "pulau", "prioritas", "luas_ha", "skor_rerata", "elevasi_median_m", "LRR_min_m_th", "jarak_permukiman_min_m",
+                       "pct_S1", "pct_S2", "pct_S3", "lintang", "bujur"] if c in prio.columns]
+    tulis(prio[kol + ["geometry"]].assign(geometry=lambda d: d.geometry.simplify(1, preserve_topology=True)), "lokasi_prioritas")
+    kp = ["id_lokasi", "pulau", "prioritas"] + (["skor_rerata"] if "skor_rerata" in prio.columns else [])
     fgd = gpd.read_file(OUT / "persetujuan_masyarakat.geojson").to_crs(UTM)
     setuju = fgd[fgd.status == "Setuju"]
     parts = []
@@ -77,33 +99,36 @@ def main():
         p, s = prio[prio.pulau == k], setuju[setuju.pulau == k]
         if not len(p) or not len(s):
             continue
-        x = gpd.overlay(p[["id_lokasi", "pulau", "prioritas", "skor_rerata", "geometry"]], s[["id", "geometry"]].rename(columns={"id": "id_fgd"}),
+        x = gpd.overlay(p[kp + ["geometry"]], s[["id", "geometry"]].rename(columns={"id": "id_fgd"}),
                         how="intersection", keep_geom_type=True)
-        x = x.dissolve(["id_lokasi", "pulau", "prioritas", "skor_rerata"], as_index=False, aggfunc={"id_fgd": lambda v: ", ".join(sorted(set(v)))})
+        x = x.dissolve(kp, as_index=False, aggfunc={"id_fgd": lambda v: ", ".join(sorted(set(v)))})
         parts.append(x)
     pm = pd.concat(parts, ignore_index=True) if parts else gpd.GeoDataFrame(columns=["id_lokasi", "pulau", "prioritas", "geometry"], crs=UTM)
     pm = gpd.GeoDataFrame(pm, crs=UTM)
     pm["luas_ha"] = (pm.area / 1e4).round(3)
     pm = pm[pm.luas_ha >= 0.01].copy()
-    pm["_u"] = pm.prioritas.map({"Tinggi": 1, "Sedang": 2, "Rendah": 3})
+    pm["_u"] = pm.prioritas.map({c: i for i, c in enumerate(KELAS_P)})
     pm = pm.sort_values(["pulau", "_u", "luas_ha"], ascending=[True, True, False]).drop(columns="_u").reset_index(drop=True)
     pm["id"] = pm.groupby("pulau").cumcount().add(1).map("{:02d}".format).radd(pm.pulau + "-P")
     ll = pm.representative_point().to_crs(4326)
     pm["lintang"], pm["bujur"] = ll.y.round(6), ll.x.round(6)
-    tulis(pm[["id", "pulau", "prioritas", "luas_ha", "skor_rerata", "id_lokasi", "id_fgd", "lintang", "bujur", "geometry"]], "prioritas_masyarakat")
+    tulis(pm[[c for c in ["id", "pulau", "prioritas", "luas_ha", "skor_rerata", "id_lokasi", "id_fgd", "lintang", "bujur"] if c in pm.columns] + ["geometry"]],
+          "prioritas_masyarakat")
+    kelas_p = [c for c in KELAS_P if (prio.prioritas == c).any()]
 
     # (3) ringkasan per pulau
     lk = pd.read_excel(AN / f"08_Kesesuaian_Pemulihan/MGV-KS_Kesesuaian_KS_{V}.xlsx", sheet_name="LUAS_KELAS")
     lk = lk.set_index(lk.columns[0])
-    an = {"versi": V, "pulau": {}, "dibangun": datetime.datetime.now().strftime("%Y-%m-%d %H:%M")}
+    an = {"versi": V, "versi_prioritas": PV, "kelas_prioritas": kelas_p, "pulau": {}, "dibangun": datetime.datetime.now().strftime("%Y-%m-%d %H:%M")}
     for k in PULAU:
         d = {}
         if k in lk.index:
             r = lk.loc[k]
             d["kesesuaian_ha"] = {c: round(float(r[c]), 2) for c in ["S1", "S2", "S3", "N"]}
-            d["prioritas_ahp_ha"] = {c: round(float(r[f"Prioritas {c}"]), 2) for c in ["Tinggi", "Sedang", "Rendah"]}
+        pp = prio[prio.pulau == k]
+        d["prioritas_ahp_ha"] = {c: round(float(pp[pp.prioritas == c].luas_ha.sum()), 2) for c in kelas_p}
         sub = pm[pm.pulau == k]
-        d["prioritas_masyarakat_ha"] = {c: round(float(sub[sub.prioritas == c].luas_ha.sum()), 2) for c in ["Tinggi", "Sedang", "Rendah"]}
+        d["prioritas_masyarakat_ha"] = {c: round(float(sub[sub.prioritas == c].luas_ha.sum()), 2) for c in kelas_p}
         sf = setuju[setuju.pulau == k]
         if len(sf):
             ks = kes[kes.pulau == k]
@@ -146,7 +171,7 @@ def main():
         an["pulau"][k]["masukan"] = m
     an["total"] = {
         "sesuai_ha": round(float(lk[["S1", "S2", "S3"]].sum().sum()), 2),
-        "prioritas_ahp_ha": round(float(lk[["Prioritas Tinggi", "Prioritas Sedang", "Prioritas Rendah"]].sum().sum()), 2),
+        "prioritas_ahp_ha": round(float(prio.luas_ha.sum()), 2),
         "prioritas_masyarakat_ha": round(float(pm.luas_ha.sum()), 2)}
     (OUT / "analisis.json").write_text(json.dumps(an, ensure_ascii=False, indent=1), encoding="utf-8")
     print("total", an["total"])
@@ -155,29 +180,35 @@ def main():
     fs = OUT / "statistik.json"
     st = json.loads(fs.read_text(encoding="utf-8"))
     t13 = st["tabel"]["13"]
-    t13["baris"] = [[PULAU[k], *[round(float(r[c]), 2) for c in ["S1", "S2", "S3", "N", "Mangrove eksisting", "Prioritas Tinggi", "Prioritas Sedang", "Prioritas Rendah"]],
+    t13["kolom"] = ["Pulau", "S1 (ha)", "S2 (ha)", "S3 (ha)", "N (ha)", "Mangrove eksisting (ha)", *[f"Prioritas {c.lower()} (ha)" for c in kelas_p], "Sumber elevasi"]
+    pl = lambda k, c: round(float(prio[(prio.pulau == k) & (prio.prioritas == c)].luas_ha.sum()), 2)
+    t13["baris"] = [[PULAU[k], *[round(float(r[c]), 2) for c in ["S1", "S2", "S3", "N", "Mangrove eksisting"]], *[pl(k, c) for c in kelas_p],
                      r.sumber_elevasi] for k, r in lk.iterrows()]
-    t13["catatan"] = [f"Sumber: Analisis kesesuaian multikriteria MGV-KS 2026 {V} (grid 10 m; 300 m ke laut, 30 m ke darat)",
+    t13["catatan"] = [f"Sumber: Analisis kesesuaian multikriteria MGV-KS 2026 {V}, lokasi prioritas {PV} (grid 10 m; 300 m ke laut, 30 m ke darat)",
                       "Catatan: S1 sangat sesuai, S2 sesuai, S3 sesuai bersyarat, N tidak sesuai. Elevasi terhadap MSL pasut lokal; "
                       "S1 = MLW–MHW, S2 = LLWS–MLW atau MHW–HHWS, S3 = batas bawah–LLWS atau HHWS–(HAT + 0,2); batas bawah per pulau = min(LLWS, P05 elevasi "
                       "mangrove eksisting), tidak lebih dalam dari LAT − 0,2; dasar di bawah LLWS paling tinggi S3."]
     if gs is not None:
         t13["catatan"].append("v06: gelombang dari model 4 musim v03 (Hs maks, HHWS, diredam breakwater); sel ≤ 25 m dari jalur kapal dan ≤ 5 m dari struktur pantai dikeluarkan dari kesesuaian.")
     pt = prio[prio.prioritas == "Tinggi"].sort_values("id_lokasi")
-    st["tabel"]["14"]["baris"] = [[r.id_lokasi, PULAU[r.pulau], round(float(r.luas_ha), 2), round(float(r.skor_rerata), 4), round(float(r.x_utm), 1),
+    ks_ = "skor_rerata" if "skor_rerata" in pt.columns else "elevasi_median_m"   # v07+: skor tidak lagi ada di poligon
+    st["tabel"]["14"]["kolom"] = ["ID lokasi", "Pulau", "Luas (ha)", "Skor rerata" if ks_ == "skor_rerata" else "Elevasi median (m MSL)",
+                                  "X (UTM 48S)", "Y (UTM 48S)", "Lintang", "Bujur"]
+    st["tabel"]["14"]["baris"] = [[r.id_lokasi, PULAU[r.pulau], round(float(r.luas_ha), 2), None if pd.isna(r[ks_]) else round(float(r[ks_]), 3), round(float(r.x_utm), 1),
                                    round(float(r.y_utm), 1), round(float(r.lintang), 4), round(float(r.bujur), 4)] for _, r in pt.iterrows()]
-    st["tabel"]["14"]["catatan"] = [f"Sumber: Analisis kesesuaian & prioritas MGV-KS 2026 {V}",
+    st["tabel"]["14"]["catatan"] = [f"Sumber: Analisis kesesuaian MGV-KS 2026 {V} & lokasi prioritas {PV}",
                                     "Catatan: Koordinat titik tengah poligon; WGS 1984 UTM Zona 48S dan geografis."]
     for k, r in lk.iterrows():
         if k in st["ringkasan"]:
             g = st["ringkasan"][k]
             for c in ["S1", "S2", "S3", "N"]:
                 g[f"{c} (ha)"] = round(float(r[c]), 2)
-            for c in ["Tinggi", "Sedang", "Rendah"]:
-                g[f"Prioritas {c} (ha)"] = round(float(r[f"Prioritas {c}"]), 2)
+            for c in kelas_p:
+                g[f"Prioritas {c} (ha)"] = pl(k, c)
             g["Elevasi dari"] = r.sumber_elevasi
             g["Jumlah lokasi prioritas tinggi"] = int((pt.pulau == k).sum())
     st["kesesuaian"]["versi"] = V
+    st["kesesuaian"]["versi_prioritas"] = PV
     bb = pd.read_excel(X, sheet_name="BOBOT_AHP")
     st["kesesuaian"]["bobot"] = [{"kode": r.iloc[0], "kriteria": r.kriteria, "bobot": round(float(r.bobot), 3)} for _, r in bb.iterrows()]
     st["kesesuaian"]["cr"] = round(float(bb.CR.iloc[0]), 3)
