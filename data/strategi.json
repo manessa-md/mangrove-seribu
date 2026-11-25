@@ -1,6 +1,6 @@
 {
- "versi": "v06",
- "dibangun": "2026-11-25 15:14",
+ "versi": "v07",
+ "dibangun": "2026-11-25 15:59",
  "dasar_data": "Dasar data: kesesuaian v07 (substrat Allen Coral Atlas + titik lapangan), prioritas v08, lalu rancangan operasional v08: hanya lokasi dalam sabuk pantai (≤ 60 m ke arah laut dari garis daratan 2025, yaitu P75 jarak mangrove eksisting ke daratan, atau ≤ 30 m dari mangrove eksisting; sel di dalam daratan 2025 yang berupa vegetasi darat, permukiman, atau pantai tidak ikut), setelah dikurangi kendala sosial-ruang v09 (lihat sheet KENDALA), dikelompokkan ke blok kerja ≥ 0,10 ha, dan dijadwalkan dengan batas kapasitas per pulau.",
  "teknik": {
   "kolom": [
@@ -130,15 +130,15 @@
    "Prio Sedang (ha)": 0.42,
    "Prio Rendah (ha)": 0.62,
    "Rekayasa < LLWS (ha)": 0.0,
-   "Luas tanam 2027 (ha)": 1.04,
-   "Luas tanam 2028 (ha)": 0.62,
+   "Luas tanam 2027 (ha)": 1.12,
+   "Luas tanam 2028 (ha)": 1.31,
    "Luas tanam 2029 (ha)": 0.0,
    "Luas tanam 2030 (ha)": 0.0,
    "Luas tanam 2031 (ha)": 0.0,
-   "Total dasar+pilot (ha)": 1.66,
+   "Total dasar+pilot (ha)": 2.43,
    "Bersyarat (ha)": 0.0,
-   "Bibit dasar+pilot (batang)": 7450.0,
-   "Pembangunan dasar+pilot (Rp)": 216835000.0,
+   "Bibit dasar+pilot (batang)": 11300.0,
+   "Pembangunan dasar+pilot (Rp)": 248790000.0,
    "Pembangunan bersyarat (Rp)": 0.0,
    "% bersedia": 0.933,
    "% dilibatkan sejak perencanaan": 0.2,
@@ -277,15 +277,15 @@
    "Prio Sedang (ha)": 13.51,
    "Prio Rendah (ha)": 6.67,
    "Rekayasa < LLWS (ha)": 9.32,
-   "Luas tanam 2027 (ha)": 9.26,
-   "Luas tanam 2028 (ha)": 9.84,
+   "Luas tanam 2027 (ha)": 9.34,
+   "Luas tanam 2028 (ha)": 10.53,
    "Luas tanam 2029 (ha)": 4.37,
    "Luas tanam 2030 (ha)": 3.62,
    "Luas tanam 2031 (ha)": 2.03,
-   "Total dasar+pilot (ha)": 29.12,
+   "Total dasar+pilot (ha)": 29.89,
    "Bersyarat (ha)": 8.49,
-   "Bibit dasar+pilot (batang)": 144225.0,
-   "Pembangunan dasar+pilot (Rp)": 2040380000.0,
+   "Bibit dasar+pilot (batang)": 148075.0,
+   "Pembangunan dasar+pilot (Rp)": 2072335000.0,
    "Pembangunan bersyarat (Rp)": 3403335000.0,
    "% bersedia": null,
    "% dilibatkan sejak perencanaan": null,
@@ -315,21 +315,21 @@
    ],
    [
     "Penanaman: bibit, ajir, upah tanam, angkut",
-    267380000.0,
-    278545000.0,
+    269700000.0,
+    298555000.0,
     126730000.0,
     104980000.0,
     58870000.0,
-    836505000.0
+    858835000.0
    ],
    [
     "Rangka rumpun berjarak",
-    51000000.0,
-    57125000.0,
+    52000000.0,
+    65750000.0,
     48250000.0,
     29125000.0,
     25375000.0,
-    210875000.0
+    220500000.0
    ],
    [
     "APO bambu",
@@ -352,20 +352,20 @@
    [
     "Penyulaman",
     0.0,
-    66845000.0,
-    96374250.0,
-    59537000.0,
+    67425000.0,
+    101608750.0,
+    61538000.0,
     38918000.0,
-    261674250.0
+    269489750.0
    ],
    [
     "Pemeliharaan 3 tahun",
-    69450000.0,
-    143250000.0,
-    176025000.0,
-    133725000.0,
+    70050000.0,
+    149025000.0,
+    181800000.0,
+    138900000.0,
     75150000.0,
-    597600000.0
+    614925000.0
    ],
    [
     "B. Program pendukung",
@@ -450,30 +450,30 @@
    ],
    [
     "Subtotal A + B",
-    2429830000.0,
-    1170765000.0,
-    1323379250.0,
-    967367000.0,
+    2433750000.0,
+    1205755000.0,
+    1334388750.0,
+    974543000.0,
     923313000.0,
-    6814654250.0
+    6871749750.0
    ],
    [
     "Kontinjensi",
-    242983000.0,
-    117076500.0,
-    132337925.0,
-    96736700.0,
+    243375000.0,
+    120575500.0,
+    133438875.0,
+    97454300.0,
     92331300.0,
-    681465425.0
+    687174975.0
    ],
    [
     "TOTAL ANGGARAN DASAR",
-    2672813000.0,
-    1287841500.0,
-    1455717175.0,
-    1064103700.0,
+    2677125000.0,
+    1326330500.0,
+    1467827625.0,
+    1071997300.0,
     1015644300.0,
-    7496119675.0
+    7558924725.0
    ],
    [
     "C. Skenario bersyarat: perluasan guludan di bawah LLWS (di luar anggaran dasar)",
@@ -527,7 +527,7 @@
     null,
     null,
     null,
-    29.12
+    29.89
    ],
    [
     "Biaya lokasi (A) per ha tanam, termasuk pemeliharaan hingga 2031 (Rp/ha)",
@@ -536,7 +536,7 @@
     null,
     null,
     null,
-    99576038.8049
+    98921035.4634
    ],
    [
     "Total anggaran dasar per ha tanam (Rp/ha)",
@@ -545,7 +545,7 @@
     null,
     null,
     null,
-    257421692.136
+    252891426.0622
    ]
   ]
  },
@@ -808,20 +808,20 @@
     "P2 Penanaman dan perlindungan pantai berbasis mangrove",
     "Tahap I (2027): blok Prioritas Tinggi pertama tiap pulau (abrasi dan S1 dekat permukiman), termasuk APO bambu",
     "10 pulau; 1 ha per pulau",
-    "8,1 ha ditanam",
+    "8,2 ha ditanam",
     "Penyulaman; survival ≥ 70% umur 12 bulan",
     "Segmen tertanam stabil (LRR ≥ −0,5 m/th)",
     "Survival; luas tanam; LRR transek terdekat",
     "Sudin SDA Kep. Seribu",
     "Sudin KPKP, CSR, kelompok masyarakat",
-    2464654250
+    2521749750
    ],
    [
     "P2 Penanaman dan perlindungan pantai berbasis mangrove",
     "Tahap II (2028–2029): sisa Prioritas Tinggi dan Sedang, kapasitas 2 ha/pulau/tahun",
     "10 pulau",
     "DED dan penyiapan bibit",
-    "14,2 ha ditanam",
+    "14,9 ha ditanam",
     "Survival ≥ 60% umur 36 bulan",
     "Survival; luas tanam; tutupan kanopi plot",
     "Sudin SDA Kep. Seribu; Sudin KPKP",
@@ -921,9 +921,9 @@
     "Luas tanam kumulatif (dasar + pilot)",
     "ha",
     "0",
-    9.26,
-    23.47,
-    29.12,
+    9.34,
+    24.24,
+    29.89,
     "Berita acara tanam + poligon GPS",
     "Per kegiatan",
     "Realisasi < 80% target tahunan"
@@ -1046,7 +1046,7 @@
   ],
   "butir": [
    "Lindungi. Mempertahankan 26,11 ha mangrove eksisting (digitasi 2025) sebagai sumber propagul dan pelindung pantai, termasuk penetapan zona lindung dan pengendalian reklamasi serta pengerukan.",
-   "Pulihkan secara bertahap. Menanam 29,12 ha blok tanam di sabuk pantai dalam tiga tahap (2027 sampai 2031) sesuai kapasitas kelompok di tiap pulau, dimulai dari segmen pantai yang mengalami abrasi, serta menguji teknik guludan seluas ±1,16 ha sebelum memutuskan perluasan 8,49 ha di bawah LLWS.",
+   "Pulihkan secara bertahap. Menanam 29,89 ha blok tanam di sabuk pantai dalam tiga tahap (2027 sampai 2031) sesuai kapasitas kelompok di tiap pulau, dimulai dari segmen pantai yang mengalami abrasi, serta menguji teknik guludan seluas ±1,16 ha sebelum memutuskan perluasan 8,49 ha di bawah LLWS.",
    "Perkaya dan kelola. Menambah keragaman jenis melalui kebun bibit multi-jenis, membangun kelembagaan pengelola di tiap pulau, dan menjalankan pemantauan yang hasilnya dipakai untuk menyesuaikan teknik."
   ]
  },
@@ -1055,7 +1055,7 @@
   "teks": [
    "Setiap lokasi melewati enam langkah: (1) konfirmasi lokasi dalam FGD dan DED (pengukuran elevasi, panjang APO); (2) pembibitan 4 sampai 6 bulan di kebun bibit desa; (3) pemasangan APO atau guludan sedikitnya tiga bulan sebelum tanam bila diperlukan; (4) penanaman pada musim timur dan peralihan, menghindari musim barat yang bergelombang tinggi; (5) pemeliharaan tiga tahun berupa pembersihan sampah dan teritip, perbaikan ajir, rumpun, dan APO; serta (6) penyulaman pada tahun pertama dan kedua. Urutan antartahap mengikuti aturan berikut:",
    "Kebutuhan bibit belum termasuk penyulaman (asumsi 25% tahun ke-1 dan 10% tahun ke-2).",
-   "Peta per pulau dengan latar citra resolusi tinggi, nomor blok kerja, dan lapisan kendala tersedia pada MGV-KS_AlbumPetaRencanaAksi_KS_v06.pdf."
+   "Peta per pulau dengan latar citra resolusi tinggi, nomor blok kerja, dan lapisan kendala tersedia pada MGV-KS_AlbumPetaRencanaAksi_KS_v07.pdf."
   ],
   "butir": [
    "Tahap I (2027): blok Prioritas Tinggi pertama di setiap pulau, maksimal 1 ha per pulau, ditambah pilot guludan ±0,5 ha di Pramuka dan Kelapa serta 0,16 ha di Harapan. Tahun ini juga dipakai untuk membangun kebun bibit, DED, dan kelembagaan.",
@@ -1073,7 +1073,7 @@
    "Lebar sabuk pantai (60 m) dan kapasitas 1 sampai 2 ha per pulau per tahun adalah asumsi perencanaan; keduanya dapat dinaikkan bila hasil pilot baik atau mitra menambah kelompok pelaksana.",
    "Zona wisata pantai (K2) dipakai sesuai batas poligon survei tanpa penyangga; ruang rekreasi di depan pantai yang melampaui batas poligon perlu dikonfirmasi bersama pengelola wisata pada FGD penetapan lokasi.",
    "Jalur perahu nelayan, tambatan, dan dermaga kecil belum terpetakan sehingga K3 hanya mencakup trayek utama; lokasi di dekat kanal dan dermaga kecil (misalnya selatan Harapan) perlu dicek bersama warga.",
-   "Lokasi Usulan FGD di Lancang dan Panggang sebagian berada pada kelas kesesuaian N menurut model; penetapannya bertumpu pada persetujuan warga dan keberadaan mangrove eksisting di dekatnya, sehingga elevasi dan substrat wajib diukur sebelum tanam.",
+   "Lokasi Usulan FGD di Lancang, Panggang, dan Tidung sebagian berada pada kelas kesesuaian N menurut model; penetapannya bertumpu pada persetujuan warga dan keberadaan mangrove eksisting di dekatnya, sehingga elevasi dan substrat wajib diukur sebelum tanam.",
    "Lamun, karang, dan pecahan karang kini dipetakan dari Allen Coral Atlas, tetapi peta ini berasal dari klasifikasi citra global yang belum divalidasi dengan transek bentik lokal, tidak membedakan lumpur dari pasir, dan tidak memuat kelas bentik untuk Sebira. Substrat di setiap blok kerja tetap harus dicek lapangan sebelum ditanam.",
    "Sebira belum memiliki data vegetasi dan sosial-ekonomi, Panggang belum terdigitasi, dan luas mangrove Tidung antara citra dan digitasi masih berbeda jauh, sehingga lokasi di tiga pulau ini perlu konfirmasi lapangan sebelum Tahap II.",
    "Bobot dan rating SWOT merupakan usulan tim dan perlu disepakati bersama pemangku kepentingan."
@@ -1150,7 +1150,7 @@
    "butir": [
     "Sabuk pantai: lokasi tanam dibatasi ≤ 60 m ke arah laut dari garis daratan 2025 atau ≤ 30 m dari mangrove eksisting, dan selalu di luar daratan 2025. Sel di dalam garis daratan, yaitu vegetasi darat, permukiman, dan pantai berpasir di belakang garis pantai, tidak dijadikan lokasi tanam walaupun elevasinya rendah. Pada versi 05 sel daratan sampai 30 m dari garis pantai masih ikut sehingga sebagian blok di Tidung, Untung Jawa, Harapan, dan Sebira jatuh di vegetasi pantai non-mangrove; versi 06 memperbaikinya. Angka 60 m adalah persentil ke-75 jarak sel mangrove eksisting ke daratan di sepuluh pulau (median 40 m), sehingga penanaman diarahkan ke ruang tempat mangrove terbukti dapat tumbuh di Kepulauan Seribu.",
     "Kendala sosial-ruang: area di dalam sabuk yang ditolak warga, zona wisata pantai, dan alur kapal dikeluarkan sebelum blok kerja dibentuk (rincian pada subbab berikutnya).",
-    "Usulan FGD (Lancang dan Panggang): poligon FGD berstatus Setuju dalam jarak ≤ 100 m dari mangrove eksisting ditambahkan ke sabuk pantai, termasuk sel yang kelas kesesuaiannya N atau tanpa kelas. Di kedua pulau ini lokasi prioritas di tepi mangrove eksisting tertahan oleh batas sabuk, padahal warga menyetujui dan mangrove terbukti tumbuh di sana. Lokasi ini dijadwalkan setelah Prioritas Rendah dan wajib diverifikasi elevasi serta substratnya sebelum tanam. Di Panggang batimetri tidak andal (kemiringan regresi terhadap elevasi lapangan 0,06), sehingga sel di bawah LLWS diperlakukan sebagai zona LLWS sampai MLW (rumpun berjarak); di Lancang sel di bawah LLWS menjadi Bersyarat.",
+    "Usulan FGD (Lancang, Panggang, dan Tidung): poligon FGD berstatus Setuju dalam jarak ≤ 100 m dari mangrove eksisting ditambahkan ke sabuk pantai, termasuk sel yang kelas kesesuaiannya N atau tanpa kelas. Di ketiga pulau ini lokasi di tepi mangrove eksisting tertahan oleh batas sabuk, padahal warga menyetujui dan mangrove terbukti tumbuh di sana. Lokasi ini dijadwalkan setelah Prioritas Rendah dan wajib diverifikasi elevasi serta substratnya sebelum tanam. Di Panggang batimetri tidak andal (kemiringan regresi terhadap elevasi lapangan 0,06), sehingga sel di bawah LLWS diperlakukan sebagai zona LLWS sampai MLW (rumpun berjarak); di Lancang sel di bawah LLWS menjadi Bersyarat. Di Tidung, poligon Setuju di pantai selatan (TDG-3) bersebelahan dengan mangrove eksisting yang tumbuh pada elevasi DEM yang sama (median sekitar −0,6 m, di bawah LLWS), sehingga DEM di lokasi ini dianggap terlalu rendah dan sel di bawah LLWS juga diperlakukan sebagai zona LLWS sampai MLW.",
     "Blok kerja: poligon yang berjarak ≤ 15 m digabung menjadi satu blok kerja agar dapat dikerjakan dalam satu paket lapangan; blok dengan luas total < 0,10 ha dibuang karena tidak efisien secara logistik (13 poligon, 0,92 ha).",
     "Kapasitas: luas tanam per pulau dibatasi 1,0 ha pada 2027 (kebun bibit baru dibangun) dan 2,0 ha per tahun pada 2028 sampai 2031, setara ±13.500 bibit termasuk penyulaman yang dapat ditangani satu kelompok pengelola. Blok diisi berurutan dari Prioritas Tinggi, Sedang, lalu Rendah; lokasi yang tidak tertampung menjadi cadangan setelah 2031."
    ]
@@ -1160,10 +1160,10 @@
    "teks": [
     "Tiga lapis kendala dikeluarkan dari sabuk pantai. Setiap lapis dipetakan sebagai poligon dan diterapkan pada sel raster 10 m yang tersentuh poligon, sehingga tidak ada blok kerja yang beririsan dengan area kendala.",
     "Urutan atribusi bila tumpang tindih: K1, K3, K2. Luas dihitung pada sel kelas Tinggi sampai Rekayasa sebelum penghalusan dan pembentukan blok.",
-    "Kendala mengeluarkan 4,72 ha atau 9% sabuk pantai. Zona wisata pantai mengeluarkan luas terbesar di Untung Jawa, Tidung, dan Kelapa Dua. Penolakan warga berpengaruh paling besar di Harapan. Alur kapal hampir tidak berpengaruh karena trayek yang terpetakan melintas di perairan dalam dan hanya menyentuh dermaga utama; jalur perahu nelayan, tambatan, dan dermaga kecil belum terpetakan sehingga perlu dikonfirmasi pada FGD penetapan lokasi.",
+    "Kendala mengeluarkan 4,72 ha atau 8,9% sabuk pantai. Zona wisata pantai mengeluarkan luas terbesar di Untung Jawa, Tidung, dan Kelapa Dua. Penolakan warga berpengaruh paling besar di Harapan. Alur kapal hampir tidak berpengaruh karena trayek yang terpetakan melintas di perairan dalam dan hanya menyentuh dermaga utama; jalur perahu nelayan, tambatan, dan dermaga kecil belum terpetakan sehingga perlu dikonfirmasi pada FGD penetapan lokasi.",
     "Kolom Di dalam sabuk pantai dan Setelah kendala adalah luas raster setelah penghalusan; selisih dengan rencana kerja berasal dari blok kecil < 0,10 ha yang dibuang dan pembagian kelas Rekayasa menjadi pilot dan bersyarat.",
-    "Dengan penyaringan ini, rencana kerja turun dari potensi 154,94 ha menjadi 29,12 ha blok tanam dan pilot di 48 blok kerja, ditambah 8,49 ha perluasan guludan bersyarat. Potensi di luar sabuk pantai tidak dihapus dari basis data; potensi ini dicatat sebagai ruang yang dapat ditinjau kembali pada evaluasi 2031 apabila hasil pilot dan pemantauan menunjukkan mangrove mampu tumbuh lebih jauh dari tepi pulau.",
-    "Sumber: LokasiAksi_KS_v06 (luas poligon setelah penyaringan sabuk, kendala, dan blok; semua status), DSAS_GarisPantai_KS_v03, KriteriaSosek_KS_v03. Sebira belum disurvei sosial-ekonomi. Kolom prioritas tidak memuat Usulan FGD di Lancang (2,83 ha) dan Panggang (1,20 ha)."
+    "Dengan penyaringan ini, rencana kerja turun dari potensi 154,94 ha menjadi 29,89 ha blok tanam dan pilot di 50 blok kerja, ditambah 8,49 ha perluasan guludan bersyarat. Potensi di luar sabuk pantai tidak dihapus dari basis data; potensi ini dicatat sebagai ruang yang dapat ditinjau kembali pada evaluasi 2031 apabila hasil pilot dan pemantauan menunjukkan mangrove mampu tumbuh lebih jauh dari tepi pulau.",
+    "Sumber: LokasiAksi_KS_v07 (luas poligon setelah penyaringan sabuk, kendala, dan blok; semua status), DSAS_GarisPantai_KS_v03, KriteriaSosek_KS_v03. Sebira belum disurvei sosial-ekonomi. Kolom prioritas tidak memuat Usulan FGD di Lancang (2,83 ha) dan Panggang (1,20 ha)."
    ],
    "butir": [
     "K1 Penolakan warga. Poligon berstatus \"Tidak setuju\" hasil FGD dengan peta rekomendasi awal (persetujuan_masyarakat.geojson), umumnya empang dan lahan milik di Untung Jawa, sisi timur Harapan dekat homestay, pesisir barat Lancang, dan sebagian Kelapa. Poligon \"Setuju\" tidak dipakai sebagai penyaring maupun urutan jadwal.",
@@ -1185,7 +1185,7 @@
      "Tinggi",
      "24,69",
      "12,18",
-     "9,36",
+     "9,33",
      "7,61",
      "–"
     ],
@@ -1193,7 +1193,7 @@
      "Sedang",
      "36,42",
      "17,30",
-     "16,13",
+     "16,07",
      "13,51",
      "–"
     ],
@@ -1201,7 +1201,7 @@
      "Rendah",
      "43,62",
      "7,89",
-     "7,83",
+     "7,80",
      "3,14",
      "–"
     ],
@@ -1214,19 +1214,19 @@
      "8,16"
     ],
     [
-     "Usulan FGD (LCG, PGG)",
+     "Usulan FGD (LCG, PGG, TDG)",
      "–",
      "–",
-     "4,03",
-     "3,70",
+     "4,80",
+     "4,47",
      "0,33"
     ],
     [
      "Total",
      "162,47",
      "48,49",
-     "47,61",
-     "29,12",
+     "48,26",
+     "29,89",
      "8,49"
     ]
    ]
@@ -1271,12 +1271,12 @@
     ],
     [
      "Tidung",
-     "4,36",
+     "5,01",
      "0,00",
      "0,01",
      "0,26",
-     "4,09",
-     "6,2%"
+     "4,74",
+     "5,4%"
     ],
     [
      "Pramuka",
@@ -1334,12 +1334,12 @@
     ],
     [
      "Total",
-     "52,33",
+     "52,98",
      "1,26",
      "0,11",
      "3,35",
-     "47,61",
-     "9%"
+     "48,26",
+     "8,9%"
     ]
    ]
   }
