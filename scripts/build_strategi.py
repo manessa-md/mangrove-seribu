@@ -54,6 +54,34 @@ def docx_bagian(f):
     return sek, tab
 
 
+ZONA_NM = {"Z1": "di atas MHW", "Z2": "MLW–MHW", "Z3": "LLWS–MLW", "Z4": "di bawah LLWS"}
+
+
+def angka(v, d=2):
+    return f"{v:.{d}f}".replace("-", "−").replace(".", ",")
+
+
+def aturan_teknik(r, nama):
+    """Telusuri aturan penetapan teknik (sheet PETUNJUK RencanaAksi v08) untuk satu lokasi.
+    Hasil: (kode teknik menurut aturan, kalimat dasar penetapan)."""
+    z, pap, rb, lrr = r.get("Zona pasut"), r.get("Paparan gelombang"), r.get("% sel rubble"), r.get("LRR min (m/th)")
+    rb = 0 if rb is None or pd.isna(rb) else rb
+    if z == "Z4":
+        return "P-1", "Dasar di bawah LLWS → P-1 saja (peredam gelombang biologis), status bersyarat: redam dulu dan pantau elevasi dasar; belum dijadwalkan tanam."
+    if z == "Z1":
+        return "T-E", "Zona Z1 (di atas MHW) → T-E " + nama.get("T-E", "") + "."
+    if rb >= 50:
+        return "T-F", f"Substrat rubble {angka(rb, 0)}% sel (≥ 50%) → T-F " + nama.get("T-F", "") + "."
+    if lrr is not None and pd.notna(lrr) and lrr < -1.5:
+        return "T-C", f"Abrasi kuat: LRR minimum {angka(lrr)} m/th (< −1,5) → T-C " + nama.get("T-C", "") + "."
+    if pap == "Terpapar":
+        return "T-B", "Paparan terpapar → P-1 dibangun lebih dulu, tanam paling cepat 2 tahun kemudian dengan T-B " + nama.get("T-B", "") + "."
+    k = {("Terlindung", "Z2"): "T-A", ("Terlindung", "Z3"): "T-B", ("Sedang", "Z2"): "T-B", ("Sedang", "Z3"): "T-C"}.get((pap, z))
+    if k is None:
+        return None, None
+    return k, f"Paparan {str(pap).lower()} di zona {z} ({ZONA_NM.get(z, '')}) → {k} {nama.get(k, '')}."
+
+
 def main():
     fx = terbaru("03_Rencana_Aksi", "MGV-KS_RencanaAksi_KS_v*.xlsx")
     if fx is None:
@@ -105,9 +133,26 @@ def main():
         g["bibit"] = j["Kebutuhan bibit (batang)"].values
         g["biaya_rp"] = j["Total biaya pembangunan (Rp)"].values
         g["apo_m"] = j["Panjang APO (m)"].values
+        # analisis teknik per lokasi: kondisi lokasi + aturan penetapan teknik
+        nama = dict(zip(tk["Kode"], tk["Teknik"]))
+        kol = {"blok": "Blok kerja", "paparan": "Paparan gelombang", "hs_m": "Hs median (m)", "rubble_pct": "% sel rubble",
+               "jarak_darat_m": "Jarak ke daratan, median (m)", "substrat_pct": "% luas dengan data substrat ≤150 m",
+               "p1": "P-1 (1/0)", "tahun_p1": "Tahun P-1", "p1_m": "Panjang P-1 (m)", "catatan": "Catatan"}
+        for a, b in kol.items():
+            if b in j.columns:
+                g[a] = j[b].values
+        atr = [aturan_teknik(r, nama) for r in j.to_dict("records")]
+        g["teknik"] = j["Teknik"].values      # teknik final menurut LOKASI_AKSI (boleh diubah per lokasi)
+        g["aturan"] = [t for _, t in atr]
+        g["sesuai_aturan"] = [int(k == tkn) if k else None for (k, _), tkn in zip(atr, g["teknik"])]
+        st["teknik_pulau"] = {}
+        for (pl, tkn), d in g.groupby(["pulau", "teknik"]):
+            st["teknik_pulau"].setdefault(pl, {})[tkn] = {"n": int(len(d)), "ha": round(float(d.luas_ha.sum()), 2)}
+        pt = X.parse("PETUNJUK", header=None)[0].dropna().astype(str).tolist()
+        st["aturan_teknik"] = [t for t in pt if t.startswith("Z1 >") or t.startswith("5. Paparan")]
         lrr = [c for c in ("LRR_min_m_th", "LRR_min_150m") if c in g.columns]  # v02: LRR_min_150m -> LRR_min_m_th
         g = g[["id_lokasi", "pulau", "prioritas", "luas_ha", "zona", "teknik", "status", "tahap", "tahun", "elevasi_median_m",
-               *lrr[:1], "bibit", "apo_m", "biaya_rp", "geometry"]].to_crs(4326)
+               *lrr[:1], "bibit", "apo_m", "biaya_rp", *[c for c in [*kol, "aturan", "sesuai_aturan"] if c in g.columns], "geometry"]].to_crs(4326)
         feats = []
         for _, r in g.iterrows():
             p = {k: bersih(v) for k, v in r.items() if k != "geometry"}

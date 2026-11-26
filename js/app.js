@@ -77,8 +77,33 @@
     "Tanggul beton / seawall": "#525252", "Struktur lain (tanpa atribut)": "#a6761d" };
   const fmtRp = v => v == null ? "–" : v >= 1e9 ? `Rp ${fmt(v / 1e9, 2)} M` : `Rp ${fmt(v / 1e6, 0)} jt`;
   const TAHAP = { "I": "#b2182b", "II": "#ef8a62", "III": "#f6c85f", "Bersyarat": "#7b3294" };
-  const TAHAP_NM = { "I": "Tahap I (2027)", "II": "Tahap II (2028–2029)", "III": "Tahap III (2030)", "Bersyarat": "Perluasan bersyarat (2031)" };
+  const TAHAP_NM = { "I": "Tahap I (2027)", "II": "Tahap II (2028–2029)", "III": "Tahap III (2030)", "Bersyarat": "Bersyarat: di bawah LLWS (P-1 saja)" };
   const tahapKey = p => p.status === "Bersyarat" ? "Bersyarat" : p.tahap;
+  const ZONA_NM = { Z1: "di atas MHW", Z2: "MLW–MHW", Z3: "LLWS–MLW", Z4: "di bawah LLWS" };
+  const TEKNIK_INFO = Object.fromEntries(((ST.teknik || {}).baris || []).map(r => [r[0], { pola: r[4], jenis: r[5], catatan: r[6] }]));
+  // analisis teknik per lokasi: kondisi lokasi → aturan penetapan → teknik & cara pelaksanaan
+  function analisisTeknik(p) {
+    const ti = TEKNIK_INFO[p.teknik] || {};
+    const kond = [
+      p.zona && `zona ${p.zona} (${ZONA_NM[p.zona] || ""}), elevasi median ${fmt(p.elevasi_median_m)} m MSL`,
+      p.paparan && `paparan ${p.paparan.toLowerCase()}${p.hs_m != null ? ` (Hs ${fmt(p.hs_m)} m)` : ""}`,
+      p.LRR_min_m_th != null && `LRR minimum ${fmt(p.LRR_min_m_th)} m/th`,
+      p.rubble_pct > 0 && `rubble ${fmt(p.rubble_pct, 0)}% sel`,
+      p.jarak_darat_m != null && `${fmt(p.jarak_darat_m, 0)} m dari daratan`].filter(Boolean);
+    return `<div class="anl"><div class="anl-h">Analisis teknik pemulihan</div>
+      <p><b>Kondisi:</b> ${esc(kond.join("; "))}.</p>
+      ${p.aturan ? `<p><b>Dasar penetapan:</b> ${esc(p.aturan)}</p>` : ""}
+      ${p.sesuai_aturan === 0 ? `<p><b>Penetapan khusus:</b> ${esc(p.catatan || "teknik diubah per lokasi")}</p>` : ""}
+      ${ti.pola ? `<p><b>Pelaksanaan:</b> ${esc(ti.pola)}${p.p1 ? `; P-1 ${fmt(p.p1_m, 0)} m${p.tahun_p1 ? ` dibangun ${p.tahun_p1}` : ""}` : ""}${p.apo_m ? `; APO bambu ${fmt(p.apo_m, 0)} m` : ""}.</p>` : ""}
+      ${ti.jenis ? `<p><b>Jenis:</b> ${esc(ti.jenis)}</p>` : ""}
+      ${p.catatan && p.sesuai_aturan !== 0 ? `<p class="muted">${esc(p.catatan)}</p>` : ""}</div>`;
+  }
+  function popupRencana(p) {
+    const t = popupTable(`Lokasi aksi ${p.id_lokasi}`, [["Pulau", PULAU[p.pulau]], ["Prioritas", p.prioritas], ["Tahap", TAHAP_NM[tahapKey(p)]], ["Tahun tanam", p.tahun ? String(p.tahun) : null],
+      ["Status", p.status], ["Teknik", `${p.teknik} – ${TEKNIK_NM[p.teknik] || ""}`], ["Luas (ha)", p.luas_ha],
+      ["Bibit (batang)", p.bibit || null, 0], ["Biaya pembangunan", fmtRp(p.biaya_rp)]]);
+    return t.slice(0, -6) + analisisTeknik(p) + "</div>";
+  }
   const TEKNIK_NM = Object.fromEntries(((ST.teknik || {}).baris || []).map(r => [r[0], r[1]]));
   const JALUR = { "Trayek Reguler Dishub": "#d6604d", "Trayek Perintis Dishub": "#b2182b", "Trayek Kapal Cepat": "#f4a582",
     "Trayek Penyeberangan Tradisional": "#8c510a", "Jalur Antar Pulau": "#35978f", "Alur Masuk Dermaga": "#fdd835" };
@@ -187,9 +212,7 @@
     { id: "rencana", grp: "Rencana aksi", label: "Lokasi rencana aksi (tahap pelaksanaan)", file: "rencana_aksi", on: false, sw: "#b2182b",
       style: f => { const k = tahapKey(f.properties); return { color: k === "Bersyarat" ? TAHAP[k] : "#3b0d0d", weight: k === "Bersyarat" ? 1.6 : 1, dashArray: k === "Bersyarat" ? "4 3" : null,
         fillColor: TAHAP[k] || "#999", fillOpacity: k === "Bersyarat" ? .25 : .85 }; },
-      popup: p => popupTable(`Lokasi aksi ${p.id_lokasi}`, [["Pulau", PULAU[p.pulau]], ["Prioritas", p.prioritas], ["Tahap", TAHAP_NM[tahapKey(p)]], ["Tahun tanam", p.tahun, 0],
-        ["Status", p.status], ["Teknik", `${p.teknik} – ${TEKNIK_NM[p.teknik] || ""}`], ["Zona pasut", p.zona], ["Luas (ha)", p.luas_ha], ["Elevasi median (m MSL)", p.elevasi_median_m],
-        ["Bibit (batang)", p.bibit, 0], ["APO bambu (m)", p.apo_m || null, 0], ["Biaya pembangunan", fmtRp(p.biaya_rp)]]),
+      popup: p => popupRencana(p),
       legend: () => `<div class="lt">Rencana aksi – tahap pelaksanaan</div>` + Object.entries(TAHAP).map(([k, c]) => `<div class="row"><span class="sw" style="background:${c}${k === "Bersyarat" ? ";opacity:.5" : ""}"></span>${TAHAP_NM[k]}</div>`).join("") },
     { id: "struktur", grp: "Infrastruktur pesisir", label: "Breakwater, jetty & tanggul", file: "struktur_pantai", on: false, sw: "#6a3d9a",
       style: f => ({ color: STRUK[f.properties.kelompok] || "#555", weight: 3.5, opacity: .95 }),
@@ -379,14 +402,17 @@
   function panelRencana(k) {
     const r = (ST.rekap_pulau || {})[k];
     if (!r) return "";
+    const tp = (ST.teknik_pulau || {})[k];
     const th = [2027, 2028, 2029, 2030, 2031].map(y => [y, r[`Luas tanam ${y} (ha)`]]).filter(([, v]) => v > 0);
     return `<h3>Rencana aksi ${esc(ST.versi)}</h3>
       <table class="kv"><tr><td>Luas tanam dasar + pilot</td><td>${fmt(r["Total dasar+pilot (ha)"])} ha</td></tr>
         ${th.map(([y, v]) => `<tr><td>&nbsp;&nbsp;tahun ${y}</td><td>${fmt(v)} ha</td></tr>`).join("")}
-        ${r["Bersyarat (ha)"] > 0 ? `<tr><td>Perluasan bersyarat (guludan, 2031)</td><td>${fmt(r["Bersyarat (ha)"])} ha</td></tr>` : ""}
+        ${r["Bersyarat (ha)"] > 0 ? `<tr><td>Bersyarat (di bawah LLWS, P-1 saja)</td><td>${fmt(r["Bersyarat (ha)"])} ha</td></tr>` : ""}
         <tr><td>Kebutuhan bibit</td><td>${fmt(r["Bibit dasar+pilot (batang)"], 0)} batang</td></tr>
         <tr><td>Biaya pembangunan (dasar + pilot)</td><td>${fmtRp(r["Pembangunan dasar+pilot (Rp)"])}</td></tr></table>
-      <p class="cap">Teknik, tahap dan biaya tiap lokasi: klik poligon pada lapisan "Lokasi rencana aksi". <a href="#" id="lnk-rencana">Tampilkan di peta</a> · <a href="#" id="lnk-strategi">Lihat strategi</a></p>`;
+      ${tp ? `<h3>Komposisi teknik pemulihan</h3><table class="kv">${Object.entries(tp).sort((a, b) => b[1].ha - a[1].ha).map(([t, v]) =>
+        `<tr><td><b>${esc(t)}</b> ${esc(TEKNIK_NM[t] || "")}</td><td>${fmt(v.ha)} ha · ${v.n} lokasi</td></tr>`).join("")}</table>` : ""}
+      <p class="cap">Teknik, tahap dan biaya tiap lokasi: klik poligon pada lapisan "Lokasi rencana aksi". <a href="#" id="lnk-rencana">Tampilkan di peta</a> · <a href="#" id="lnk-anltek" data-k="${k}">Analisis teknik per lokasi</a> · <a href="#" id="lnk-strategi">Lihat strategi</a></p>`;
   }
   function panelSosek(k) {
     const s = (SO.survei || {})[k];
@@ -448,6 +474,11 @@
           plugins: { legend: { position: "bottom", labels: { boxWidth: 10 } } } } });
     }
   }
+  async function bukaLokasi(id) {
+    await ensureOn("rencana");
+    loaded.rencana?.eachLayer(l => { if (l.feature?.properties.id_lokasi === id) { map.flyToBounds(l.getBounds(), { maxZoom: 17, duration: .8 }); setTimeout(() => l.openPopup(), 900); } });
+    if (window.innerWidth < 860) $("#panel").classList.remove("open");
+  }
   function flyIsland(k) {
     const ll = S.pusat[k]; if (!ll) return;
     const z = window.innerWidth < 860 ? 14 : 15;
@@ -469,6 +500,7 @@
     if (e.target.id === "btn-layers") { ["plot", "air", "lai", "transek"].forEach(ensureOn); flyIsland(current); }
     if (e.target.id === "lnk-rencana") { e.preventDefault(); ensureOn("rencana"); flyIsland(current); }
     if (e.target.id === "lnk-strategi") { e.preventDefault(); showTab("strategi"); }
+    if (e.target.id === "lnk-anltek") { e.preventDefault(); showTab("strategi"); const s = $("#at-pulau"); if (s) { s.value = e.target.dataset.k; s.dispatchEvent(new Event("change")); s.closest("h3")?.scrollIntoView(); $("#anl-teknik")?.scrollIntoView(); } }
     if (e.target.id === "lnk-infra") { e.preventDefault(); ensureOn("struktur"); ensureOn("jalur"); flyIsland(current); }
     if (e.target.id === "lnk-gel") { e.preventDefault(); ensureOn("gelombang"); ensureOn("angin"); flyIsland(current); }
     if (e.target.id === "lnk-setuju") {
@@ -592,6 +624,7 @@
         <p style="font-size:.88rem">${esc(PL.kendala.teks[0] || "")}</p><ul class="lst">${PL.kendala.butir.map(butirKode).join("")}</ul>
         ${PL.kendala.teks.slice(1).filter(t => !/^(Kolom|Urutan|Sumber)/.test(t)).map(t => `<p style="font-size:.88rem">${esc(t)}</p>`).join("")}</div>` : ""}
       ${PL.kendala_pulau ? `<details class="exp"><summary>Luas dikeluarkan kendala per pulau (ha)</summary>${tblTeks(PL.kendala_pulau)}</details>` : ""}`;
+    const TKODE = ((ST.teknik || {}).baris || []).map(r => r[0]);
     const tows = ST.tows.baris, grpT = { SO: "Kekuatan–Peluang (SO)", ST: "Kekuatan–Ancaman (ST)", WO: "Kelemahan–Peluang (WO)", WT: "Kelemahan–Ancaman (WT)" };
     $("#tab-strategi").innerHTML = `
       <h2>Strategi &amp; rencana aksi pemulihan</h2>
@@ -600,7 +633,7 @@
         <div class="kpi"><div class="v">${fmt(rt["Total dasar+pilot (ha)"])} ha</div><div class="l">luas tanam ${thn[0]}–${thn.at(-1)} (dasar + pilot)</div></div>
         <div class="kpi"><div class="v">${fmt(rt["Bibit dasar+pilot (batang)"], 0)}</div><div class="l">bibit (batang, belum termasuk sulaman)</div></div>
         <div class="kpi"><div class="v">${fmtRp(totDasar[6])}</div><div class="l">anggaran dasar 2027–2031 (termasuk kontinjensi)</div></div>
-        <div class="kpi"><div class="v">${fmt(rt["Bersyarat (ha)"])} ha</div><div class="l">perluasan guludan bersyarat (${fmtRp(totBers[6])})</div></div>
+        <div class="kpi"><div class="v">${fmt(rt["Bersyarat (ha)"])} ha</div><div class="l">bersyarat di bawah LLWS, P-1 saja (${fmtRp(totBers[6])})</div></div>
       </div>
       <p><button class="btn" id="btn-rencana">Tampilkan lokasi rencana aksi di peta</button></p>
       <h3>Arah kebijakan</h3>
@@ -624,6 +657,16 @@
       <p class="cap">Luas tanam per pulau per tahun (ha), lokasi dasar + pilot.</p>
       <h3>Teknik penanaman</h3>
       ${tbl(ST.teknik, [0, 1, 2, 3, 5])}
+      ${ST.teknik_pulau ? `<h3 id="anl-teknik">Analisis teknik pemulihan per lokasi</h3>
+      ${(ST.aturan_teknik || []).map(t => `<p class="cap">${esc(t.replace(/^\d+\.\s*/, ""))}</p>`).join("")}
+      <div class="dtable-wrap"><table class="dtable"><thead><tr><th>Pulau</th>${TKODE.map(t => `<th title="${esc(TEKNIK_NM[t] || "")}">${t}</th>`).join("")}<th>Total</th></tr></thead><tbody>
+        ${KODE.filter(k => ST.teknik_pulau[k]).map(k => { const d = ST.teknik_pulau[k]; const tot = Object.values(d).reduce((a, v) => a + v.ha, 0);
+          return `<tr><td>${esc(PULAU[k])}</td>${TKODE.map(t => `<td>${d[t] ? fmt(d[t].ha) : "–"}</td>`).join("")}<td><b>${fmt(tot)}</b></td></tr>`; }).join("")}</tbody></table></div>
+      <p class="cap">Luas (ha) lokasi aksi per teknik dan pulau, semua status (dasar, pilot, bersyarat, cadangan).</p>
+      <div class="flt"><label>Pulau <select id="at-pulau"><option value="">Semua</option>${KODE.filter(k => ST.teknik_pulau[k]).map(k => `<option value="${k}">${esc(PULAU[k])}</option>`).join("")}</select></label>
+        <label>Teknik <select id="at-teknik"><option value="">Semua</option>${TKODE.map(t => `<option value="${t}">${t} ${esc(TEKNIK_NM[t] || "")}</option>`).join("")}</select></label>
+        <label>Status <select id="at-status"><option value="">Semua</option>${["Dasar", "Pilot", "Bersyarat", "Cadangan"].map(t => `<option>${t}</option>`).join("")}</select></label></div>
+      <div id="at-tabel"><div class="note">Memuat lokasi…</div></div>` : ""}
       <h3>Anggaran 2027–2031</h3>
       <div class="chartbox" style="height:280px"><canvas id="ch-anggaran"></canvas></div>
       <p class="cap">Harga satuan indikatif; perlu disesuaikan dengan SSH/HSPK DKI Jakarta tahun anggaran berjalan. Perluasan bersyarat di luar anggaran dasar.</p>
@@ -635,7 +678,27 @@
       ${tbl(ST.indikator, [1, 2, 3, 4, 5, 6])}
       ${ST.peran ? `<h3>Peran pelaksana</h3><table class="kv">${ST.peran.baris.map(r => `<tr><td><b>${esc(r[0])}</b><br><span class="muted">${esc(r[1])}</span></td><td></td></tr>`).join("")}</table>` : ""}
       ${ST.peta ? `<h3>Peta tahap rencana aksi</h3><a href="${ST.peta}" target="_blank"><img src="${ST.peta}" alt="Peta tahap rencana aksi" style="width:100%;border:1px solid var(--line);border-radius:6px"></a>` : ""}`;
-    $("#tab-strategi").addEventListener("click", e => { if (e.target.id === "btn-rencana") { ensureOn("rencana"); map.setView([-5.62, 106.58], 10); } });
+    $("#tab-strategi").addEventListener("click", e => {
+      if (e.target.id === "btn-rencana") { ensureOn("rencana"); map.setView([-5.62, 106.58], 10); }
+      const tr = e.target.closest("tr[data-id]"); if (tr) bukaLokasi(tr.dataset.id);
+    });
+    if (ST.teknik_pulau) {
+      let RA = null;
+      const gambarAT = () => {
+        if (!RA) return;
+        const fp = $("#at-pulau").value, ft = $("#at-teknik").value, fs = $("#at-status").value;
+        const fs_ = RA.features.map(f => f.properties).filter(p => (!fp || p.pulau === fp) && (!ft || p.teknik === ft) && (!fs || p.status === fs));
+        const ha = fs_.reduce((a, p) => a + (p.luas_ha || 0), 0);
+        $("#at-tabel").innerHTML = `<p class="cap">${fs_.length} lokasi · ${fmt(ha)} ha. Klik baris untuk melihat lokasi dan analisisnya di peta.</p>
+          <div class="dtable-wrap" style="max-height:460px;overflow:auto"><table class="dtable left at"><thead><tr><th>Lokasi</th><th>Zona</th><th>Paparan (Hs m)</th><th>LRR min</th><th>Rubble</th><th>Teknik</th><th>Dasar penetapan</th><th>Status · tahun</th></tr></thead><tbody>
+          ${fs_.map(p => `<tr data-id="${esc(p.id_lokasi)}" class="klik"><td>${esc(p.id_lokasi)}<br><small class="muted">${fmt(p.luas_ha)} ha · ${esc(p.prioritas)}</small></td>
+            <td>${esc(p.zona)}</td><td>${esc(p.paparan || "–")}${p.hs_m != null ? ` (${fmt(p.hs_m)})` : ""}</td><td>${fmt(p.LRR_min_m_th)}</td><td>${p.rubble_pct ? fmt(p.rubble_pct, 0) + "%" : "–"}</td>
+            <td><b>${esc(p.teknik)}</b></td><td>${esc(p.sesuai_aturan === 0 ? "Penetapan khusus: " + (p.catatan || "diubah per lokasi") : p.aturan || "")}</td>
+            <td>${esc(p.status)}${p.tahun ? " · " + p.tahun : ""}${p.p1 && p.tahun_p1 ? `<br><small class="muted">P-1 ${p.tahun_p1}</small>` : ""}</td></tr>`).join("")}</tbody></table></div>`;
+      };
+      ["#at-pulau", "#at-teknik", "#at-status"].forEach(id => $(id).addEventListener("change", gambarAT));
+      getGeo("rencana_aksi").then(g => { RA = g; gambarAT(); });
+    }
     chart("ch-tanam", { type: "bar", data: { labels: KODE.map(k => PULAU[k]), datasets: thn.map((y, i) => ({ label: String(y), data: KODE.map(k => (ST.rekap_pulau[k] || {})[`Luas tanam ${y} (ha)`] || 0),
         backgroundColor: ["#b2182b", "#ef8a62", "#f4a582", "#f6c85f", "#8fbf6a", "#4d9a8a"][i] })) },
       options: { indexAxis: "y", maintainAspectRatio: false, scales: { x: { stacked: true, title: { display: true, text: "ha" } }, y: { stacked: true } }, plugins: { legend: { position: "bottom", labels: { boxWidth: 10 } } } } });

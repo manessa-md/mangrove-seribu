@@ -271,3 +271,13 @@ select, .btn {
 details.exp { border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; margin: 6px 0; font-size: .86rem; }
 details.exp > summary { cursor: pointer; }
 details.exp .kv td { font-size: .8rem; vertical-align: top; }
+
+/* analisis teknik per lokasi */
+.pop .anl { margin-top: 8px; padding-top: 6px; border-top: 1px solid var(--line); font-size: .78rem; line-height: 1.35; }
+.pop .anl p { margin: 3px 0; }
+.pop .anl-h { font-weight: 600; color: var(--brand); margin-bottom: 2px; }
+.flt { display: flex; flex-wrap: wrap; gap: 6px 12px; margin: 8px 0 4px; font-size: .8rem; }
+.flt select { font: inherit; padding: 2px 4px; max-width: 220px; }
+.dtable.at tr.klik { cursor: pointer; }
+.dtable.at tr.klik:hover td { background: var(--bg); }
+.dtable.at td:nth-child(7) { min-width: 170px; }

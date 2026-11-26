@@ -1,6 +1,6 @@
 {
  "versi": "v08",
- "dibangun": "2026-11-26 15:13",
+ "dibangun": "2026-11-26 16:10",
  "dasar_data": "Dasar data: kesesuaian v08 (substrat titik lapangan didahulukan lalu Allen Coral Atlas; karang, lamun, dan batu dihindari; DEM Panggang dan Tidung dikoreksi; bagian dalam pulau dimasking dengan garis pantai 2025), prioritas v09, lalu rancangan operasional v08: hanya lokasi dalam sabuk pantai (≤ 60 m ke arah laut dari garis pantai 2025, atau ≤ 30 m dari mangrove eksisting), setelah dikurangi kendala sosial-ruang (sheet KENDALA), dikelompokkan ke blok kerja ≥ 0,10 ha, dan dijadwalkan dengan batas kapasitas per pulau.",
  "teknik": {
   "kolom": [
@@ -1339,5 +1339,183 @@
    ]
   }
  },
+ "teknik_pulau": {
+  "HRP": {
+   "P-1": {
+    "n": 25,
+    "ha": 7.0
+   },
+   "T-A": {
+    "n": 1,
+    "ha": 0.07
+   },
+   "T-B": {
+    "n": 4,
+    "ha": 0.8
+   },
+   "T-C": {
+    "n": 5,
+    "ha": 0.72
+   },
+   "T-E": {
+    "n": 1,
+    "ha": 0.07
+   },
+   "T-F": {
+    "n": 1,
+    "ha": 0.07
+   }
+  },
+  "KLD": {
+   "T-A": {
+    "n": 8,
+    "ha": 2.31
+   },
+   "T-B": {
+    "n": 3,
+    "ha": 0.71
+   },
+   "T-C": {
+    "n": 2,
+    "ha": 0.31
+   }
+  },
+  "KLP": {
+   "P-1": {
+    "n": 22,
+    "ha": 5.39
+   },
+   "T-B": {
+    "n": 6,
+    "ha": 0.91
+   },
+   "T-C": {
+    "n": 2,
+    "ha": 0.15
+   }
+  },
+  "LCG": {
+   "P-1": {
+    "n": 18,
+    "ha": 4.3
+   },
+   "T-A": {
+    "n": 12,
+    "ha": 2.6
+   },
+   "T-B": {
+    "n": 3,
+    "ha": 0.75
+   },
+   "T-C": {
+    "n": 15,
+    "ha": 2.95
+   },
+   "T-E": {
+    "n": 1,
+    "ha": 0.17
+   }
+  },
+  "PAR": {
+   "P-1": {
+    "n": 31,
+    "ha": 9.38
+   },
+   "T-A": {
+    "n": 1,
+    "ha": 0.19
+   },
+   "T-B": {
+    "n": 40,
+    "ha": 9.79
+   },
+   "T-C": {
+    "n": 47,
+    "ha": 15.05
+   }
+  },
+  "PGG": {
+   "P-1": {
+    "n": 1,
+    "ha": 0.48
+   },
+   "T-A": {
+    "n": 2,
+    "ha": 0.48
+   },
+   "T-B": {
+    "n": 6,
+    "ha": 1.67
+   },
+   "T-C": {
+    "n": 5,
+    "ha": 0.55
+   },
+   "T-E": {
+    "n": 1,
+    "ha": 0.05
+   },
+   "T-F": {
+    "n": 1,
+    "ha": 0.21
+   }
+  },
+  "PRM": {
+   "P-1": {
+    "n": 47,
+    "ha": 12.53
+   },
+   "T-C": {
+    "n": 5,
+    "ha": 1.12
+   }
+  },
+  "SBR": {
+   "T-B": {
+    "n": 15,
+    "ha": 3.07
+   },
+   "T-F": {
+    "n": 1,
+    "ha": 0.25
+   }
+  },
+  "TDG": {
+   "T-A": {
+    "n": 15,
+    "ha": 3.06
+   },
+   "T-B": {
+    "n": 25,
+    "ha": 7.44
+   },
+   "T-C": {
+    "n": 8,
+    "ha": 3.77
+   },
+   "T-E": {
+    "n": 2,
+    "ha": 0.45
+   },
+   "T-F": {
+    "n": 3,
+    "ha": 0.46
+   }
+  },
+  "UTJ": {
+   "T-A": {
+    "n": 2,
+    "ha": 0.25
+   },
+   "T-B": {
+    "n": 2,
+    "ha": 0.16
+   }
+  }
+ },
+ "aturan_teknik": [
+  "5. Paparan gelombang per lokasi dari Hs maksimum empat musim (median dalam poligon): ≤ 0,55 m terlindung, 0,55–0,79 m sedang, > 0,79 m terpapar. Seluruh Sebira diperlakukan terpapar karena pohon mangrove besar tercatat tercabut ombak. Lokasi terpapar ditanam paling cepat 2 tahun setelah P-1 dibangun (kolom Tahun P-1).",
+  "Z1 > MHW → T-E pengayaan zona belakang. Substrat rubble (≥ 50% sel) → T-F jepit karang. Terlindung: Z2 → T-A tanam langsung, Z3 → T-B tanam rapat/rumpun. Sedang: Z2 → T-B, Z3 → T-C rumpun + APO bambu. Terpapar: P-1 dulu, lalu T-B atau T-F. Z2/Z3 dengan LRR minimum < −1,5 m/th → T-C. Di bawah LLWS → P-1 saja (Bersyarat, redam dulu)."
+ ],
  "peta": "data/peta_rencana_aksi.png"
 }
