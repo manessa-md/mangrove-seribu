@@ -6,7 +6,7 @@ Sumber (versi tertinggi vNN):
                                                                            IFAS_EFAS, TOWS, MATRIKS_RENCANA_AKSI, INDIKATOR_MONEV)
   06_STRATEGI_RENCANA_AKSI/03_Rencana_Aksi/MGV-KS_LokasiAksi_KS_vNN.gpkg    (layer lokasi_aksi)
   06_STRATEGI_RENCANA_AKSI/03_Rencana_Aksi/MGV-KS_PetaTahapRencanaAksi_KS_vNN.png
-  06_STRATEGI_RENCANA_AKSI/02_Strategi_Pemulihan/MGV-KS_StrategiRencanaAksi_KS_vNN.docx (arah kebijakan, tipologi, tahapan, peran, keterbatasan)
+  06_STRATEGI_RENCANA_AKSI/02_Strategi_Pemulihan/MGV-KS_StrategiRencanaAksi_KS_vNN.docx (arah kebijakan, tipologi, tahapan, peran)
 Keluaran: data/strategi.json, data/rencana_aksi.geojson, data/peta_rencana_aksi.png
 """
 import json, re, sys, shutil, datetime
@@ -86,7 +86,6 @@ def main():
         sek, tab = docx_bagian(fd)
         st["arah_kebijakan"] = sek.get("9.4")
         st["tahapan"] = sek.get("10.3")
-        st["keterbatasan"] = sek.get("10.10")
         st["tipologi"] = next((v for k, v in tab.items() if k.startswith("Tipologi|")), None)
         st["peran"] = next((v for k, v in tab.items() if k.startswith("Pihak|")), None)
         # v04+: penetapan lokasi = potensi prioritas -> sabuk pantai -> kendala sosial-ruang -> blok kerja (dicari menurut judul, bukan nomor)

@@ -634,8 +634,7 @@
       <h3>Indikator keberhasilan &amp; monev</h3>
       ${tbl(ST.indikator, [1, 2, 3, 4, 5, 6])}
       ${ST.peran ? `<h3>Peran pelaksana</h3><table class="kv">${ST.peran.baris.map(r => `<tr><td><b>${esc(r[0])}</b><br><span class="muted">${esc(r[1])}</span></td><td></td></tr>`).join("")}</table>` : ""}
-      ${ST.peta ? `<h3>Peta tahap rencana aksi</h3><a href="${ST.peta}" target="_blank"><img src="${ST.peta}" alt="Peta tahap rencana aksi" style="width:100%;border:1px solid var(--line);border-radius:6px"></a>` : ""}
-      ${ST.keterbatasan ? `<h3>Keterbatasan</h3><ul class="lst">${ST.keterbatasan.butir.map(t => `<li>${esc(t)}</li>`).join("")}</ul>` : ""}`;
+      ${ST.peta ? `<h3>Peta tahap rencana aksi</h3><a href="${ST.peta}" target="_blank"><img src="${ST.peta}" alt="Peta tahap rencana aksi" style="width:100%;border:1px solid var(--line);border-radius:6px"></a>` : ""}`;
     $("#tab-strategi").addEventListener("click", e => { if (e.target.id === "btn-rencana") { ensureOn("rencana"); map.setView([-5.62, 106.58], 10); } });
     chart("ch-tanam", { type: "bar", data: { labels: KODE.map(k => PULAU[k]), datasets: thn.map((y, i) => ({ label: String(y), data: KODE.map(k => (ST.rekap_pulau[k] || {})[`Luas tanam ${y} (ha)`] || 0),
         backgroundColor: ["#b2182b", "#ef8a62", "#f4a582", "#f6c85f", "#8fbf6a", "#4d9a8a"][i] })) },
