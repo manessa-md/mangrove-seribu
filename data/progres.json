@@ -1,6 +1,6 @@
 {
   "_petunjuk": "Ubah berkas ini untuk memperbarui panel Progres. status: selesai | berjalan | belum",
-  "diperbarui": "2026-11-25 15:59 WIB",
+  "diperbarui": "2026-11-26 15:13 WIB",
   "tahapan": [
     {
       "nama": "Persiapan & desain sampling",
@@ -19,10 +19,10 @@
       "tanggal": "Okt–Nov 2026"
     },
     {
-      "nama": "Analisis spasial & kesesuaian pemulihan (v06)",
+      "nama": "Analisis spasial & kesesuaian pemulihan (v08)",
       "status": "selesai",
-      "tanggal": "Okt–18 Nov 2026",
-      "catatan": "10 pulau, 6 kriteria AHP; v06: gelombang 4 musim v03 diredam breakwater, jalur kapal & struktur pantai dikeluarkan; batimetri baru Lancang, Panggang, Kelapa, Tidung; prioritas dipadukan dengan area FGD"
+      "tanggal": "Okt–26 Nov 2026",
+      "catatan": "10 pulau, 6 kriteria AHP (bobot & ambang tetap); v08: ACA hanya untuk menghindari karang/lamun, koreksi DEM Panggang & Tidung, daratan 2025 dikeluarkan; prioritas v09 dipadukan dengan area FGD; rencana aksi v08"
     },
     {
       "nama": "Paparan awal hasil",
