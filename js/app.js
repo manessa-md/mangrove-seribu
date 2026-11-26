@@ -79,6 +79,7 @@
   const TAHAP = { "I": "#b2182b", "II": "#ef8a62", "III": "#f6c85f", "Bersyarat": "#7b3294" };
   const TAHAP_NM = { "I": "Tahap I (2027)", "II": "Tahap II (2028–2029)", "III": "Tahap III (2030)", "Bersyarat": "Bersyarat: di bawah LLWS (P-1 saja)" };
   const tahapKey = p => p.status === "Bersyarat" ? "Bersyarat" : p.tahap;
+  const TEKNIK_WARNA = { "T-A": "#e7298a", "T-B": "#7570b3", "T-C": "#d95f02", "T-E": "#e6ab02", "T-F": "#a6761d", "P-1": "#1f78b4" };
   const ZONA_NM = { Z1: "di atas MHW", Z2: "MLW–MHW", Z3: "LLWS–MLW", Z4: "di bawah LLWS" };
   const TEKNIK_INFO = Object.fromEntries(((ST.teknik || {}).baris || []).map(r => [r[0], { pola: r[4], jenis: r[5], catatan: r[6] }]));
   // analisis teknik per lokasi: kondisi lokasi → aturan penetapan → teknik & cara pelaksanaan
@@ -214,6 +215,14 @@
         fillColor: TAHAP[k] || "#999", fillOpacity: k === "Bersyarat" ? .25 : .85 }; },
       popup: p => popupRencana(p),
       legend: () => `<div class="lt">Rencana aksi – tahap pelaksanaan</div>` + Object.entries(TAHAP).map(([k, c]) => `<div class="row"><span class="sw" style="background:${c}${k === "Bersyarat" ? ";opacity:.5" : ""}"></span>${TAHAP_NM[k]}</div>`).join("") },
+    { id: "teknik", grp: "Rencana aksi", label: "Teknik pemulihan per lokasi", file: "rencana_aksi", on: false, sw: "#2f8466",
+      style: f => { const b = f.properties.status === "Bersyarat" || f.properties.status === "Cadangan";
+        return { color: "#111", weight: 1.2, dashArray: b ? "4 3" : null, fillColor: TEKNIK_WARNA[f.properties.teknik] || "#999", fillOpacity: b ? .45 : .9 }; },
+      popup: p => popupRencana(p),
+      tooltip: p => `${p.id_lokasi} · ${p.teknik} ${TEKNIK_NM[p.teknik] || ""}`,
+      legend: () => `<div class="lt">Teknik pemulihan per lokasi</div>` + Object.entries(TEKNIK_WARNA).map(([k, c]) =>
+        `<div class="row"><span class="sw" style="background:${c}"></span>${k} ${esc(TEKNIK_NM[k] || "")}</div>`).join("") +
+        `<div class="row muted" style="font-size:.72rem">garis putus = bersyarat/cadangan · klik lokasi untuk analisisnya</div>` },
     { id: "struktur", grp: "Infrastruktur pesisir", label: "Breakwater, jetty & tanggul", file: "struktur_pantai", on: false, sw: "#6a3d9a",
       style: f => ({ color: STRUK[f.properties.kelompok] || "#555", weight: 3.5, opacity: .95 }),
       popup: p => popupTable(p.tipe || p.kelompok, [["Pulau", PULAU[p.pulau]], ["Kelompok", p.kelompok], ["Panjang (m)", p.panjang_m, 0], ["Tahun data", p.tahun, 0]]),
@@ -239,7 +248,7 @@
     const gj = await getGeo(file);
     const opt = {
       style: def.style, filter: def.filter,
-      onEachFeature: def.popup ? (f, l) => l.bindPopup(() => def.popup(f.properties), { maxWidth: 320 }) : undefined,
+      onEachFeature: def.popup ? (f, l) => { l.bindPopup(() => def.popup(f.properties), { maxWidth: 320 }); if (def.tooltip) l.bindTooltip(def.tooltip(f.properties), { sticky: true }); } : undefined,
     };
     if (def.point) opt.pointToLayer = (f, ll) => L.circleMarker(ll, { ...def.style(f), renderer: canvas });
     return L.geoJSON(gj, opt);
@@ -305,7 +314,7 @@
     document.querySelectorAll(".tabs button").forEach(b => b.classList.toggle("active", b.dataset.tab === name));
     document.querySelectorAll(".tab-pane").forEach(p => p.classList.toggle("active", p.id === "tab-" + name));
     if (open) $("#panel").classList.add("open");
-    if (name === "strategi" && ST.versi) ensureOn("rencana");
+    if (name === "strategi" && ST.versi) ensureOn("teknik");
   }
   document.querySelectorAll(".tabs button").forEach(b => b.addEventListener("click", () => showTab(b.dataset.tab)));
   $("#panel-toggle").addEventListener("click", () => {
@@ -475,8 +484,8 @@
     }
   }
   async function bukaLokasi(id) {
-    await ensureOn("rencana");
-    loaded.rencana?.eachLayer(l => { if (l.feature?.properties.id_lokasi === id) { map.flyToBounds(l.getBounds(), { maxZoom: 17, duration: .8 }); setTimeout(() => l.openPopup(), 900); } });
+    await ensureOn("teknik");
+    loaded.teknik?.eachLayer(l => { if (l.feature?.properties.id_lokasi === id) { map.flyToBounds(l.getBounds(), { maxZoom: 17, duration: .8 }); setTimeout(() => l.openPopup(), 900); } });
     if (window.innerWidth < 860) $("#panel").classList.remove("open");
   }
   function flyIsland(k) {
@@ -493,14 +502,14 @@
       document.querySelectorAll("#tab-pulau .subsec").forEach(d => d.classList.toggle("active", d.dataset.sub === subTab));
       $("#panel").scrollTop = 0; gambarS2(current);
       if (subTab === "gelombang") { ensureOn("gelombang"); ensureOn("angin"); ensureOn("struktur"); }
-      if (subTab === "pemulihan") { ensureOn("kesesuaian"); ensureOn("prioritas"); }
+      if (subTab === "pemulihan") { ensureOn("kesesuaian"); ensureOn("prioritas"); ensureOn("teknik"); }
       return;
     }
     const a = e.target.closest("a[data-ll]"); if (a) { e.preventDefault(); const [la, lo] = a.dataset.ll.split(",").map(Number); map.flyTo([la, lo], 17); ensureOn("prioritas"); }
     if (e.target.id === "btn-layers") { ["plot", "air", "lai", "transek"].forEach(ensureOn); flyIsland(current); }
     if (e.target.id === "lnk-rencana") { e.preventDefault(); ensureOn("rencana"); flyIsland(current); }
     if (e.target.id === "lnk-strategi") { e.preventDefault(); showTab("strategi"); }
-    if (e.target.id === "lnk-anltek") { e.preventDefault(); showTab("strategi"); const s = $("#at-pulau"); if (s) { s.value = e.target.dataset.k; s.dispatchEvent(new Event("change")); s.closest("h3")?.scrollIntoView(); $("#anl-teknik")?.scrollIntoView(); } }
+    if (e.target.id === "lnk-anltek") { e.preventDefault(); ensureOn("teknik"); flyIsland(current); showTab("strategi"); const s = $("#at-pulau"); if (s) { s.value = e.target.dataset.k; s.dispatchEvent(new Event("change")); s.closest("h3")?.scrollIntoView(); $("#anl-teknik")?.scrollIntoView(); } }
     if (e.target.id === "lnk-infra") { e.preventDefault(); ensureOn("struktur"); ensureOn("jalur"); flyIsland(current); }
     if (e.target.id === "lnk-gel") { e.preventDefault(); ensureOn("gelombang"); ensureOn("angin"); flyIsland(current); }
     if (e.target.id === "lnk-setuju") {
